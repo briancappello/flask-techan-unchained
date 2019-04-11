@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: marketstore
+  labels:
+    deployment: marketstore
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: marketstore
+  template:
+    metadata:
+      labels:
+        pod: marketstore
+    spec:
+      containers:
+        - name: marketstore
+          image: kubernetes-marketstore:v1
+          ports:
+            - containerPort: 5993
+
+      volumes:
+        - name: marketstore-volume-mount
+          persistentVolumeClaim:
+            claimName: marketstore-pvc

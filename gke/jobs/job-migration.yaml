@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: flask-migrations
+spec:
+  backoffLimit: 5
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: flask
+          image: gcr.io/project-id/backend
+          command: ['flask', 'db', 'upgrade']
+          env:
+            - name: FLASK_DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: db
+
+            - name: FLASK_DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: user
+
+            - name: FLASK_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: password
+
+            - name: FLASK_DATABASE_HOST
+              value: postgres-service

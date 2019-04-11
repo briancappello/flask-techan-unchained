@@ -1,0 +1,7 @@
+@import "finance/styles/variables";
+
+.techan-chart {
+  .plot-indicator.sma100 path.line {
+    stroke: $sma100-color;
+  }
+}

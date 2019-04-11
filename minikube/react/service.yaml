@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: react-service
+spec:
+  type: NodePort
+  selector:
+    pod: react
+  ports:
+  - protocol: TCP
+    port: 8888
+    targetPort: 8888

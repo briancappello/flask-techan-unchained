@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: react
+  labels:
+    deployment: react
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: react
+  template:
+    metadata:
+      labels:
+        pod: react
+    spec:
+      containers:
+        - name: react
+          image: kubernetes-react:v1
+          command: ['npm', 'run', 'start']
+          ports:
+            - containerPort: 8888
+          env:
+            - name: ANALYZER_HOST
+              value: "0.0.0.0"
+
+            - name: API_HOST
+              value: flask-service
+
+            - name: API_PORT
+              value: "5000"

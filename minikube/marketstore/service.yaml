@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: marketstore-service
+spec:
+  selector:
+    pod: marketstore
+  ports:
+  - protocol: TCP
+    port: 5993
+    targetPort: 5993
+  type: NodePort

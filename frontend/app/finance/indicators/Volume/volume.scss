@@ -1,0 +1,18 @@
+@import "finance/styles/variables";
+
+.techan-chart {
+  .axis.volume line {
+    stroke: none;
+  }
+  path.volume {
+    opacity: $volume-opacity;
+    fill: $unchanged-color;
+
+    &.up {
+      fill: $up-color;
+    }
+    &.down {
+      fill: $down-color;
+    }
+  }
+}

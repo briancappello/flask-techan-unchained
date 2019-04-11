@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery-worker
+  labels:
+    deployment: celery-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: celery-worker
+  template:
+    metadata:
+      labels:
+        pod: celery-worker
+    spec:
+      containers:
+        - name: celery-worker
+          image: gcr.io/project-id/backend
+          command: ['celery', 'worker', '-A', 'celery_app.celery', '-l', 'info']
+          env:
+            - name: FLASK_DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: db
+
+            - name: FLASK_DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: user
+
+            - name: FLASK_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: password
+
+            - name: FLASK_DATABASE_HOST
+              value: postgres-service
+
+            - name: REDIS_HOST
+              value: redis-service

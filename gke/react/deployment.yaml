@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: react-deployment
+  labels:
+    pod: react
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: react
+  template:
+    metadata:
+      labels:
+        pod: react
+    spec:
+      containers:
+        - name: react
+          image: gcr.io/project-id/react
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          env:
+            - name: ANALYZER_HOST
+              value: "0.0.0.0"
+
+            - name: API_HOST
+              value: flask-service
+
+            - name: API_PORT
+              value: "5000"

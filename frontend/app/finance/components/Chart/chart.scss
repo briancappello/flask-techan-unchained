@@ -1,0 +1,156 @@
+@import "finance/styles/variables";
+
+.chart-header {
+  height: $chart-header-height;
+  padding: 5px;
+
+  background-color: $bg-color;
+  color: $text-color;
+
+  line-height: 1.1;
+
+  .ohlc {
+    display: inline-block;
+    float: left;
+    padding: 4px 15px 0 25px;
+    min-width: 150px;
+    table {
+      margin-bottom: 0;
+      font-family: sans-serif;
+      font-size: 14px;
+      tbody {
+        tr, tr:hover {
+          background-color: $bg-color;
+          color: $text-color;
+        }
+        th {
+          text-align: right;
+          padding: 0 6px 0 0;
+        }
+        td {
+          padding: 0;
+        }
+        th,
+        td {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+
+  .company-name {
+    padding: 5px 0;
+  }
+
+  .ticker {
+    font-size: 35px;
+    font-weight: bold;
+    display: inline-block;
+    float: left;
+  }
+}
+
+.techan-chart {
+  font-size: 10px;
+  background-color: $bg-color;
+
+  text {
+    stroke-width: 0.2;
+    stroke: $text-color;
+    fill: $text-color;
+    font-family: sans-serif;
+  }
+
+  .grid path.domain,
+  .axis path.domain {
+    stroke: $axis-color;
+  }
+  .axis .tick line {
+    stroke: $axis-tick-color;
+  }
+
+  .grid .tick line {
+    stroke: $grid-color;
+    opacity: $grid-opacity;
+  }
+
+  .price-chart {
+    // line chart
+    path.line {
+      stroke: $line-plot-color;
+      fill: none;
+    }
+
+    // candlestick chart
+    path.candle {
+      stroke: $unchanged-color;
+
+      &.body {
+        stroke-width: 0;
+      }
+      &.up {
+        fill: $up-color;
+        stroke: $up-color;
+      }
+      &.down {
+        fill: $down-color;
+        stroke: $down-color;
+      }
+    }
+
+    // bar chart
+    path.ohlc {
+      &.up {
+        stroke: $up-color;
+      }
+      &.down {
+        stroke: $down-color;
+      }
+    }
+  }
+
+  .crosshair {
+    cursor: crosshair;
+
+    path.wire {
+      fill: $crosshair-color;
+      stroke: $crosshair-color;
+      stroke-width: .5;
+      stroke-dasharray: none;
+      opacity: 1;
+
+      &.horizontal {
+        stroke-width: .5;
+      }
+    }
+
+    .axisannotation {
+      text {
+        fill: $crosshair-annotation-text-color;
+        stroke: $crosshair-annotation-text-color;
+      }
+      path {
+        fill: $crosshair-annotation-bg-color;
+      }
+    }
+  }
+
+  .plot-indicator {
+    fill: none;
+  }
+
+  .indicator {
+    fill: none;
+    path.overbought,
+    path.oversold {
+      stroke: $indicator-signal-color;
+      stroke-dasharray: 5, 2;
+      stroke-width: 0.8;
+    }
+    path.middle {
+      stroke: $indicator-zero-color;
+      stroke-opacity: 0.8;
+      stroke-dasharray: 1, 1;
+    }
+  }
+}

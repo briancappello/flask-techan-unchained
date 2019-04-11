@@ -1,0 +1,21 @@
+@import "finance/styles/variables";
+
+.techan-chart {
+  .indicator.stochastic path {
+    &.k {
+      stroke: $stochastic-k-color;
+    }
+    &.d {
+      stroke: $stochastic-d-color;
+    }
+  }
+
+  text.legend.stochastic {
+    &.k {
+      fill: $stochastic-k-color;
+    }
+    &.d {
+      fill: $stochastic-d-color;
+    }
+  }
+}

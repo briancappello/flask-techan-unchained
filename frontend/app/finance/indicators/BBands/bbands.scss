@@ -1,0 +1,15 @@
+@import "finance/styles/variables";
+
+.techan-chart {
+  .plot-indicator.bbands path {
+    &.upper {
+      stroke: $bbands-upper-color;
+    }
+    &.middle {
+      stroke: $bbands-middle-color;
+    }
+    &.lower {
+      stroke: $bbands-lower-color;
+    }
+  }
+}

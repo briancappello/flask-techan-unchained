@@ -1,0 +1,256 @@
+# -----------------------------------------
+# marketstore configuration
+# -----------------------------------------
+root_directory: /data      # root directory of the database
+listen_port: 5993         # the port exposed by the database server
+log_level: info           # (info|warn|error)
+queryable: true           # allows the database to be queried through a client connection
+stop_grace_period: 0
+wal_rotate_interval: 5
+enable_add: true
+enable_remove: false
+enable_last_known: false
+timezone: "America/New_York"
+
+# ----------------------------------------
+# Triggers (uncomment to enable)
+# ----------------------------------------
+triggers:
+  # aggregate minutely data to 5Min and 30Min
+  - module: ondiskagg.so
+    on: "*/1Min/OHLCV"
+    config:
+      filter: nasdaq
+      destinations:
+        - 5Min
+
+#  # aggregate daily data to weekly, monthly, and yearly
+#  - module: ondiskagg.so
+#    on: "*/1D/OHLCV"
+#    config:
+#      filter: nasdaq
+#      destinations:
+#        - 1W
+#        - 1M
+#        - 1Y
+
+#   - module: stream.so
+#     on: "*/*/*"
+#     config:
+#       filter: nasdaq
+
+
+# ----------------------------------------
+# Background Workers (uncomment to enable)
+# ----------------------------------------
+bgworkers:
+  - module: iex.so
+    config:
+      daily: true
+      intraday: true
+      symbols:
+        - DDD
+        - ROKU
+        - SQ
+        - STX
+        - W
+
+        # Dow Jones Industrial Average
+        - AAPL
+        - AXP
+        - BA
+        - CAT
+        - CSCO
+        - CVX
+        - DIS
+        - DOW
+        - GS
+        - HD
+        - IBM
+        - INTC
+        - JNJ
+        - JPM
+        - KO
+        - MCD
+        - MMM
+        - MRK
+        - MSFT
+        - NKE
+        - PFE
+        - PG
+        - TRV
+        - UNH
+        - UTX
+        - V
+        - VZ
+        - WBA
+        - WMT
+        - XOM
+
+        # Dow Jones Transportation Average
+        - AAL
+        - ALK
+        - CAR
+        - CHRW
+        - CSX
+        - DAL
+        - EXPD
+        - FDX
+        - JBHT
+        - JBLU
+        - KEX
+        - KSU
+        - LSTR
+        - LUV
+        - MATX
+        - NSC
+        - R
+        - UAL
+        - UNP
+        - UPS
+
+        # NASDAQ-100
+        - AAL
+        - AAPL
+        - ADBE
+        - ADI
+        - ADP
+        - ADSK
+        - ALGN
+        - ALXN
+        - AMAT
+        - AMD
+        - AMGN
+        - AMZN
+        - ASML
+        - ATVI
+        - AVGO
+        - BIDU
+        - BIIB
+        - BKNG
+        - BMRN
+        - CDNS
+        - CELG
+        - CERN
+        - CHKP
+        - CHTR
+        - CMCSA
+        - COST
+        - CSCO
+        - CSX
+        - CTAS
+        - CTRP
+        - CTSH
+        - CTXS
+        - DLTR
+        - EA
+        - EBAY
+        - EXPE
+        - FAST
+        - FB
+        - FISV
+        - FOX
+        - FOXA
+        - GILD
+        - GOOG
+        - GOOGL
+        - HAS
+        - HSIC
+        - IDXX
+        - ILMN
+        - INCY
+        - INTC
+        - INTU
+        - ISRG
+        - JBHT
+        - JD
+        - KHC
+        - KLAC
+        - LBTYA
+        - LBTYK
+        - LRCX
+        - LULU
+        - MAR
+        - MCHP
+        - MDLZ
+        - MELI
+        - MNST
+        - MSFT
+        - MU
+        - MXIM
+        - MYL
+        - NFLX
+        - NTAP
+        - NTES
+        - NVDA
+        - NXPI
+        - ORLY
+        - PAYX
+        - PCAR
+        - PEP
+        - PYPL
+        - QCOM
+        - REGN
+        - ROST
+        - SBUX
+        - SIRI
+        - SNPS
+        - SWKS
+        - SYMC
+        - TFCF
+        - TFCFA
+        - TMUS
+        - TSLA
+        - TTWO
+        - TXN
+        - UAL
+        - ULTA
+        - VRSK
+        - VRSN
+        - VRTX
+        - WBA
+        - WDAY
+        - WDC
+        - WLTW
+        - WYNN
+        - XEL
+        - XLNX
+
+#   - module: gdaxfeeder.so
+#     name: GdaxFetcher
+#     config:
+#       query_start: "2017-09-01 00:00"
+#   - module: slait.so
+#       name: SlaitSubscriber
+#       config:
+#           endpoint: localhost:5000
+#           topic: bars_gdax
+#           attribute_group: OHLCV
+#           shape:
+#           - - Epoch
+#             - int64
+#           - - Open
+#             - float64
+#           - - High
+#             - float64
+#           - - Low
+#             - float64
+#           - - Close
+#             - float64
+#           - - Volume
+#             - float64
+#   - module: polygon.so
+#         name: Polygon
+#         config:
+#             api_key: your_api_key
+#             base_url: https://api.polygon.io
+#             symbols:
+#                 - AAPL
+#                 - SPY
+#   - module: bitmexfeeder.so
+#     name: BitmexFeeder
+#     config:
+#       query_start: "2017-01-01 00:00"
+#       symbols:
+#         - .XBT
+#       base_timeframe: "5Min"

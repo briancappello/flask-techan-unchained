@@ -1,0 +1,44 @@
+#### FRONTEND ####
+node_modules/
+/static/
+
+#### BACKEND ####
+*.py[cod]
+*.sqlite
+celerybeat-schedule
+celerybeat.pid
+*.pem
+*.srl
+
+docker/postgres/data
+docker/redis/data
+
+# C extensions
+*.so
+
+# Packages
+*.egg
+*.egg-info
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.tox
+__snapshots__/
+.cache/
+.pytest_cache/
+
+# si
+*.mo

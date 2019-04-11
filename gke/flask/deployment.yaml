@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask
+  labels:
+    deployment: flask
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: flask
+  template:
+    metadata:
+      labels:
+        pod: flask
+    spec:
+      containers:
+        - name: flask
+          image: gcr.io/project-id/backend
+          ports:
+            - containerPort: 5000
+          env:
+            - name: FLASK_DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: db
+
+            - name: FLASK_DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: user
+
+            - name: FLASK_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: password
+
+            - name: FLASK_DATABASE_HOST
+              value: postgres-service
+
+            - name: FLASK_REDIS_HOST
+              value: redis-service
+
+            - name: MARKETSTORE_RPC_HOST
+              value: marketstore-service

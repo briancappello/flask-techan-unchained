@@ -1,0 +1,41 @@
+$chart-header-height: 100px; // should match CHART_HEADER_HEIGHT in finance/constants.js
+
+$bg-color: #0c0c0c !default;
+$text-color: #fff !default;
+$grid-color: #999 !default;
+
+$axis-color: #ddd !default;
+$axis-tick-color: #ccc !default;
+
+$line-plot-color: #fff !default;
+$crosshair-color: #fff !default;
+$crosshair-annotation-text-color: #000 !default;
+$crosshair-annotation-bg-color: #fff !default;
+
+$unchanged-color: #f3ff00 !default;
+$up-color: #0a0 !default;
+$down-color: #f00 !default;
+
+$sma100-color: #6daaff !default;
+$sma200-color: #00f !default;
+
+$bbands-upper-color: #ff33d2 !default;
+$bbands-middle-color: #aaa !default;
+$bbands-lower-color: #a76ae9 !default;
+
+$grid-opacity: 0.4 !default;
+$volume-opacity: 0.5 !default;
+
+$indicator-zero-color: #fff !default;
+$indicator-signal-color: #fff !default;
+
+$indicator-zero-color: cyan;
+
+$macd-color: #6daaff !default;
+$macd-signal-color: #f99 !default;
+$macd-difference-color: #bbb !default;
+
+$rsi-color: #ff5900 !default;
+
+$stochastic-k-color: cyan !default;
+$stochastic-d-color: #f91bf9 !default;

@@ -1,0 +1,32 @@
+@import "finance/styles/variables";
+
+.techan-chart {
+  .indicator.macd path {
+    &.macd {
+      stroke: $macd-color;
+    }
+    &.signal {
+      stroke: $macd-signal-color;
+    }
+    &.zero {
+      stroke: $indicator-zero-color;
+      stroke-dasharray: 0;
+      stroke-opacity: 0.8;
+      stroke-width: 0.5;
+    }
+    &.difference {
+      fill: $macd-difference-color;
+      opacity: 0.5;
+    }
+  }
+
+  text.legend.macd {
+    fill: $macd-color;
+    &.signal {
+      fill: $macd-signal-color;
+    }
+    &.difference {
+      fill: $macd-difference-color;
+    }
+  }
+}

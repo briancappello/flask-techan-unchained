@@ -1,0 +1,11 @@
+@import "finance/styles/variables";
+
+.techan-chart {
+  .indicator.rsi path.rsi {
+    stroke: $rsi-color;
+  }
+
+  text.legend.rsi {
+    fill: $rsi-color;
+  }
+}
