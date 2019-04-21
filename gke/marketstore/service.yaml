@@ -2,11 +2,14 @@ kind: Service
 apiVersion: v1
 metadata:
   name: marketstore-service
+  labels:
+    app: marketstore
 spec:
+  type: ClusterIP
   selector:
-    pod: marketstore
+    app: marketstore
   ports:
-  - protocol: TCP
+  - name: marketstore
+    protocol: TCP
     port: 5993
     targetPort: 5993
-  type: NodePort

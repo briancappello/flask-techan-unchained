@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: marketstore
+spec:
+  updateStrategy:
+    type: RollingUpdate
+
+  selector:
+    matchLabels:
+      app: marketstore
+
+  serviceName: marketstore-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: marketstore
+    spec:
+      terminationGracePeriodSeconds: 10
+
+      containers:
+        - name: marketstore
+          image: gcr.io/project-id/marketstore
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - containerPort: 5993
+
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+
+          volumeMounts:
+            - mountPath: /data
+              name: marketstore
+
+  volumeClaimTemplates:
+  - metadata:
+      name: marketstore
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: "standard"
+      resources:
+        requests:
+          storage: 10Gi
