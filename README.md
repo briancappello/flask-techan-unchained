@@ -15,13 +15,14 @@ See [gke/README.md](https://github.com/briancappello/flask-techan-unchained/blob
 
 ## Running locally
 
-This assumes you're on a reasonably standard \*nix system. Windows *might* work if you know what you're doing, but you're on your own there. (Note that MarketStore **requires** \*nix to run locally.)
+This assumes you're on a reasonably standard \*nix system. (Tested on Linux)
 
 Dependencies:
 
 - Python 3.6+
 - Your virtualenv tool of choice (strongly recommended)
 - PostgreSQL
+- MarketStore
 - Redis (used for sessions persistence and the Celery tasks queue)
 - node.js & npm (v6 or later recommended, only required for development)
 - MailHog (not required, but it's awesome for testing email related tasks)
