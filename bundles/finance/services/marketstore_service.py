@@ -63,7 +63,12 @@ class MarketstoreService(BaseService):
         p = pymkts.Param(symbol, get_timeframe(timeframe), attrgroup,
                          start=start, end=end,
                          limit=limit, limit_from_start=limit_from_start)
-        return self.client.query(p).first().df()
+        try:
+            return self.client.query(p).first().df()
+        except Exception as e:
+            if 'No files returned from query parse' in e.args[0]:
+                return None
+            raise e
 
     def get_bulk_history(self, symbols, timeframe, attrgroup='OHLCV',
                          start=None, end=None,

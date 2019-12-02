@@ -229,10 +229,14 @@ class DataService(BaseService):
         self.print('Added {} {} tickers'.format(len(index.equities), index.name))
 
     def get_quotes(self, tickers: Iterable[str]):
-        return [self.get_quote(t) for t in tickers]
+        quotes = [self.get_quote(t) for t in tickers]
+        return [q for q in quotes if q is not None]
 
     def get_quote(self, ticker: str):
         df = self.marketstore_service.get_history(ticker, '1D', limit=2)
+        if df is None:
+            return None
+
         prev_bar = df.iloc[-2]
         bar = df.iloc[-1]
         return dict(ticker=ticker,
