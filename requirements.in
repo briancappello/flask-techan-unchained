@@ -6,6 +6,7 @@ flask-unchained[api,celery,mail,session,security,sqlalchemy]
 
 appdirs
 bcrypt
+cachetools
 gunicorn
 jinja2
 jinja2-time
