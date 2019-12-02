@@ -170,7 +170,7 @@ class DataService(BaseService):
         industries = {}
 
         for sector_name, group in df.groupby('sector'):
-            sector, sector_created = self.sector_manager.get_or_create(name=sector_name)
+            sector, _ = self.sector_manager.get_or_create(name=sector_name)
             sectors[sector_name] = sector
 
             for industry_name in group.industry.unique():
