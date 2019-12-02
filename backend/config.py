@@ -106,8 +106,8 @@ class DevConfig(Config):
     # EXPLAIN_TEMPLATE_LOADING = True
     # SQLALCHEMY_ECHO = True
 
+    SERVER_NAME = '{host}:5000'.format(host=os.getenv('API_HOST', 'localhost'))
     EXTERNAL_SERVER_NAME = 'http://localhost:8888'
-
     SESSION_COOKIE_SECURE = False
 
     ##########################################################################
