@@ -3,10 +3,10 @@ import numpy as np
 import pandas as pd
 import requests
 
+from cachetools import cached, TTLCache
 from datetime import date, datetime, time, timezone
 from dateutil.parser import parse as _parse_dt
 from dateutil.tz import gettz
-from json import dumps as json_dumps
 from urllib.parse import urlencode
 
 from bundles.finance.utils import clean_df, get_soup, table_to_df
@@ -113,17 +113,31 @@ def get_daily_df(ticker, start=None, end=None):
     return daily_json_to_df(r.json())
 
 
-def get_most_actives(region='us', min_intraday_vol=2.5e5, min_intraday_price=2):
-    url = 'https://query1.finance.yahoo.com/v1/finance/screener?' + urlencode({
+@cached(cache=TTLCache(maxsize=1, ttl=60*60*24))  # 24 hours
+def get_yfi_crumb():
+    html = str(requests.get('https://finance.yahoo.com/most-active').content)
+    start_idx = html.find('"CrumbStore"')
+    crumb = html[start_idx:html.find('"}', start_idx)]
+    return crumb[crumb.rfind('"')+1:]
+
+
+def get_most_actives(
+        region='us',
+        min_intraday_vol=2.5e5,
+        min_intraday_price=2,
+        num_results=100
+):
+    url = 'https://query2.finance.yahoo.com/v1/finance/screener?' + urlencode({
         'lang': 'en-US',
         'region': region.upper(),
         'formatted': 'true',
         'corsDomain': 'finance.yahoo.com',
+        'crumb': get_yfi_crumb(),
     })
 
     r = requests.post(url, json={
         'offset': 0,
-        'size': 25,
+        'size': num_results,
         'sortField': 'dayvolume',
         'sortType': 'DESC',
         'quoteType': 'EQUITY',
@@ -131,12 +145,15 @@ def get_most_actives(region='us', min_intraday_vol=2.5e5, min_intraday_price=2):
             'operator': 'AND',
             'operands': [
                 {'operator': 'eq', 'operands': ['region', region.lower()]},
-                {'operator': 'gt', 'operands': ['dayvolume', min_intraday_vol]},
-                {'operator': 'gt', 'operands': ['intradayprice', min_intraday_price]},
+                {'operator': 'gt', 'operands': ['dayvolume', int(min_intraday_vol)]},
+                {'operator': 'gt', 'operands': ['intradayprice', float(min_intraday_price)]},
             ],
         },
         'userId': '',
         'userIdType': 'guid',
+    }, headers={
+        'Host': 'query2.finance.yahoo.com',
+        'Origin': 'https://finance.yahoo.com',
     })
 
     quotes = r.json()['finance']['result'][0]['quotes']
@@ -154,11 +171,14 @@ def get_trending_tickers():
     soup = get_soup(url)
     table = soup.find('table', attrs={'class': 'yfinlist-table'})
     df = table_to_df(table, index_col='symbol')
-    df = (df.drop(['day_chart', '52_week_range', 'intraday_high/low'], axis=1)
-            .rename(columns={'%_change': 'pct_change',
-                             'avg_vol_(3_month)': 'avg_volume'})
+
+    renames = {'change': ['change', 'pct_change'],
+               'avg_vol____month': ['avg_volume']}
+    df = (df.drop(['day_chart', 'week_range', 'intraday_high_low'], axis=1)
+            .rename(columns=lambda c: renames[c].pop(0) if renames.get(c, []) else c)
             .replace('-', np.nan)
             .dropna())
+
     df['last_price'] = df['last_price'].apply(to_float)
     df['change'] = df['change'].apply(to_float)
     df['pct_change'] = df['pct_change'].apply(to_percent)
