@@ -1,24 +1,23 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+
 import isFunction from 'lodash/isFunction'
 import techan from 'techan'
 
 import { log_debug, log_critical } from 'logging'
 
-import { CHART_HEADER_HEIGHT, CHART_SIDEBAR_WIDTH } from 'finance/constants'
-import { niceLogMin, niceLogMax, getLogTickValues } from 'finance/utils/logScale'
-import './chart.scss'
-
 import {
+  CHART_HEADER_HEIGHT, CHART_SIDEBAR_WIDTH,
   BAR_CHART, CANDLE_CHART, LINE_CHART,
   LINEAR_SCALE, LOG_SCALE,
   FREQUENCY,
   FORMATS,
-  CHART_INDICATOR_LABEL,
   CHART_INDICATOR,
 } from 'finance/constants'
+import { niceLogMin, niceLogMax, getLogTickValues } from 'finance/utils/logScale'
+
+import './chart.scss'
+
 
 const CHART_TYPES = {
   [LINE_CHART]: techan.plot.close(),
@@ -333,13 +332,14 @@ export default class Chart extends React.Component {
   }
 
   _drawPriceChart() {
+    const { clipId, upperIndicators } = this.state
+
     this.priceChart = CHART_TYPES[this.props.type]
       .xScale(this.xScale)
       .yScale(this.yScale)
 
     this.svg.append('g')
       .attr('class', 'price-chart')
-    const { clipId, upperIndicators } = this.state
 
     // create a clip path so that indicators don't visually overflow the price plot viewport
     this.svg.append('defs')
@@ -429,7 +429,7 @@ export default class Chart extends React.Component {
       .domain([1, indicators.length])
       .range([
         this.priceChartHeight + CHART_INDICATOR.padding, // top of first indicator
-        this.chartHeight - indicatorHeight         // top of last indicator
+        this.chartHeight - indicatorHeight               // top of last indicator
       ])
 
     return d3.scaleLinear()

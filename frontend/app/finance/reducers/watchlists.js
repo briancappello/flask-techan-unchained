@@ -24,14 +24,12 @@ export default function (state = initialState, action) {
     // loadWatchlists
     // -------------------------------------------------------------------------
     case loadWatchlists.REQUEST:
-      return {
-        ...state,
+      return { ...state,
         isLoading: true,
       }
 
     case loadWatchlists.SUCCESS:
-      return {
-        ...state,
+      return { ...state,
         watchlists: payload.watchlists.reduce((watchlists, watchlist) => {
           watchlists[watchlist.key] = Object.assign({}, initialWatchlistState, watchlist)
           return watchlists
@@ -40,14 +38,12 @@ export default function (state = initialState, action) {
       }
 
     case loadWatchlists.FAILURE:
-      return {
-        ...state,
+      return { ...state,
         isLoaded: false,
       }
 
     case loadWatchlists.FULFILL:
-      return {
-        ...state,
+      return { ...state,
         isLoading: false,
       }
 
@@ -55,10 +51,8 @@ export default function (state = initialState, action) {
     // loadWatchlist
     // -------------------------------------------------------------------------
     case loadWatchlist.REQUEST:
-      return {
-        ...state,
-        watchlists: {
-          ...state.watchlists,
+      return { ...state,
+        watchlists: { ...state.watchlists,
           [key]: {
             ...Object.assign({}, initialWatchlistState, state.watchlists[key]),
             isLoading: true,
@@ -67,12 +61,9 @@ export default function (state = initialState, action) {
       }
 
     case loadWatchlist.SUCCESS:
-      return {
-        ...state,
-        watchlists: {
-          ...state.watchlists,
-          [key]: {
-            ...state.watchlists[key],
+      return { ...state,
+        watchlists: { ...state.watchlists,
+          [key]: { ...state.watchlists[key],
             isLoaded: true,
             ...watchlist,
           }
@@ -80,24 +71,18 @@ export default function (state = initialState, action) {
       }
 
     case loadWatchlist.FAILURE:
-      return {
-        ...state,
-        watchlists: {
-          ...state.watchlists,
-          [key]: {
-            ...state.watchlists[key],
+      return { ...state,
+        watchlists: { ...state.watchlists,
+          [key]: { ...state.watchlists[key],
             isLoaded: false,
           }
         }
       }
 
     case loadWatchlist.FULFILL:
-      return {
-        ...state,
-        watchlists: {
-          ...state.watchlists,
-          [key]: {
-            ...state.watchlists[key],
+      return { ...state,
+        watchlists: { ...state.watchlists,
+          [key]: { ...state.watchlists[key],
             isLoading: false,
           }
         }
