@@ -16,9 +16,10 @@ def table_to_df(table, index_col=None, columns=None) -> pd.DataFrame:
     Uses the first row as the column labels, converted to snakecase
     """
     header, *rows = table.find_all('tr')
-    cols = columns or [re.sub(r'[^a-z]', ' ',
-                              th.text.strip().lower()).strip().replace(' ', '_')
-                       for th in header.find_all('th')]
+    cols = columns or [
+        re.sub(r'[^a-z]', ' ', th.text.strip().lower()).strip().replace(' ', '_')
+        for th in header.find_all('th')
+    ]
     rows = [list(td.text.strip() for td in tr.find_all('td'))[:len(cols)]
             for tr in rows]
     df = pd.DataFrame(rows, columns=cols)
