@@ -1,3 +1,4 @@
+import numpy as np
 import pymarketstore as pymkts
 import re
 
@@ -38,6 +39,23 @@ class MarketstoreService(BaseService):
         port = config.MARKETSTORE_RPC_PORT
         path = config.MARKETSTORE_RPC_PATH
         self.client = pymkts.Client(endpoint=f'http://{host}:{port}{path}')
+
+    def get_symbols(self):
+        return self.client.list_symbols()
+
+    def write(self, df, tbk, isvariablelength=False):
+        # rename lower case columns to title case
+        df = df.rename(columns={name: name.title() for name in
+                                ['open', 'high', 'low', 'close', 'volume']})
+
+        # FIXME: convert float64 to float32 to make marketstore happy
+        new_types = df.dtypes.map({
+            np.dtype(np.float64): np.float32,
+            np.dtype(np.int64): np.int32,
+        }).to_dict()
+        df = df.astype(new_types)
+
+        return self.client.write(df, tbk, isvariablelength)
 
     def get_history(self, symbol, timeframe, attrgroup='OHLCV',
                     start=None, end=None,
