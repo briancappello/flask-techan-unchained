@@ -12,7 +12,7 @@ HEADER = '''
 # -----------------------------------------
 # Auto-generated marketstore configuration.
 # -----------------------------------------
-root_directory: /data      # root directory of the marketstore database
+root_directory: /data     # root directory of the marketstore database
 listen_port: 5993         # the port exposed by the database server
 log_level: info           # (info|warn|error)
 queryable: true
