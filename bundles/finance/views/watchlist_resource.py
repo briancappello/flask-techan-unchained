@@ -20,10 +20,22 @@ class WatchlistResource(Resource):
     def list(self):
         watchlists = [dict(key=index.ticker,
                            label=index.name)
-                      for index in self.index_manager.all()]
+                      for index in self.index_manager.all()] + [
+            dict(key='most-actives', label='Most Actives'),
+            dict(key='trending', label='Trending'),
+        ]
         return self.jsonify(watchlists)
 
     def get(self, key):
+        if key == 'most-actives':
+            return dict(key=key,
+                        label='Most Actives',
+                        components=self.watchlist_manager.get_most_actives())
+        elif key == 'trending':
+            return dict(key=key,
+                        label='Trending',
+                        components=self.watchlist_manager.get_trending())
+
         index = self.index_manager.get_by(ticker=key)
         if index is not None:
             return self.jsonify(dict(

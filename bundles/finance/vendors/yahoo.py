@@ -126,7 +126,7 @@ def get_most_actives(
         min_intraday_vol=2.5e5,
         min_intraday_price=2,
         num_results=100
-):
+) -> pd.DataFrame:
     url = 'https://query2.finance.yahoo.com/v1/finance/screener?' + urlencode({
         'lang': 'en-US',
         'region': region.upper(),
