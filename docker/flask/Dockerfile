@@ -20,7 +20,7 @@ RUN apt-get remove --purge -y curl
 
 WORKDIR /flask/src
 
-RUN pip install -U pip numpy==1.16.2
+RUN pip install -U pip $(cat requirements.txt | grep ^numpy | cut -d ' ' -f 1)
 
 COPY ./requirements-dev.txt requirements-dev.txt
 RUN pip install --no-cache-dir -r requirements-dev.txt
