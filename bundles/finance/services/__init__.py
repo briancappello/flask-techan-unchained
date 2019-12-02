@@ -13,3 +13,4 @@ from .industry_manager import IndustryManager
 from .market_manager import MarketManager
 from .marketstore_service import MarketstoreService
 from .sector_manager import SectorManager
+from .watchlist_manager import WatchlistManager
