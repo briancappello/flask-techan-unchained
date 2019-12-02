@@ -51,7 +51,7 @@ class ChartContainer extends React.Component {
     const { loadTickerHistory, ticker: prevTicker, frequency: prevFrequency } = this.props
     const { ticker, frequency } = nextProps
 
-    if (prevTicker != ticker || prevFrequency != frequency) {
+    if (prevTicker !== ticker || prevFrequency !== frequency) {
       loadTickerHistory.maybeTrigger({ ticker, frequency })
       this.setState({ ticker: '' })
     }
@@ -100,7 +100,7 @@ class ChartContainer extends React.Component {
   }
 
   render() {
-    const { ticker, history, frequency, scale, type } = this.props
+    const { id, ticker, history, frequency, scale, type } = this.props
 
     return (
       <div className="chart-container-wrap">
@@ -131,7 +131,7 @@ class ChartContainer extends React.Component {
               {this.renderButton('scale', LOG_SCALE, 'Log')}
             </div>
           </div>
-          <Chart data={history} ticker={ticker} frequency={frequency} scale={scale} type={type} />
+          <Chart id={id} data={history} ticker={ticker} frequency={frequency} scale={scale} type={type} />
         </div>
         <aside className="sidebar">
           <form onSubmit={this.onSubmit}>
