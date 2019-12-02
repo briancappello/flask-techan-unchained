@@ -7,3 +7,10 @@ class WatchlistAsset(db.Model):
 
     watchlist_id = db.foreign_key('Watchlist', primary_key=True)
     watchlist = db.relationship('Watchlist', back_populates='watchlist_assets')
+
+    def __init__(self, asset=None, watchlist=None, **kwargs):
+        super().__init__(**kwargs)
+        if asset is not None:
+            self.asset = asset
+        if watchlist is not None:
+            self.watchlist = watchlist

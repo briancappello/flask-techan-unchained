@@ -4,6 +4,9 @@ from .watchlist_asset import WatchlistAsset
 
 
 class Watchlist(db.Model):
+    class Meta:
+        repr = ('id', 'name', 'user')
+
     name = db.Column(db.String, unique=True, index=True)
 
     user_id = db.foreign_key('User')

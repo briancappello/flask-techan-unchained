@@ -13,6 +13,8 @@ from .index_data_vendor import IndexDataVendor
 from .industry import Industry
 from .market import Market
 from .sector import Sector
+from .watchlist import Watchlist
+from .watchlist_asset import WatchlistAsset
 
 # FIXME
 """
