@@ -12,7 +12,7 @@ import './watchlist.scss'
 class Watchlist extends React.Component {
 
   static propTypes = {
-    watchlistKey: PropTypes.string.isRequired,
+    watchlist: PropTypes.string.isRequired,
     quotes: PropTypes.arrayOf(PropTypes.shape({
       ticker: PropTypes.string.isRequired,
       open: PropTypes.number.isRequired,
@@ -24,11 +24,11 @@ class Watchlist extends React.Component {
   }
 
   render() {
-    const { watchlistKey, quotes, queryParams } = this.props
+    const { watchlist, quotes, queryParams } = this.props
     return (
       <div className="watchlist">
         <div className="watchlist-key">
-          {watchlistKey}
+          {watchlist}
         </div>
         <ul>
           {quotes.map((quote) => {

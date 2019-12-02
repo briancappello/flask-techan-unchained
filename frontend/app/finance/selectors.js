@@ -34,7 +34,10 @@ export const selectWatchlistComponents = (state) => {
   return Object.keys(watchlistsState.watchlists).reduce((watchlists, key) => {
     let watchlistState = watchlistsState.watchlists[key]
     if (watchlistState.isLoaded) {
-      watchlists[key] = watchlistState.components
+      watchlists[key] = {
+        label: watchlistState.label,
+        components: watchlistState.components,
+      }
     }
     return watchlists
   }, {})

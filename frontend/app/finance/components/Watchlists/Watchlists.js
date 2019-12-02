@@ -53,8 +53,8 @@ class Watchlists extends React.Component {
     return (
       <div className="watchlists" style={{ height: sidebarListHeight }}>
         {Object.keys(watchlistComponents).map((watchlistKey) => {
-          const quotes = watchlistComponents[watchlistKey]
-          return <Watchlist key={watchlistKey} watchlistKey={watchlistKey} quotes={quotes} queryParams={queryParams} />
+          const { label, components } = watchlistComponents[watchlistKey]
+          return <Watchlist key={watchlistKey} watchlist={label} quotes={components} queryParams={queryParams} />
         })}
       </div>
     )
