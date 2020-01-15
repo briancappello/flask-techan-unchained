@@ -29,19 +29,15 @@ class WatchlistResource(Resource):
 
     def get(self, key):
         if key == 'most-actives':
-            return dict(key=key,
-                        label='Most Actives',
-                        components=self.watchlist_manager.get_most_actives())
+            return dict(key=key, components=self.watchlist_manager.get_most_actives())
         elif key == 'trending':
-            return dict(key=key,
-                        label='Trending',
-                        components=self.watchlist_manager.get_trending())
+            return dict(key=key, components=self.watchlist_manager.get_trending())
 
+        # fall back to returning index components
         index = self.index_manager.get_by(ticker=key)
         if index is not None:
             return self.jsonify(dict(
                 key=index.ticker,
-                label=index.name,
                 components=[self.data_service.get_quote(equity.ticker)
                             for equity in index.equities],
             ))
