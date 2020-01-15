@@ -2,7 +2,7 @@ import numpy as np
 import pymarketstore as pymkts
 import re
 
-from flask_unchained import BaseService
+from flask_unchained import Service
 
 from ..enums import Frequency
 
@@ -33,7 +33,7 @@ def get_timeframe(timeframe):
     return timeframe
 
 
-class MarketstoreService(BaseService):
+class MarketstoreService(Service):
     def __init__(self, config):
         host = config.MARKETSTORE_RPC_HOST
         port = config.MARKETSTORE_RPC_PORT

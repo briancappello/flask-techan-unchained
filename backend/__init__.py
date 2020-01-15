@@ -14,17 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from flask import Flask, session
-from flask_unchained import AppBundle as BaseAppBundle
+from flask_unchained import AppBundle, FlaskUnchained, generate_csrf, session
 
 
-class AppBundle(BaseAppBundle):
+class App(AppBundle):
     @classmethod
-    def before_init_app(cls, app: Flask):
-        app.url_map.strict_slashes = False
-
-    @classmethod
-    def after_init_app(cls, app: Flask):
+    def after_init_app(cls, app: FlaskUnchained):
         app.jinja_env.add_extension('jinja2_time.TimeExtension')
 
         # set session to use PERMANENT_SESSION_LIFETIME
@@ -34,6 +29,14 @@ class AppBundle(BaseAppBundle):
             session.permanent = True
             session.modified = True
 
+        # send CSRF token in the cookie
+        @app.after_request
+        def set_csrf_cookie(response):
+            if response:
+                response.set_cookie('csrf_token', generate_csrf())
+            return response
+
+        # disable strict slashes on routes
         for rule in app.url_map.iter_rules():
             if 'static' in rule.endpoint:
                 rule.strict_slashes = True

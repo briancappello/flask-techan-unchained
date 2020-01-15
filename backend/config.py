@@ -22,10 +22,13 @@ class Config(BundleConfig):
     app_dirs = AppDirs('flask-techan-unchained')
 
     APP_CACHE_FOLDER = app_dirs.user_cache_dir
-    os.makedirs(APP_CACHE_FOLDER, exist_ok=True)
-
     APP_DATA_FOLDER = app_dirs.user_data_dir
+
+    os.makedirs(APP_CACHE_FOLDER, exist_ok=True)
     os.makedirs(APP_DATA_FOLDER, exist_ok=True)
+
+    FLASH_MESSAGES = False
+    WTF_CSRF_ENABLED = True
 
     ##########################################################################
     # celery                                                                 #
@@ -67,7 +70,6 @@ class Config(BundleConfig):
     ##########################################################################
     # security                                                               #
     ##########################################################################
-    FLASH_MESSAGES = False
     SECURITY_PASSWORD_SALT = 'security-password-salt'
     SECURITY_CONFIRMABLE = True
     SECURITY_REGISTERABLE = True
@@ -132,6 +134,7 @@ class StagingConfig(ProdConfig):
 
 class TestConfig(Config):
     TESTING = True
+    WTF_CSRF_ENABLED = False
 
     SERVER_NAME = 'localhost:5000'
 

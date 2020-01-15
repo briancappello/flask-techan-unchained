@@ -1,7 +1,7 @@
 import pandas as pd
 
 from flask_unchained.bundles.sqlalchemy import SessionManager
-from flask_unchained import BaseService, injectable
+from flask_unchained import Service, injectable
 from typing import *
 
 from ..vendors import exchanges, indexes
@@ -17,7 +17,7 @@ from .marketstore_service import MarketstoreService
 from .sector_manager import SectorManager
 
 
-class DataService(BaseService):
+class DataService(Service):
     country_manager: CountryManager = injectable
     currency_manager: CurrencyManager = injectable
     equity_manager: EquityManager = injectable
