@@ -13,7 +13,7 @@ jinja2-time
 markdown
 pandas
 pdfquery
-psycopg2
+psycopg2-binary
 pymarketstore
 python-dateutil
 python-frontmatter
