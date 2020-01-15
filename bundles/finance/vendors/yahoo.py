@@ -4,7 +4,7 @@ import pandas as pd
 import requests
 
 from cachetools import cached, TTLCache
-from datetime import date, datetime, time, timezone
+from datetime import date, datetime, time, timedelta, timezone
 from dateutil.parser import parse as _parse_dt
 from dateutil.tz import gettz
 from urllib.parse import urlencode
@@ -42,13 +42,13 @@ def to_est(dt: datetime):
 
 
 def sanitize_dates(start=None, end=None):
-    start = to_datetime(start)
-    if start is None:
-        start = datetime(1900, 1, 1)
-
     end = to_datetime(end)
     if end is None:
         end = datetime.now()
+
+    start = to_datetime(start)
+    if start is None:
+        start = end - timedelta(days=(365*100) - 1)  # 100 years(ish) minus 1 day
 
     return to_est(start), to_est(end)
 
