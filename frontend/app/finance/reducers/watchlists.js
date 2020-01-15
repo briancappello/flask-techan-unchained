@@ -19,6 +19,10 @@ export default function (state = initialState, action) {
   const { type, payload } = action
   const { key, watchlist } = payload || {}
 
+  if (!payload) {
+    return state
+  }
+
   switch (type) {
     // -------------------------------------------------------------------------
     // loadWatchlists

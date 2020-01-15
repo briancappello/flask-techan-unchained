@@ -22,11 +22,17 @@ class Watchlists extends React.Component {
   }
 
   componentWillMount() {
-    const { loadWatchlists, loadWatchlist } = this.props
-    loadWatchlists.maybeTrigger()
-    loadWatchlist.maybeTrigger({ key: '^DJI' })
-    loadWatchlist.maybeTrigger({ key: '^DJT' })
-    loadWatchlist.maybeTrigger({ key: '^NDX' })
+    this.props.loadWatchlists.maybeTrigger()
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { watchlists, loadWatchlist } = nextProps;
+    const { watchlist } = this.state;
+    if (watchlist === undefined && watchlists && watchlists.length) {
+      const watchlist = watchlists[0].key
+      loadWatchlist.maybeTrigger({ key: watchlist })
+      this.setState({ watchlist })
+    }
   }
 
   componentDidMount() {
@@ -47,15 +53,33 @@ class Watchlists extends React.Component {
     return height - (formHeight + paddingTop)
   }
 
+  onChange = (e) => {
+    e.preventDefault()
+    this.props.loadWatchlist.maybeTrigger({ key: e.target.value })
+    this.setState({ watchlist: e.target.value })
+  }
+
   render() {
-    const { watchlistComponents, queryParams } = this.props
-    const { sidebarListHeight } = this.state
+    const { watchlists, watchlistComponents, queryParams } = this.props
+    const { watchlist, sidebarListHeight } = this.state
+    if (!watchlist || !watchlistComponents || watchlistComponents[watchlist] === undefined) {
+      return <p>Loading...</p>
+    }
+
+    const { label, components } = watchlistComponents[watchlist]
     return (
       <div className="watchlists" style={{ height: sidebarListHeight }}>
-        {Object.keys(watchlistComponents).map((watchlistKey) => {
-          const { label, components } = watchlistComponents[watchlistKey]
-          return <Watchlist key={watchlistKey} watchlist={label} quotes={components} queryParams={queryParams} />
-        })}
+        <form>
+          <select onChange={this.onChange} value={watchlist}>
+            {watchlists.map((watchlist) => {
+              return <option key={watchlist.key} value={watchlist.key}>{watchlist.label}</option>
+            })}
+          </select>
+        </form>
+        <Watchlist key={watchlist}
+                   watchlist={label}
+                   quotes={components}
+                   queryParams={queryParams} />
       </div>
     )
   }
