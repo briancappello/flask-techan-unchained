@@ -5,9 +5,9 @@ import requests
 from bundles.finance.utils.pandas import html_unescape, str_strip
 
 
-NASDAQ_GS_URL = 'http://www.nasdaq.com/screening/companies-by-industry.aspx?exchange=NASDAQ&market=NGS&render=download'
-NASDAQ_GM_URL = 'http://www.nasdaq.com/screening/companies-by-industry.aspx?exchange=NASDAQ&market=NGM&render=download'
-NASDAQ_CM_URL = 'http://www.nasdaq.com/screening/companies-by-industry.aspx?exchange=NASDAQ&market=NCM&render=download'
+NASDAQ_GS_URL = 'http://old.nasdaq.com/screening/companies-by-industry.aspx?exchange=NASDAQ&market=NGS&render=download'
+NASDAQ_GM_URL = 'http://old.nasdaq.com/screening/companies-by-industry.aspx?exchange=NASDAQ&market=NGM&render=download'
+NASDAQ_CM_URL = 'http://old.nasdaq.com/screening/companies-by-industry.aspx?exchange=NASDAQ&market=NCM&render=download'
 
 
 def nasdaq_csv_to_df(url):

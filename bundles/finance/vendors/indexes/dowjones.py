@@ -12,11 +12,10 @@ def get_dji_df():
 
     Indexed by ticker with columns: company_name, exchange, industry, date_added, notes
     """
-    df = get_wiki_table_df(DJI_URL).rename(
-        columns={'company': 'company_name',
-                 'symbol': 'ticker'},
-    )
-    return df .set_index('ticker')
+    df = get_wiki_table_df(DJI_URL).rename(columns={'company': 'company_name',
+                                                    'symbol': 'ticker'})
+    df.ticker = [x.split(':')[-1].strip() for x in df.ticker]
+    return df.set_index('ticker')
 
 
 def get_djt_df():

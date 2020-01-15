@@ -132,10 +132,10 @@ class DataService(BaseService):
             'name': 'NASDAQ-100',
         }, indexes.nasdaq.get_nasdaq_100_df().index)
 
-        self._add_index({
-            'ticker': '^R1000',
-            'name': 'Russell 1000',
-        }, indexes.russell.get_russell_1000_tickers())
+        # self._add_index({
+        #     'ticker': '^R1000',
+        #     'name': 'Russell 1000',
+        # }, indexes.russell.get_russell_1000_tickers())
 
         # self._add_index({
         #     'ticker': '^R2000',

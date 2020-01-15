@@ -1,7 +1,7 @@
 from .nasdaq import nasdaq_csv_to_df
 
 
-AMEX_URL = 'http://www.nasdaq.com/screening/companies-by-industry.aspx?exchange=AMEX&render=download'
+AMEX_URL = 'http://old.nasdaq.com/screening/companies-by-industry.aspx?exchange=AMEX&render=download'
 
 
 def get_amex_df():

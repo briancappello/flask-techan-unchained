@@ -20,7 +20,8 @@ class WatchlistResource(Resource):
     def list(self):
         watchlists = [dict(key=index.ticker,
                            label=index.name)
-                      for index in self.index_manager.all()] + [
+                      for index in self.index_manager.all()
+                      if 'Russell' not in index.name] + [
             dict(key='most-actives', label='Most Actives'),
             dict(key='trending', label='Trending'),
         ]

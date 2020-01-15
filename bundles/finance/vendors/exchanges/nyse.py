@@ -1,7 +1,7 @@
 from .nasdaq import nasdaq_csv_to_df
 
 
-NYSE_URL = 'http://www.nasdaq.com/screening/companies-by-industry.aspx?exchange=NYSE&render=download'
+NYSE_URL = 'http://old.nasdaq.com/screening/companies-by-industry.aspx?exchange=NYSE&render=download'
 
 
 def get_nyse_df():
