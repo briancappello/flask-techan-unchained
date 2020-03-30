@@ -240,7 +240,7 @@ class DataService(Service):
         prev_bar = df.iloc[-2]
         bar = df.iloc[-1]
         return dict(ticker=ticker,
-                    date=bar.name,
+                    date=bar.name.to_pydatetime(),
                     open=bar.Open,
                     high=bar.High,
                     low=bar.Low,

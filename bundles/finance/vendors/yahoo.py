@@ -114,11 +114,12 @@ def get_daily_df(ticker, start=None, end=None):
 
 
 @cached(cache=TTLCache(maxsize=1, ttl=60*60*24))  # 24 hours
-def get_yfi_crumb():
-    html = str(requests.get('https://finance.yahoo.com/most-active').content)
+def get_yfi_crumb_and_cookies():
+    r = requests.get('https://finance.yahoo.com/most-active')
+    html = str(r.content)
     start_idx = html.find('"CrumbStore"')
     crumb = html[start_idx:html.find('"}', start_idx)]
-    return crumb[crumb.rfind('"')+1:]
+    return crumb[crumb.rfind('"')+1:], r.cookies
 
 
 def get_most_actives(
@@ -127,12 +128,14 @@ def get_most_actives(
         min_intraday_price=2,
         num_results=100
 ) -> pd.DataFrame:
+    crumb, cookies = get_yfi_crumb_and_cookies()
+
     url = 'https://query2.finance.yahoo.com/v1/finance/screener?' + urlencode({
         'lang': 'en-US',
         'region': region.upper(),
         'formatted': 'true',
         'corsDomain': 'finance.yahoo.com',
-        'crumb': get_yfi_crumb(),
+        'crumb': crumb,
     })
 
     r = requests.post(url, json={
@@ -154,12 +157,15 @@ def get_most_actives(
     }, headers={
         'Host': 'query2.finance.yahoo.com',
         'Origin': 'https://finance.yahoo.com',
-    })
+    }, cookies=cookies)
 
-    quotes = r.json()['finance']['result'][0]['quotes']
+    data = r.json()['finance']
+    if 'error' in data and data['error']:
+        raise Exception(str(data['error']))
+
     df = pd.DataFrame.from_records([
         {k: v['raw'] if isinstance(v, dict) else v for k, v in quote.items()}
-        for quote in quotes
+        for quote in data['result'][0]['quotes']
     ], index='symbol')
 
     # drop junk data before returning (some kind of yahoo-specific (testing?) symbol)
