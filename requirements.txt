@@ -25,7 +25,7 @@ cssselect==1.1.0          # via pdfquery, pyquery
 decorator==4.4.1          # via networkx
 dill==0.3.1.1             # via flask-unchained
 faker==3.0.1              # via py-yaml-fixtures
-flask-babelex==0.9.3      # via flask-unchained
+flask-babelex==0.9.4      # via flask-unchained
 flask-login==0.4.1        # via flask-unchained
 flask-marshmallow==0.10.1  # via flask-unchained
 flask-migrate==2.5.2      # via flask-unchained
@@ -34,7 +34,7 @@ flask-session==0.3.1      # via flask-unchained
 flask-sqlalchemy-unchained==0.7.3  # via flask-unchained
 flask-sqlalchemy==2.4.1   # via flask-migrate, flask-sqlalchemy-unchained
 flask-unchained[api,celery,mail,security,session,sqlalchemy]==0.7.9
-flask-wtf==0.14.2         # via flask-unchained
+flask-wtf==0.14.3         # via flask-unchained
 flask==1.1.1              # via flask-babelex, flask-login, flask-marshmallow, flask-migrate, flask-principal, flask-session, flask-sqlalchemy, flask-unchained, flask-wtf
 gunicorn==20.0.4
 idna==2.8                 # via requests
@@ -52,7 +52,7 @@ marshmallow==3.3.0        # via flask-marshmallow, flask-unchained, marshmallow-
 more-itertools==8.1.0     # via pytest, zipp
 msgpack-python==0.5.6     # via pymarketstore
 networkx==2.4             # via flask-unchained, py-yaml-fixtures
-numpy==1.18.1             # via pandas, pymarketstore, ta-lib
+numpy==1.18.2             # via pandas, pymarketstore, ta-lib
 packaging==20.0           # via pytest
 pandas==0.25.3
 passlib==1.7.2            # via flask-unchained

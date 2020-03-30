@@ -18,8 +18,10 @@ from flask_unchained import AppBundle, FlaskUnchained, generate_csrf, session
 
 
 class App(AppBundle):
-    @classmethod
-    def after_init_app(cls, app: FlaskUnchained):
+    def before_init_app(self, app: FlaskUnchained) -> None:
+        app.url_map.strict_slashes = False
+
+    def after_init_app(self, app: FlaskUnchained):
         app.jinja_env.add_extension('jinja2_time.TimeExtension')
 
         # set session to use PERMANENT_SESSION_LIFETIME
@@ -35,10 +37,3 @@ class App(AppBundle):
             if response:
                 response.set_cookie('csrf_token', generate_csrf())
             return response
-
-        # disable strict slashes on routes
-        for rule in app.url_map.iter_rules():
-            if 'static' in rule.endpoint:
-                rule.strict_slashes = True
-            else:
-                rule.strict_slashes = False
