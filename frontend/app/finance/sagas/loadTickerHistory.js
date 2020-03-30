@@ -23,10 +23,7 @@ export const loadTickerHistorySaga = createRoutineSaga(
   loadTickerHistory,
   function *({ ticker, frequency }) {
     let history = yield call(FinanceApi.loadTickerHistory, ticker, frequency)
-    history = parseHistoryJson(history, [FREQUENCY.Daily,
-                                         FREQUENCY.Weekly,
-                                         FREQUENCY.Monthly,
-                                         FREQUENCY.Yearly].includes(frequency))
+    history = parseHistoryJson(history, frequency)
     yield put(loadTickerHistory.success({ ticker, frequency, history }))
   }
 )
@@ -37,20 +34,27 @@ export default () => [
 ]
 
 
-export function parseHistoryJson(json, dateOnly) {
+export function parseHistoryJson(json, frequency) {
   const { columns, data, index } = json
-  return data.map((values, i) => {
-    const dt = new Date(index[i])
+  const dateOnly = [
+    FREQUENCY.Daily,
+    FREQUENCY.Weekly,
+    FREQUENCY.Monthly,
+    FREQUENCY.Yearly,
+  ].includes(frequency)
+
+  return data.map((values, row_i) => {
+    const dt = new Date(index[row_i])
     const row = {
       date: dateOnly
         ? new Date(dt.getUTCFullYear(), dt.getUTCMonth(), dt.getUTCDate())
         : dt,
     }
-    for (let j = 0; j < values.length; j++) {
+    for (let col_i = 0; col_i < values.length; col_i++) {
       // convert empty strings to null, all other values to numbers
-      let val = values[j]
+      let val = values[col_i]
       val = (val === null || (isString(val) && val.length === 0)) ? null : +val
-      row[columns[j]] = val
+      row[columns[col_i]] = val
     }
     return row
   })
