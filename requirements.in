@@ -1,0 +1,25 @@
+# config file used to generate requirements.txt
+#
+# pip-compile requirements.in --output-file requirements.txt
+
+flask-unchained[api,celery,mail,session,security,sqlalchemy]
+
+appdirs
+bcrypt
+cachetools
+gunicorn
+jinja2
+jinja2-time
+markdown
+pandas
+pdfquery
+psycopg2-binary
+pymarketstore
+python-dateutil
+python-frontmatter
+pytz
+py-yaml-fixtures
+redis
+requests
+ta-lib
+tzlocal
