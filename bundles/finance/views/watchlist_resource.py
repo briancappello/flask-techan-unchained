@@ -38,6 +38,7 @@ class WatchlistResource(Resource):
         if index is not None:
             return self.jsonify(dict(
                 key=index.ticker,
-                components=[self.data_service.get_quote(equity.ticker)
-                            for equity in index.equities],
+                components=self.data_service.get_quotes(
+                    equity.ticker for equity in index.equities
+                ),
             ))
