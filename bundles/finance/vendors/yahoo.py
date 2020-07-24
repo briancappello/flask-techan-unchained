@@ -113,7 +113,7 @@ def get_daily_df(ticker, start=None, end=None):
     return daily_json_to_df(r.json())
 
 
-@cached(cache=TTLCache(maxsize=1, ttl=60*60*24))  # 24 hours
+@cached(cache=TTLCache(maxsize=1, ttl=60*60*8))  # 8 hours
 def get_yfi_crumb_and_cookies():
     r = requests.get('https://finance.yahoo.com/most-active')
     html = str(r.content)
