@@ -9,8 +9,11 @@ const logger = require('./logger')
 
 const argv = require('minimist')(process.argv.slice(2))
 const addDevMiddlewares = require('./addDevMiddlewares')
-const webpackConfig = require('../internals/webpack/webpack.dev.config')
 const isDev = process.env.NODE_ENV !== 'production'
+let webpackConfig = require('../internals/webpack/webpack.prod.config')
+if (isDev) {
+  webpackConfig = require('../internals/webpack/webpack.dev.config')
+}
 const ngrok = (isDev && process.env.ENABLE_TUNNEL) || argv.tunnel ? require('ngrok') : false
 const app = express()
 
@@ -28,7 +31,7 @@ app.use(/^\/api|auth\//, proxy(`http://${backendHost}:${backendPort}`, {
     proxyReqPathResolver: (req) => req.baseUrl + req.url,
 }))
 
-addDevMiddlewares(app, webpackConfig)
+addDevMiddlewares(app, webpackConfig, isDev)
 
 // Start your app.
 app.listen(frontendPort, host, (err) => {

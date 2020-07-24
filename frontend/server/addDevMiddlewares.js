@@ -5,7 +5,7 @@ const webpack = require('webpack')
 const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpackHotMiddleware = require('webpack-hot-middleware')
 
-module.exports = function addDevMiddlewares(app, webpackConfig) {
+module.exports = function addDevMiddlewares(app, webpackConfig, isDev) {
   const compiler = webpack(webpackConfig)
   const middleware = webpackDevMiddleware(compiler, {
     publicPath: webpackConfig.output.publicPath,
@@ -14,7 +14,9 @@ module.exports = function addDevMiddlewares(app, webpackConfig) {
   })
 
   app.use(middleware)
-  app.use(webpackHotMiddleware(compiler))
+  if (isDev) {
+    app.use(webpackHotMiddleware(compiler))
+  }
   app.use('/static/articles', express.static(path.join(process.cwd(), 'articles')))
   app.use('/static', express.static(path.join(process.cwd(), 'static')))
 
