@@ -72,7 +72,13 @@ export default class MACD {
   }
 
   drawChartData(data) {
-    this.yScale.domain(techan.scale.plot.macd(data, this.accessor).domain()).nice()
+    const yDomain = techan.scale.plot.macd(data, this.accessor).domain()
+    if (yDomain[0] > 0) {
+      yDomain[0] = 0
+    } else if (yDomain[1] < 0) {
+      yDomain[1] = 0
+    }
+    this.yScale.domain(yDomain).nice()
     this.svg.select('g.macd.axis').call(this.yAxisLeft)
     this.svg.select('g.macd.axis.right').call(this.yAxisRight)
     this.svg.select('g.macd.indicator').datum(data).call(this.macd)

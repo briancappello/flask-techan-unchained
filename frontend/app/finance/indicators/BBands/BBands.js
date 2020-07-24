@@ -15,7 +15,7 @@ export default class BBands {
   draw(clipId) {
     this.accessor = techan.accessor.bollinger()
       .upper((d) => d.bbands_upper)
-      .lower((d) => Math.max(0.01, d.bbands_lower))
+      .lower((d) => d.bbands_lower)
 
     this.bbands = techan.plot.bollinger()
       .xScale(this.xScale)
