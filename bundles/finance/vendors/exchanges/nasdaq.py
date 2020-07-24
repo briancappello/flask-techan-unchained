@@ -19,7 +19,10 @@ def nasdaq_csv_to_df(url):
             'ipo_year', 'sector', 'industry', 'url', '__empty__']
     use_cols = ['ticker', 'company_name', 'last_sale', 'market_cap',
                 'sector', 'industry']
-    return pd.read_csv(io.BytesIO(requests.get(url).content),
+    r = requests.get(url, headers={
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0',
+    })
+    return pd.read_csv(io.BytesIO(r.content),
                        header=0,
                        names=cols,
                        usecols=use_cols,

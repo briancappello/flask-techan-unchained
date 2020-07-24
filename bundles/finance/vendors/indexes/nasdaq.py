@@ -12,7 +12,9 @@ def get_nasdaq_100_df():
 
     Indexed by ticker with columns: company_name
     """
-    html = requests.get(NDX_URL).text
+    html = requests.get(NDX_URL, headers={
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0',
+    }).text
     start = 'var table_body = '
     start_idx = html.find(start)+len(start)
     table = html[start_idx:html.find(';var col', start_idx)]
