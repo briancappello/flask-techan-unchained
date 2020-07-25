@@ -9,7 +9,7 @@ from dateutil.parser import parse as _parse_dt
 from dateutil.tz import gettz
 from urllib.parse import urlencode
 
-from bundles.finance.utils import clean_df, get_soup, table_to_df
+from bundles.finance.utils import get_soup, table_to_df
 from bundles.finance.utils.pandas import kmbt_to_int, to_float, to_percent
 
 BASE_URL = 'https://query1.finance.yahoo.com/v8/finance/chart/{ticker}?{query}'
@@ -26,8 +26,8 @@ parse_datetime = functools.partial(_parse_dt,
 
 
 def to_datetime(dt):
-    if not dt:
-        return None
+    if isinstance(dt, int):
+        return datetime.fromtimestamp(dt)
     elif isinstance(dt, pd.Timestamp):
         return dt.to_pydatetime()
     elif isinstance(dt, datetime):
@@ -41,29 +41,25 @@ def to_est(dt: datetime):
     return dt.astimezone(EST)
 
 
-def sanitize_dates(start=None, end=None):
-    end = to_datetime(end)
+def sanitize_dates(start=None, end=None, timeframe='1d'):
     if end is None:
-        end = datetime.now()
+        end = date.today() + timedelta(days=1)
+    end = to_datetime(end)
 
-    start = to_datetime(start)
     if start is None:
-        start = end - timedelta(days=(365*100) - 1)  # 100 years(ish) minus 1 day
+        days = 7 if timeframe == '1m' else (365*100 - 1)  # 100 years(ish)
+        start = end - timedelta(days=days)
+    start = to_datetime(start)
 
     return to_est(start), to_est(end)
 
 
-def clean_df(df):
-    df.volume = df.volume.fillna(0).astype('int64')
-    return df.fillna(method='ffill')
-
-
-def get_daily_url(ticker, start=None, end=None):
-    start, end = sanitize_dates(start, end)
+def get_yfi_url(ticker, start=None, end=None, timeframe='1d'):
+    start, end = sanitize_dates(start, end, timeframe)
     q = {'symbol': ticker,
          'period1': int(start.timestamp()),
          'period2': int(end.timestamp()),
-         'interval': '1d',
+         'interval': timeframe,
          'includePrePost': 'false',
          'events': 'div|split|earn',
          'corsDomain': 'finance.yahoo.com',
@@ -71,7 +67,7 @@ def get_daily_url(ticker, start=None, end=None):
     return BASE_URL.format(ticker=ticker, query=urlencode(q))
 
 
-def daily_json_to_df(json):
+def yfi_json_to_df(json, timeframe):
     result = json['chart']
     if result['error']:
         print(result['error'])
@@ -81,12 +77,12 @@ def daily_json_to_df(json):
     try:
         quotes = data['indicators']['quote'][0]
         dates = pd.to_datetime(data['timestamp'], unit='s')
-        # dates = pd.to_datetime(data['timestamp'], unit='s').date
         index = pd.DatetimeIndex(dates, name='datetime')
         df = pd.DataFrame(quotes, index=index)
-        df = clean_df(df).sort_index()
+        df.volume = df.volume.fillna(0).astype('int64')
+        df = df.fillna(method='ffill').sort_index()
         df = df[['open', 'high', 'low', 'close', 'volume']]
-        if not len(df):
+        if not len(df) or timeframe != '1d':
             return df
 
         # check if 2 or more rows for the latest date
@@ -102,15 +98,15 @@ def daily_json_to_df(json):
         return None
 
 
-def get_daily_df(ticker, start=None, end=None):
-    url = get_daily_url(ticker, start, end)
+def get_df(ticker, start=None, end=None, timeframe='1d'):
+    url = get_yfi_url(ticker, start, end, timeframe)
     r = requests.get(url)
 
     if r.status_code != 200:
         print(url, r.status_code, r.headers, r.content)
         return None
 
-    return daily_json_to_df(r.json())
+    return yfi_json_to_df(r.json(), timeframe)
 
 
 @cached(cache=TTLCache(maxsize=1, ttl=60*60*8))  # 8 hours
