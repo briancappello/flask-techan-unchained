@@ -31,6 +31,7 @@ if (dllPlugin) {
 }
 
 module.exports = require('./webpack.base.config.js')({
+  mode: 'development',
   output: {
     filename: '[name].js',
     chunkFilename: '[name].chunk.js',
@@ -61,18 +62,6 @@ module.exports = require('./webpack.base.config.js')({
 function dependencyHandlers() {
   // Don't do anything during the DLL Build step
   if (process.env.BUILDING_DLL) { return [] }
-
-  // If the package.json does not have a dllPlugin property, use the CommonsChunkPlugin
-  if (!dllPlugin) {
-    return [
-      new webpack.optimize.CommonsChunkPlugin({
-        name: 'vendor',
-        children: true,
-        minChunks: 2,
-        async: true,
-      }),
-    ]
-  }
 
   const dllPath = path.resolve(process.cwd(), dllPlugin.path || 'node_modules/flask-api-dlls')
 

@@ -8,6 +8,7 @@ const STYLES_ROOT = path.join(APP_ROOT, 'styles')
 process.traceDeprecation = true
 
 module.exports = (options) => ({
+  mode: options.mode || 'production',
   devtool: options.devtool,
   target: 'web',
   performance: options.performance || {},
@@ -59,10 +60,6 @@ module.exports = (options) => ({
             },
           },
         ],
-      },
-      {
-        test: /\.json$/,
-        use: [{ loader: 'json-loader' }],
       },
       {
         test: /\.png$/,

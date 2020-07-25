@@ -7,6 +7,7 @@ module.exports = require('./webpack.base.config.js')({
   entry: {
     app: path.join(process.cwd(), 'frontend', 'app', 'index.js'),
   },
+  mode: 'production',
 
   // Utilize long-term caching by adding content hashes (not compilation hashes) to compiled assets
   output: {
@@ -14,14 +15,28 @@ module.exports = require('./webpack.base.config.js')({
     chunkFilename: '[name].[chunkhash].chunk.js',
   },
 
+  optimization: {
+    minimize: true,
+    splitChunks: {
+      chunks: 'async',
+      minChunks: 2,
+      minSize: 20000,
+      cacheGroups: {
+        defaultVendors: {
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10,
+        },
+        default: {
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true,
+        },
+      },
+    },
+  },
+
   plugins: [
     new webpack.optimize.ModuleConcatenationPlugin(),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
-      children: true,
-      minChunks: 2,
-      async: true,
-    }),
     new HtmlWebpackPlugin({
       template: 'frontend/index.html',
       minify: {
@@ -43,7 +58,6 @@ module.exports = require('./webpack.base.config.js')({
         NODE_ENV: JSON.stringify('production'),
       },
     }),
-    new webpack.optimize.UglifyJsPlugin(),
     new BundleAnalyzerPlugin({
       analyzerMode: 'disabled',
       generateStatsFile: true,
