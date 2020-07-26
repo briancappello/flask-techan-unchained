@@ -67,7 +67,7 @@ def get_yfi_url(ticker, start=None, end=None, timeframe='1d'):
     return BASE_URL.format(ticker=ticker, query=urlencode(q))
 
 
-def yfi_json_to_df(json, timeframe):
+def yfi_json_to_df(json, timeframe='1d'):
     result = json['chart']
     if result['error']:
         print(result['error'])
