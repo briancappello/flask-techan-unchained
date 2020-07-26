@@ -2,19 +2,21 @@ import json
 import requests
 
 
+def get_symbol_info_url(symbol):
+    return f'https://seekingalpha.com/symbol/{symbol.upper()}/overview'
+
+
 def get_symbol_info(symbol):
     """
     company info keys:
     company_name
     long_desc
-
     """
-    url = f'https://seekingalpha.com/symbol/{symbol.upper()}/overview'
-    r = requests.get(url)
-    return _json_string_to_dict(r.text, '"symbolQuoteInfo":')
+    r = requests.get(get_symbol_info_url(symbol))
+    return json_string_to_dict(r.text)
 
 
-def _json_string_to_dict(html: str, search_start: str) -> dict:
+def json_string_to_dict(html: str, search_start: str = '"symbolQuoteInfo":') -> dict:
     start = html.find(search_start) + len(search_start)
     end = -1
     stack = 0
