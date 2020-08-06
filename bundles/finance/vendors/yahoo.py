@@ -76,12 +76,16 @@ def yfi_json_to_df(json, timeframe='1d'):
     data = result['result'][0]
     try:
         quotes = data['indicators']['quote'][0]
-        dates = pd.to_datetime(data['timestamp'], unit='s')
-        index = pd.DatetimeIndex(dates, name='datetime')
+        index = pd.DatetimeIndex(
+            pd.to_datetime(data['timestamp'], unit='s'), name='Epoch'
+        ).tz_localize('America/New_York')
+        if timeframe == '1d':
+            index = index.normalize()
         df = pd.DataFrame(quotes, index=index)
         df.volume = df.volume.fillna(0).astype('int64')
         df = df.fillna(method='ffill').sort_index()
-        df = df[['open', 'high', 'low', 'close', 'volume']]
+        df.rename(columns=lambda name: name.title(), inplace=True)
+        df = df[['Open', 'High', 'Low', 'Close', 'Volume']]
         if not len(df) or timeframe != '1d':
             return df
 
@@ -91,7 +95,7 @@ def yfi_json_to_df(json, timeframe='1d'):
             return df
 
         # and if so, pick the best daily bar by greatest volume
-        latest = tail.sort_values('volume').iloc[-1]
+        latest = tail.sort_values('Volume').iloc[-1]
         return df[:df.iloc[-1].name.date()].append(latest)
     except Exception as e:
         print(str(e), '\n', data)

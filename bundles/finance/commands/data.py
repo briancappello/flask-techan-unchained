@@ -44,7 +44,7 @@ def sync(
         except Exception as e:
             return symbol, e
         else:
-            df = yahoo.yfi_json_to_df(data)
+            df = yahoo.yfi_json_to_df(data, '1d')
             if df is None:
                 return symbol, "Invalid Data"
             click.echo(f'writing {symbol}')
@@ -55,7 +55,7 @@ def sync(
         async with aiohttp.ClientSession() as session:
             for batch in chunk(symbols, 8):
                 tasks = [dl(session, symbol) for symbol in batch]
-                results = await asyncio.gather(*tasks, return_exceptions=True)
+                results = await asyncio.gather(*tasks, return_exceptions=False)
                 errors.extend([error for error in results if error])
         return errors
 
@@ -64,15 +64,16 @@ def sync(
         dl_all(list(equities.keys()))
     )
 
-    click.echo('!!! Handling Errors !!!')
-    for error in errors:
-        if isinstance(error, tuple):
-            symbol, msg = error
-            if msg == 'Not Found':
-                equity_manager.delete(equities[symbol])
-        else:
-            print(error)
-    equity_manager.commit()
+    if errors:
+        click.echo('!!! Handling Errors !!!')
+        for error in errors:
+            if isinstance(error, tuple):
+                symbol, msg = error
+                if msg == 'Not Found':
+                    equity_manager.delete(equities[symbol])
+            else:
+                print(error)  # FIXME: properly handle exceptions...
+        equity_manager.commit()
 
     click.echo('Done')
 
