@@ -1,6 +1,5 @@
 const express = require('express')
 const path = require('path')
-const proxy = require('express-http-proxy')
 const webpack = require('webpack')
 const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpackHotMiddleware = require('webpack-hot-middleware')
