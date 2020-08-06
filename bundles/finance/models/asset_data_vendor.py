@@ -1,6 +1,5 @@
 from flask_unchained.bundles.sqlalchemy import db
-
-from backend.utils import utcnow
+from flask_unchained.utils import utcnow
 
 from ..enums import Frequency
 

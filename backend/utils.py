@@ -30,10 +30,6 @@ def timestamp_to_datetime(seconds, tz=None):
     return dt.astimezone(timezone.utc)
 
 
-def utcnow():
-    return datetime.now(timezone.utc)
-
-
 def to_datetime(dt):
     if not dt:
         return None
