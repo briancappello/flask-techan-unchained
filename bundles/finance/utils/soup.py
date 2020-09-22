@@ -18,9 +18,9 @@ def table_to_df(table, index_col=None, columns=None) -> pd.DataFrame:
     header, *rows = table.find_all('tr')
     cols = columns or [
         re.sub(r'[^a-z]', ' ', th.text.strip().lower()).strip().replace(' ', '_')
-        for th in header.find_all('th')
+        for th in header.find_all(['td', 'th'])
     ]
-    rows = [list(td.text.strip() for td in tr.find_all('td'))[:len(cols)]
+    rows = [list(td.text.strip() for td in tr.find_all(['td', 'th']))[:len(cols)]
             for tr in rows]
     df = pd.DataFrame(rows, columns=cols)
     if index_col:

@@ -23,7 +23,7 @@ def get_djt_df():
 
     Indexed by ticker with columns: company_name, industry
     """
-    df = get_wiki_table_df(DJT_URL, 'ticker')
+    df = get_wiki_table_df(DJT_URL, index_col='ticker')
     return df.rename(columns={'corporation': 'company_name'})
 
 
@@ -32,7 +32,11 @@ def get_dju_df():
 
     Indexed by ticker with columns: company_name
     """
-    soup = get_soup(DJU_URL)
-    components_header = soup.find('span', attrs={'id': 'Components'}).parent
-    components_list = components_header.find_next_sibling('ul')
-    return wiki_components_list_to_df(components_list)
+    df = get_wiki_table_df(DJU_URL).rename(columns={'company': 'company_name'})
+    return df.set_index('ticker')
+
+    # old working code (for <ul> components instead of <table>)
+    # soup = get_soup(DJU_URL)
+    # components_header = soup.find('span', attrs={'id': 'Components'}).parent
+    # components_list = components_header.find_next_sibling('ul')
+    # return wiki_components_list_to_df(components_list)
