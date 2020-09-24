@@ -237,7 +237,6 @@ class DataService(Service):
         if df is None:
             return None
 
-        prev_bar = df.iloc[-2]
         bar = df.iloc[-1]
         return dict(ticker=ticker,
                     date=bar.name.to_pydatetime(),
@@ -246,4 +245,4 @@ class DataService(Service):
                     low=bar.Low,
                     close=bar.Close,
                     volume=bar.Volume,
-                    prev_close=prev_bar.Close)
+                    prev_close=df.iloc[-2].Close if len(df) > 1 else None)
