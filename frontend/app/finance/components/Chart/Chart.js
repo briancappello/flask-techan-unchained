@@ -172,9 +172,8 @@ export default class Chart extends React.Component {
   drawChart() {
     log_debug('Chart (d3): drawChart')
 
-    const { chartId, showCrosshairs } = this.props
+    const { chartId, frequency, showCrosshairs } = this.props
     const { totalHeight, totalWidth, indicators, indicatorHeight } = this.state
-    const { numTicks, tickFormat } = this._getXAxisTicks()
 
     this.chartHeight = totalHeight - this.margin.top - this.margin.bottom
     this.chartWidth = totalWidth - this.margin.left - this.margin.right
@@ -201,7 +200,7 @@ export default class Chart extends React.Component {
         svg: this.svg,
         xScale: this.xScale,
         yScale: this._getIndicatorScale(i + 1),
-        numTicks,
+        frequency,
       })
 
       indicator.draw()
@@ -292,23 +291,9 @@ export default class Chart extends React.Component {
     }
   }
 
-  _getXAxisTicks() {
-    const { frequency } = this.props
-
-    // daily defaults
-    let numTicks = 20, // each new month
-        tickFormat = FORMATS.DAILY_TICK_FMT
-
-    if (frequency === FREQUENCY.Minutely) {
-      numTicks = 8 // each new hour
-      tickFormat = FORMATS.MINUTELY_TICK_FMT
-    }
-
-    return { numTicks, tickFormat }
-  }
-
   _drawAxes() {
-    const { numTicks, tickFormat } = this._getXAxisTicks()
+    const { frequency } = this.props
+    const tickFormat = FORMATS[frequency]
 
     // x axis
     this.xScale = techan.scale.financetime()
@@ -317,7 +302,7 @@ export default class Chart extends React.Component {
 
     this.xAxis = d3.axisBottom(this.xScale)
       // axis labels at bottom of chart
-      .ticks(numTicks)
+      .ticks(frequency)
       .tickFormat(tickFormat)
       .tickSizeOuter(0)
 
@@ -327,7 +312,7 @@ export default class Chart extends React.Component {
 
     this.priceChartXAxisLabels = d3.axisBottom(this.xScale)
       // axis labels below price chart
-      .ticks(numTicks)
+      .ticks(frequency)
       .tickFormat(tickFormat)
       .tickSizeOuter(0)
 
@@ -337,7 +322,7 @@ export default class Chart extends React.Component {
 
     // x grid
     this.xGrid = d3.axisBottom(this.xScale)
-      .ticks(numTicks)
+      .ticks(frequency)
       .tickFormat(() => null)
       .tickSizeInner(-this.priceChartHeight)
       .tickSizeOuter(-this.priceChartHeight)

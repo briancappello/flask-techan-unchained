@@ -6,11 +6,11 @@ import './stochastics.scss'
 
 
 export default class Stochastics {
-  init({ svg, xScale, yScale, numTicks }) {
+  init({ svg, xScale, yScale, frequency }) {
     this.svg = svg
     this.xScale = xScale
     this.yScale = yScale
-    this.numTicks = numTicks
+    this.frequency = frequency
     this.chartWidth = this.xScale.range()[1]
     this.indicatorHeight = this.yScale.range()[0] - this.yScale.range()[1]
     this.indicatorY = this.yScale.range()[1]
@@ -19,7 +19,7 @@ export default class Stochastics {
 
   draw() {
     this.xGrid = d3.axisBottom(this.xScale)
-      .ticks(this.numTicks)
+      .ticks(this.frequency)
       .tickFormat(() => null)
       .tickSizeInner(this.indicatorHeight)
       .tickSizeOuter(this.indicatorHeight)
