@@ -221,7 +221,15 @@ export default class Chart extends React.Component {
     const { latestBar, indicators, upperIndicators } = this.state
 
     // DOMAINS
-    this.xScale.domain(techan.scale.plot.time(data).domain())
+    let xDomain = techan.scale.plot.time(data).domain()
+
+    // FIXME: hacky render fix for drawing a single bar
+    if (xDomain.length === 1) {
+      const d = new Date()
+      d.setDate(xDomain[0].getDate()-1)
+      xDomain.splice(0, 0, d) // prepend one prior day
+    }
+    this.xScale.domain(xDomain)
 
     // calculate y domain based on min/max of both price and bbands (if possible)
     let yMin = Math.min(...data.map(d => d.low))
