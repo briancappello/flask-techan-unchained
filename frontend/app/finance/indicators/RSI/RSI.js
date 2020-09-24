@@ -6,15 +6,28 @@ import './RSI.scss'
 
 
 export default class RSI {
-  init({ svg, xScale, yScale }) {
+  init({ svg, xScale, yScale, numTicks }) {
     this.svg = svg
     this.xScale = xScale
     this.yScale = yScale
+    this.numTicks = numTicks
     this.chartWidth = this.xScale.range()[1]
-    this.indicatorLabelY = this.yScale.range()[1] - CHART_INDICATOR_LABEL.padding
+    this.indicatorHeight = this.yScale.range()[0] - this.yScale.range()[1]
+    this.indicatorY = this.yScale.range()[1]
+    this.indicatorLabelY = this.indicatorY - CHART_INDICATOR_LABEL.padding
   }
 
   draw() {
+    this.xGrid = d3.axisBottom(this.xScale)
+      .ticks(this.numTicks)
+      .tickFormat(() => null)
+      .tickSizeInner(this.indicatorHeight)
+      .tickSizeOuter(this.indicatorHeight)
+
+    this.svg.append('g')
+      .attr('class', 'rsi x grid')
+      .attr('transform', `translate(0, ${this.indicatorY})`)
+
     // axes
     const rsiTicks = [0, 30, 50, 70, 100]
     this.yAxisLeft = d3.axisLeft(this.yScale)
@@ -72,6 +85,7 @@ export default class RSI {
   }
 
   drawChartData(data) {
+    this.svg.select('g.rsi.x.grid').call(this.xGrid)
     this.svg.select('g.rsi.axis').call(this.yAxisLeft)
     this.svg.select('g.rsi.axis.right').call(this.yAxisRight)
     this.svg.select('g.rsi.indicator').datum(data).call(this.rsi)

@@ -6,15 +6,28 @@ import './MACD.scss'
 
 
 export default class MACD {
-  init({ svg, xScale, yScale }) {
+  init({ svg, xScale, yScale, numTicks }) {
     this.svg = svg
     this.xScale = xScale
     this.yScale = yScale
+    this.numTicks = numTicks
     this.chartWidth = this.xScale.range()[1]
-    this.indicatorLabelY = this.yScale.range()[1] - CHART_INDICATOR_LABEL.padding
+    this.indicatorHeight = this.yScale.range()[0] - this.yScale.range()[1]
+    this.indicatorY = this.yScale.range()[1]
+    this.indicatorLabelY = this.indicatorY - CHART_INDICATOR_LABEL.padding
   }
 
   draw() {
+    this.xGrid = d3.axisBottom(this.xScale)
+      .ticks(this.numTicks)
+      .tickFormat(() => null)
+      .tickSizeInner(this.indicatorHeight)
+      .tickSizeOuter(this.indicatorHeight)
+
+    this.svg.append('g')
+      .attr('class', 'macd x grid')
+      .attr('transform', `translate(0, ${this.indicatorY})`)
+
     // axes
     this.yAxisLeft = d3.axisLeft(this.yScale)
       .ticks(5)
@@ -25,6 +38,7 @@ export default class MACD {
 
     this.yAxisRight = d3.axisRight(this.yScale)
       .ticks(5)
+      .tickSizeOuter(0)
 
     this.svg.append('g')
       .attr('class', 'macd axis right')
@@ -79,6 +93,7 @@ export default class MACD {
       yDomain[1] = 0
     }
     this.yScale.domain(yDomain).nice()
+    this.svg.select('g.macd.x.grid').call(this.xGrid)
     this.svg.select('g.macd.axis').call(this.yAxisLeft)
     this.svg.select('g.macd.axis.right').call(this.yAxisRight)
     this.svg.select('g.macd.indicator').datum(data).call(this.macd)

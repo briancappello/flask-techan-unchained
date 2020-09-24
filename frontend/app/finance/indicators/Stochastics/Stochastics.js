@@ -6,15 +6,28 @@ import './stochastics.scss'
 
 
 export default class Stochastics {
-  init({ svg, xScale, yScale }) {
+  init({ svg, xScale, yScale, numTicks }) {
     this.svg = svg
     this.xScale = xScale
     this.yScale = yScale
+    this.numTicks = numTicks
     this.chartWidth = this.xScale.range()[1]
-    this.indicatorLabelY = this.yScale.range()[1] - CHART_INDICATOR_LABEL.padding
+    this.indicatorHeight = this.yScale.range()[0] - this.yScale.range()[1]
+    this.indicatorY = this.yScale.range()[1]
+    this.indicatorLabelY = this.indicatorY - CHART_INDICATOR_LABEL.padding
   }
 
   draw() {
+    this.xGrid = d3.axisBottom(this.xScale)
+      .ticks(this.numTicks)
+      .tickFormat(() => null)
+      .tickSizeInner(this.indicatorHeight)
+      .tickSizeOuter(this.indicatorHeight)
+
+    this.svg.append('g')
+      .attr('class', 'stochastic x grid')
+      .attr('transform', `translate(0, ${this.indicatorY})`)
+
     this.yAxisLeft = d3.axisLeft(this.yScale)
       .ticks(5)
       .tickSizeOuter(-this.chartWidth)
@@ -68,6 +81,7 @@ export default class Stochastics {
   }
 
   drawChartData(data) {
+    this.svg.select('g.stochastic.x.grid').call(this.xGrid)
     this.svg.select('g.stochastic.axis').call(this.yAxisLeft)
     this.svg.select('g.stochastic.axis.right').call(this.yAxisRight)
     this.svg.select('g.stochastic.indicator').datum(data).call(this.stochastics)

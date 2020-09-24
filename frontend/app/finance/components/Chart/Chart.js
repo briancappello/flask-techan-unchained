@@ -30,7 +30,7 @@ const SCALES = {
   [LOG_SCALE]: d3.scaleLog(),
 }
 
-const MAX_BARS = 300
+const MAX_BARS = 310
 
 export default class Chart extends React.Component {
 
@@ -174,12 +174,15 @@ export default class Chart extends React.Component {
 
     const { chartId, showCrosshairs } = this.props
     const { totalHeight, totalWidth, indicators, indicatorHeight } = this.state
+    const { numTicks, tickFormat } = this._getXAxisTicks()
 
     this.chartHeight = totalHeight - this.margin.top - this.margin.bottom
     this.chartWidth = totalWidth - this.margin.left - this.margin.right
 
     this.priceChartWidth = this.chartWidth
-    this.priceChartHeight = this.chartHeight - ((indicatorHeight + CHART_INDICATOR.padding) * indicators.length)
+    this.priceChartHeight = this.chartHeight - 35 - (
+        indicators.length * (indicatorHeight + CHART_INDICATOR.padding)
+    )
 
     let rootSvg = d3.select(`#${chartId}`).append('svg')
       .attr('height', totalHeight)
@@ -198,6 +201,7 @@ export default class Chart extends React.Component {
         svg: this.svg,
         xScale: this.xScale,
         yScale: this._getIndicatorScale(i + 1),
+        numTicks,
       })
 
       indicator.draw()
@@ -247,7 +251,7 @@ export default class Chart extends React.Component {
       ]
     }
 
-    if (this.props.scale == LINEAR_SCALE) {
+    if (this.props.scale === LINEAR_SCALE) {
       this.yScale.domain(yDomain).nice()
     } else {
       // d3's nice() doesn't work so well with logarithmic scale
@@ -263,6 +267,7 @@ export default class Chart extends React.Component {
 
     // AXES
     this.svg.select('g.x.axis').call(this.xAxis)
+    this.svg.select('g.x.axis.labels').call(this.priceChartXAxisLabels)
     this.svg.select('g.x.grid').call(this.xGrid)
     this.svg.select('g.y.axis').call(this.yAxis)
     this.svg.select('g.y.axis.right').call(this.yAxisRight)
@@ -287,22 +292,52 @@ export default class Chart extends React.Component {
     }
   }
 
+  _getXAxisTicks() {
+    const { frequency } = this.props
+
+    // daily defaults
+    let numTicks = 20, // each new month
+        tickFormat = FORMATS.DAILY_TICK_FMT
+
+    if (frequency === FREQUENCY.Minutely) {
+      numTicks = 8 // each new hour
+      tickFormat = FORMATS.MINUTELY_TICK_FMT
+    }
+
+    return { numTicks, tickFormat }
+  }
+
   _drawAxes() {
+    const { numTicks, tickFormat } = this._getXAxisTicks()
+
     // x axis
     this.xScale = techan.scale.financetime()
       .range([0, this.chartWidth])
       .outerPadding(1)
 
     this.xAxis = d3.axisBottom(this.xScale)
+      // axis labels at bottom of chart
+      .ticks(numTicks)
+      .tickFormat(tickFormat)
       .tickSizeOuter(0)
 
     this.svg.append('g')
       .attr('class', 'x axis')
       .attr('transform', `translate(0, ${this.chartHeight})`)
 
+    this.priceChartXAxisLabels = d3.axisBottom(this.xScale)
+      // axis labels below price chart
+      .ticks(numTicks)
+      .tickFormat(tickFormat)
+      .tickSizeOuter(0)
+
+    this.svg.append('g')
+      .attr('class', 'x axis labels')
+      .attr('transform', `translate(0, ${this.priceChartHeight})`)
+
     // x grid
     this.xGrid = d3.axisBottom(this.xScale)
-      .ticks(8) // FIXME: this draws quarterly lines with daily data, what about intraday/weekly/monthly??
+      .ticks(numTicks)
       .tickFormat(() => null)
       .tickSizeInner(-this.priceChartHeight)
       .tickSizeOuter(-this.priceChartHeight)
@@ -316,6 +351,7 @@ export default class Chart extends React.Component {
       .range([this.priceChartHeight, 0])
 
     this.yAxis = d3.axisLeft(this.yScale)
+      .tickSizeOuter(0)
       .tickFormat(FORMATS.SMART)
 
     this.svg.append('g')
@@ -436,8 +472,12 @@ export default class Chart extends React.Component {
     const indicatorScaleHelper = d3.scaleLinear()
       .domain([1, indicators.length])
       .range([
-        this.priceChartHeight + CHART_INDICATOR.padding, // top of first indicator
-        this.chartHeight - indicatorHeight               // top of last indicator
+        // top of first indicator
+        this.chartHeight - (
+            indicators.length * (indicatorHeight + CHART_INDICATOR.padding)
+        ),
+        // top of last indicator
+        this.chartHeight - indicatorHeight
       ])
 
     return d3.scaleLinear()
@@ -453,12 +493,12 @@ export default class Chart extends React.Component {
     let barDelta = 0
 
     // double click
-    if (e == null) {
+    if (e === null) {
       return
     }
 
     // scroll wheel
-    if (e.type == 'wheel') {
+    if (e.type === 'wheel') {
       if (e.deltaY < 0) {
         barDelta = 1
       } else {

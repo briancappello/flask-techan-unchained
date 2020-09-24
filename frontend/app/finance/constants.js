@@ -26,8 +26,11 @@ const DEC = ',.2f',
       DEC1 = ',.1f',
       INT = ',.0f',
       SI = ',.3s',
-      DATE = '%b %d, %Y', // https://github.com/d3/d3-time-format#locale_format
-      DATETIME = '%a %m/%d %I:%M%p'
+
+      // https://github.com/d3/d3-time-format#locale_format
+      DATE = '%b %d, %Y',
+      DATETIME = '%a %_m/%d %_I:%M %p',
+      MINUTELY_TICK_FMT = '%_I:%M %p'
 
 export const FORMATS = {
   DEC: d3.format(DEC),
@@ -45,6 +48,29 @@ export const FORMATS = {
   },
   DATE: d3.timeFormat(DATE),
   DATETIME: d3.timeFormat(DATETIME),
+  MINUTELY_TICK_FMT: function (date, i, nodes) {
+    if (i > 0) {
+      const getX = function(node) {
+        const transform = node.parentElement.attributes.transform.value
+        const re = /translate\(([\d\.]+),([\d\.]+)\)/
+        const matches = transform.match(re)
+        return parseFloat(matches[1])
+      }
+
+      const prevX = getX(nodes[i-1]),
+            thisX = getX(nodes[i])
+      if ((thisX - prevX) < 50) {
+        return null
+      }
+    }
+    return d3.timeFormat(MINUTELY_TICK_FMT)(date)
+  },
+  DAILY_TICK_FMT: function (d) {
+    if (d.getMonth() === 0) {
+      return d3.timeFormat('%b %Y')(d)
+    }
+    return d3.timeFormat('%b')(d)
+  },
 }
 
 export const CHART_INDICATOR_LABEL = {
@@ -53,5 +79,5 @@ export const CHART_INDICATOR_LABEL = {
 }
 
 export const CHART_INDICATOR = {
-  padding: CHART_INDICATOR_LABEL.fontSize + (CHART_INDICATOR_LABEL.padding * 2)
+  padding: CHART_INDICATOR_LABEL.fontSize + CHART_INDICATOR_LABEL.padding,
 }
