@@ -46,7 +46,7 @@ export default class Chart extends React.Component {
     showCrosshairs: true,
     upperIndicators: ['Volume', 'BBands', 'SMA100', 'SMA200'],
     indicatorHeight: 100,
-    indicators: ['MACD', 'RSI', 'Stochastics'],
+    indicators: ['RSI', 'MACD', 'Stochastics'],
     scale: LINEAR_SCALE,
     chartId: 'chart',
     type: CANDLE_CHART,
