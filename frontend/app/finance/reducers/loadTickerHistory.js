@@ -43,6 +43,20 @@ export default function (state = initialState, action) {
         },
       }
 
+    // FIXME handle errors more gracefully than just showing no chart
+    case loadTickerHistory.FAILURE:
+      tickerState = Object.assign({}, state.tickers[ticker])
+      return { ...state,
+        tickers: { ...state.tickers,
+          [ticker]: { ...tickerState,
+            lastUpdated: new Date(),
+            history: { ...tickerState.history,
+              [frequency]: { },
+            },
+          },
+        },
+      }
+
     case loadTickerHistory.FULFILL:
       tickerState = Object.assign({}, state.tickers[ticker])
       return { ...state,
