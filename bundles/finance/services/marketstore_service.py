@@ -47,11 +47,11 @@ class MarketstoreService(Service):
         df.rename(columns=lambda name: name.title(), inplace=True)
 
         # convert 64bit values to 32bit to make marketstore happy
-        new_types = df.dtypes.map({
-            np.dtype(np.float64): np.float32,
-            np.dtype(np.int64): np.int32,
-        }).to_dict()
-        df = df.astype(new_types)
+        # new_types = df.dtypes.map({
+        #     np.dtype(np.float64): np.float32,
+        #     np.dtype(np.int64): np.int32,
+        # }).to_dict()
+        # df = df.astype(new_types)
 
         return self.client.write(df, tbk, isvariablelength)
 
