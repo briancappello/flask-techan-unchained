@@ -117,9 +117,10 @@ def get_df(ticker, start=None, end=None, timeframe='1d'):
 def get_yfi_crumb_and_cookies():
     r = requests.get('https://finance.yahoo.com/most-active')
     html = str(r.content)
-    start_idx = html.find('"CrumbStore"')
+    start_search = '"CrumbStore":{"crumb":"'
+    start_idx = html.find(start_search) + len(start_search)
     crumb = html[start_idx:html.find('"}', start_idx)]
-    return crumb[crumb.rfind('"')+1:], r.cookies
+    return crumb, r.cookies
 
 
 def get_most_actives(
