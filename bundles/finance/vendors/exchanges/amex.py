@@ -1,12 +1,8 @@
-from .nasdaq import nasdaq_csv_to_df
+from .nasdaq import get_exchange_df
 
 
-AMEX_URL = 'http://old.nasdaq.com/screening/companies-by-industry.aspx?exchange=AMEX&render=download'
+AMEX_URL = "https://api.nasdaq.com/api/screener/stocks?exchange=AMEX&download=true"
 
 
 def get_amex_df():
-    """A DataFrame of AMEX listed equities
-
-    Indexed by ticker with columns: company_name, last_sale, market_cap, sector, industry
-    """
-    return nasdaq_csv_to_df(AMEX_URL)
+    return get_exchange_df(AMEX_URL)

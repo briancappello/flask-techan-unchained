@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 import pymarketstore as pymkts
 import pystore
-import trading_calendars as tc
+import pandas_market_calendars as tc
 
 from collections import defaultdict
 from datetime import date, timezone
