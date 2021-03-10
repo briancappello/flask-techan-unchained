@@ -4,94 +4,399 @@
 #
 #    pip-compile --output-file=requirements.txt requirements.in
 #
-alembic==1.4.2            # via flask-migrate, sqlalchemy-unchained
-amqp==2.6.1               # via kombu
-apispec==3.3.1            # via flask-unchained
+aiohttp==3.7.4.post0
+    # via -r requirements.in
+alembic==1.5.6
+    # via
+    #   flask-migrate
+    #   sqlalchemy-unchained
+amqp==5.0.5
+    # via kombu
+apispec==3.3.2
+    # via flask-unchained
 appdirs==1.4.4
-arrow==0.15.8             # via jinja2-time
-attrs==19.3.0             # via pytest
-babel==2.8.0              # via flask-babelex
-bcrypt==3.1.7
-beautifulsoup4==4.9.1     # via flask-unchained
-billiard==3.6.3.0         # via celery
-blinker==1.4              # via flask-principal, flask-unchained
-cachetools==4.1.1
-celery==4.4.7             # via flask-unchained
-certifi==2020.6.20        # via requests
-cffi==1.14.1              # via bcrypt
-chardet==3.0.4            # via pdfminer.six, pdfquery, requests
-click==7.1.2              # via flask, flask-unchained
-cssselect==1.1.0          # via pdfquery, pyquery
-decorator==4.4.2          # via networkx
-dill==0.3.2               # via flask-unchained
-faker==4.1.1              # via py-yaml-fixtures
-flask-babelex==0.9.4      # via flask-unchained
-flask-login==0.5.0        # via flask-unchained
-flask-marshmallow==0.13.0  # via flask-unchained
-flask-migrate==2.5.3      # via flask-unchained
-flask-principal==0.4.0    # via flask-unchained
-flask-session==0.3.2      # via flask-unchained
-flask-sqlalchemy-unchained==0.7.3  # via flask-unchained
-flask-sqlalchemy==2.4.4   # via flask-migrate, flask-sqlalchemy-unchained
-flask-unchained[api,celery,mail,security,session,sqlalchemy]==0.7.9
-flask-wtf==0.14.3         # via flask-unchained
-flask==1.1.2              # via flask-babelex, flask-login, flask-marshmallow, flask-migrate, flask-principal, flask-session, flask-sqlalchemy, flask-unchained, flask-wtf
+    # via -r requirements.in
+arrow==1.0.3
+    # via jinja2-time
+async-timeout==3.0.1
+    # via aiohttp
+attrs==20.3.0
+    # via
+    #   aiohttp
+    #   pytest
+babel==2.9.0
+    # via flask-babelex
+bcrypt==3.2.0
+    # via
+    #   -r requirements.in
+    #   flask-unchained
+beautifulsoup4==4.9.3
+    # via flask-unchained
+billiard==3.6.3.0
+    # via celery
+blinker==1.4
+    # via
+    #   flask-principal
+    #   flask-unchained
+cachelib==0.1.1
+    # via flask-session
+cachetools==4.2.1
+    # via -r requirements.in
+celery==5.0.5
+    # via flask-unchained
+certifi==2020.12.5
+    # via requests
+cffi==1.14.5
+    # via
+    #   bcrypt
+    #   cryptography
+chardet==4.0.0
+    # via
+    #   aiohttp
+    #   pdfminer.six
+    #   pdfquery
+    #   requests
+click-didyoumean==0.0.3
+    # via celery
+click-plugins==1.1.1
+    # via celery
+click-repl==0.1.6
+    # via celery
+click==7.1.2
+    # via
+    #   celery
+    #   click-didyoumean
+    #   click-plugins
+    #   click-repl
+    #   distributed
+    #   flask
+    #   flask-unchained
+cloudpickle==1.6.0
+    # via
+    #   distributed
+    #   pystore
+cryptography==3.4.6
+    # via pdfminer.six
+cssselect==1.1.0
+    # via
+    #   pdfquery
+    #   pyquery
+dask[dataframe]==2021.3.0
+    # via
+    #   -r requirements.in
+    #   distributed
+    #   pystore
+decorator==4.4.2
+    # via networkx
+dill==0.3.3
+    # via flask-unchained
+distributed==2021.3.0
+    # via pystore
+dnspython==2.1.0
+    # via email-validator
+email-validator==1.1.2
+    # via flask-unchained
+factory-boy==3.2.0
+    # via flask-unchained
+faker==6.5.0
+    # via
+    #   factory-boy
+    #   py-yaml-fixtures
+fastparquet==0.5.0
+    # via pystore
+flask-babelex==0.9.4
+    # via flask-unchained
+flask-login==0.5.0
+    # via flask-unchained
+flask-marshmallow==0.14.0
+    # via flask-unchained
+flask-migrate==2.7.0
+    # via flask-unchained
+flask-principal==0.4.0
+    # via flask-unchained
+flask-session==0.3.2
+    # via flask-unchained
+flask-sqlalchemy-unchained==0.7.3
+    # via flask-unchained
+flask-sqlalchemy==2.4.4
+    # via
+    #   flask-migrate
+    #   flask-sqlalchemy-unchained
+flask-unchained[api,celery,mail,security,session,sqlalchemy]==0.8.1
+    # via -r requirements.in
+flask-wtf==0.14.3
+    # via flask-unchained
+flask==1.1.2
+    # via
+    #   flask-babelex
+    #   flask-login
+    #   flask-marshmallow
+    #   flask-migrate
+    #   flask-principal
+    #   flask-session
+    #   flask-sqlalchemy
+    #   flask-unchained
+    #   flask-wtf
+fsspec==0.8.7
+    # via dask
+grpcio==1.36.1
+    # via pymarketstore
 gunicorn==20.0.4
-idna==2.10                # via requests
-importlib-metadata==1.7.0   # via kombu, pluggy, pytest
-itsdangerous==1.1.0       # via flask, flask-unchained
+    # via -r requirements.in
+heapdict==1.0.1
+    # via zict
+idna==2.10
+    # via
+    #   email-validator
+    #   requests
+    #   yarl
+iniconfig==1.1.1
+    # via pytest
+itsdangerous==1.1.0
+    # via
+    #   flask
+    #   flask-unchained
+    #   flask-wtf
 jinja2-time==0.2.0
-jinja2==2.11.2
-kombu==4.6.11             # via celery
-lxml==4.5.2               # via flask-unchained, pdfquery, pyquery
-mako==1.1.3               # via alembic
-markdown==3.2.2
-markupsafe==1.1.1         # via jinja2, mako
-marshmallow-sqlalchemy==0.23.1  # via flask-unchained
-marshmallow==3.7.1        # via flask-marshmallow, flask-unchained, marshmallow-sqlalchemy
-more-itertools==8.4.0     # via pytest, zipp
-msgpack-python==0.5.6     # via pymarketstore
-networkx==2.4             # via flask-unchained, py-yaml-fixtures
-numpy==1.19.1             # via pandas, pymarketstore, ta-lib
-packaging==20.4           # via pytest
-pandas==1.1.0
-passlib==1.7.2            # via flask-unchained
-pdfminer.six==20200726    # via pdfquery
+    # via -r requirements.in
+jinja2==2.11.3
+    # via
+    #   -r requirements.in
+    #   flask
+    #   flask-babelex
+    #   jinja2-time
+    #   py-yaml-fixtures
+kombu==5.0.2
+    # via celery
+llvmlite==0.34.0
+    # via numba
+locket==0.2.1
+    # via partd
+lxml==4.6.2
+    # via
+    #   flask-unchained
+    #   pdfquery
+    #   pyquery
+mako==1.1.4
+    # via alembic
+markdown==3.3.4
+    # via -r requirements.in
+markupsafe==1.1.1
+    # via
+    #   jinja2
+    #   mako
+    #   wtforms
+marshmallow-sqlalchemy==0.24.2
+    # via flask-unchained
+marshmallow==3.10.0
+    # via
+    #   flask-marshmallow
+    #   flask-unchained
+    #   marshmallow-sqlalchemy
+msgpack-python==0.5.6
+    # via pymarketstore
+msgpack==1.0.2
+    # via distributed
+multidict==5.1.0
+    # via
+    #   aiohttp
+    #   yarl
+multitasking==0.0.9
+    # via pystore
+networkx==2.5
+    # via
+    #   flask-unchained
+    #   py-yaml-fixtures
+numba==0.51.2
+    # via fastparquet
+numpy==1.20.1
+    # via
+    #   dask
+    #   fastparquet
+    #   numba
+    #   pandas
+    #   pymarketstore
+    #   pystore
+    #   ta-lib
+    #   trading-calendars
+packaging==20.9
+    # via pytest
+pandas-market-calendars==1.6.1
+    # via -r requirements.in
+pandas==1.2.3
+    # via
+    #   -r requirements.in
+    #   dask
+    #   fastparquet
+    #   pandas-market-calendars
+    #   pymarketstore
+    #   pystore
+    #   trading-calendars
+partd==1.1.0
+    # via
+    #   dask
+    #   pystore
+passlib==1.7.4
+    # via flask-unchained
+pdfminer.six==20201018
+    # via pdfquery
 pdfquery==0.4.3
-pluggy==0.13.1            # via pytest
-psycopg2-binary==2.8.5
-py-meta-utils==0.7.6      # via flask-unchained, sqlalchemy-unchained
+    # via -r requirements.in
+pluggy==0.13.1
+    # via pytest
+prompt-toolkit==3.0.16
+    # via click-repl
+protobuf==3.15.5
+    # via pymarketstore
+psutil==5.8.0
+    # via distributed
+psycopg2-binary==2.8.6
+    # via -r requirements.in
+py-meta-utils==0.7.8
+    # via
+    #   flask-unchained
+    #   sqlalchemy-unchained
 py-yaml-fixtures==0.6.1
-py==1.9.0                 # via pytest
-pycparser==2.20           # via cffi
-pycryptodome==3.9.8       # via pdfminer.six
-pymarketstore==0.17
-pyparsing==2.4.7          # via packaging
-pyquery==1.4.1            # via pdfquery
+    # via -r requirements.in
+py==1.10.0
+    # via pytest
+pycparser==2.20
+    # via cffi
+pymarketstore==0.18
+    # via -r requirements.in
+pyparsing==2.4.7
+    # via packaging
+pyquery==1.4.3
+    # via pdfquery
+pystore==0.1.22
+    # via -r requirements.in
+pyterminalsize==0.1.0
+    # via flask-unchained
+pytest==6.2.2
+    # via pymarketstore
 python-dateutil==2.8.1
-python-editor==1.0.4      # via alembic
+    # via
+    #   -r requirements.in
+    #   alembic
+    #   arrow
+    #   faker
+    #   pandas
+    #   pandas-market-calendars
+    #   py-yaml-fixtures
+    #   trading-calendars
+python-editor==1.0.4
+    # via alembic
 python-frontmatter==0.5.0
-pytz==2020.1
-pyyaml==5.3.1             # via py-yaml-fixtures, python-frontmatter
+    # via -r requirements.in
+python-snappy==0.6.0
+    # via pystore
+pytz==2021.1
+    # via
+    #   -r requirements.in
+    #   babel
+    #   celery
+    #   pandas
+    #   pandas-market-calendars
+    #   trading-calendars
+    #   tzlocal
+pyyaml==5.4.1
+    # via
+    #   dask
+    #   distributed
+    #   py-yaml-fixtures
+    #   python-frontmatter
 redis==3.5.3
-requests==2.24.0
-roman==3.3                # via pdfquery
-six==1.15.0               # via bcrypt, faker, flask-marshmallow, packaging, pymarketstore, python-dateutil, python-frontmatter, websocket-client
-sortedcontainers==2.2.2   # via pdfminer.six
-soupsieve==2.0.1          # via beautifulsoup4
-speaklater==1.3           # via flask-babelex
-sqlalchemy-unchained==0.11.0  # via flask-sqlalchemy-unchained, flask-unchained
-sqlalchemy==1.3.18        # via alembic, flask-sqlalchemy, marshmallow-sqlalchemy, sqlalchemy-unchained
-ta-lib==0.4.18
-text-unidecode==1.3       # via faker
+    # via -r requirements.in
+requests==2.25.1
+    # via
+    #   -r requirements.in
+    #   pymarketstore
+roman==3.3
+    # via pdfquery
+six==1.15.0
+    # via
+    #   bcrypt
+    #   click-repl
+    #   flask-marshmallow
+    #   grpcio
+    #   protobuf
+    #   pymarketstore
+    #   python-dateutil
+    #   python-frontmatter
+    #   thrift
+    #   trading-calendars
+    #   websocket-client
+sortedcontainers==2.3.0
+    # via
+    #   distributed
+    #   pdfminer.six
+soupsieve==2.2
+    # via beautifulsoup4
+speaklater==1.3
+    # via flask-babelex
+sqlalchemy-unchained==0.11.0
+    # via
+    #   flask-sqlalchemy-unchained
+    #   flask-unchained
+sqlalchemy==1.3.23
+    # via
+    #   alembic
+    #   flask-sqlalchemy
+    #   marshmallow-sqlalchemy
+    #   sqlalchemy-unchained
+    #   wtforms-sqlalchemy
+ta-lib==0.4.19
+    # via -r requirements.in
+tblib==1.7.0
+    # via distributed
+text-unidecode==1.3
+    # via faker
+thrift==0.13.0
+    # via fastparquet
+toml==0.10.2
+    # via pytest
+toolz==0.11.1
+    # via
+    #   dask
+    #   distributed
+    #   partd
+    #   pystore
+    #   trading-calendars
+tornado==6.1
+    # via distributed
+trading-calendars==2.1.1
+    # via pandas-market-calendars
+typing-extensions==3.7.4.3
+    # via aiohttp
 tzlocal==2.1
-urllib3==1.25.10          # via pymarketstore, requests
-vine==1.3.0               # via amqp, celery
-wcwidth==0.2.5            # via pytest
-websocket-client==0.57.0  # via pymarketstore
-werkzeug==1.0.1           # via flask
-wtforms==2.3.3            # via flask-wtf
-zipp==3.1.0               # via importlib-metadata
+    # via -r requirements.in
+urllib3==1.26.3
+    # via
+    #   pymarketstore
+    #   requests
+vine==5.0.0
+    # via
+    #   amqp
+    #   celery
+wcwidth==0.2.5
+    # via prompt-toolkit
+websocket-client==0.58.0
+    # via pymarketstore
+werkzeug==1.0.1
+    # via
+    #   flask
+    #   flask-unchained
+wtforms-sqlalchemy==0.2
+    # via flask-unchained
+wtforms==2.3.3
+    # via
+    #   flask-unchained
+    #   flask-wtf
+    #   wtforms-sqlalchemy
+yarl==1.6.3
+    # via aiohttp
+zict==2.0.0
+    # via distributed
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

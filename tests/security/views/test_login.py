@@ -30,7 +30,7 @@ class TestLogin:
     #     assert current_user == user
 
     def test_active_user_required(self, api_client, user, user_manager):
-        user.active = False
+        user.is_active = False
         user_manager.save(user, commit=True)
         r = api_client.post('security_controller.login',
                             data=dict(email=user.email, password='password'))
@@ -45,7 +45,7 @@ class TestLogin:
                                    password='password',
                                    first_name='the',
                                    last_name='user',
-                                   active=True)
+                                   is_active=True)
         security_service.register_user(user)
 
         r = api_client.post('security_controller.login',

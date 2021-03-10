@@ -4,14 +4,12 @@ import os
 import subprocess
 import sys
 
-from flask_unchained import click
-
 
 def main():
     result = subprocess.run(['pip', 'show', 'pip-tools'], stdout=subprocess.PIPE)
     if not result.stdout.strip():
-        click.secho('This script requires the pip-tools package be installed:\n'
-                    '    pip install pip-tools', fg='white', bg='red')
+        print('This script requires the pip-tools package be installed:\n'
+              '    pip install pip-tools', fg='white', bg='red')
         sys.exit(1)
 
     req_args = ['pip-compile', '--output-file', 'requirements.txt',

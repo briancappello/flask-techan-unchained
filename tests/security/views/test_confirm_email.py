@@ -22,7 +22,7 @@ class TestConfirmEmail:
         user = self.register(user_manager, security_service)
         assert len(registrations) == 1
         assert user == registrations[0]['user']
-        assert not user.active
+        assert not user.is_active
         assert not user.confirmed_at
 
         confirm_token = registrations[0]['confirm_token']
@@ -34,7 +34,7 @@ class TestConfirmEmail:
         assert len(confirmations) == 1
         assert user in confirmations
 
-        assert user.active
+        assert user.is_active
         assert user.confirmed_at
         assert current_user == user
 
@@ -57,7 +57,7 @@ class TestConfirmEmail:
         assert templates[1].template.name == 'security/email/email_confirmation_instructions.html'
         assert templates[1].context.get('confirmation_link')
 
-        assert not user.active
+        assert not user.is_active
         assert not user.confirmed_at
         assert isinstance(current_user._get_current_object(), AnonymousUser)
 
@@ -76,6 +76,6 @@ class TestConfirmEmail:
         assert len(outbox) == len(templates) == 1
         assert templates[0].template.name == 'security/email/welcome.html'
 
-        assert not user.active
+        assert not user.is_active
         assert not user.confirmed_at
         assert isinstance(current_user._get_current_object(), AnonymousUser)

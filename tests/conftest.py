@@ -18,7 +18,7 @@ class UserFactory(ModelFactory):
     password = 'password'
     first_name = 'first'
     last_name = 'last'
-    active = True
+    is_active = True
     confirmed_at = datetime.now(timezone.utc)
 
 

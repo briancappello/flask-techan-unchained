@@ -101,7 +101,7 @@ def upgrade():
     op.create_table('user',
     sa.Column('email', sa.String(length=64), nullable=False),
     sa.Column('password', sa.String(), nullable=True),
-    sa.Column('active', sa.Boolean(name='active'), nullable=False),
+    sa.Column('is_active', sa.Boolean(name='is_active'), nullable=False),
     sa.Column('confirmed_at', sqla_bundle.DateTime(timezone=True), nullable=True),
     sa.Column('username', sa.String(length=64), nullable=False),
     sa.Column('first_name', sa.String(length=64), nullable=False),

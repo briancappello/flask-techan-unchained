@@ -4,7 +4,7 @@ a:
   password: password
   first_name: first
   last_name: last
-  active: True
+  is_active: True
   confirmed_at: utcnow
   roles: ['Role(ROLE_USER)']
 
@@ -14,7 +14,7 @@ admin:
   password: password
   first_name: the
   last_name: admin
-  active: True
+  is_active: True
   confirmed_at: utcnow
   roles: ['Role(ROLE_ADMIN, ROLE_USER)']
 
@@ -24,6 +24,6 @@ user:
   password: password
   first_name: the
   last_name: user
-  active: True
+  is_active: True
   confirmed_at: utcnow
   roles: ['Role(ROLE_USER)']

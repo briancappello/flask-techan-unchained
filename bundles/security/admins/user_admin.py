@@ -14,7 +14,7 @@ from ..models import User
 class BaseUserForm(ReorderableForm):
     def populate_obj(self, user):
         super().populate_obj(user)
-        if user.active and not user.confirmed_at:
+        if user.is_active and not user.confirmed_at:
             user.confirmed_at = utcnow()
 
 
@@ -25,13 +25,13 @@ class UserAdmin(ModelAdmin):
     category_name = 'Security'
     menu_icon_value = 'glyphicon-user'
 
-    column_list = ('username', 'email', 'first_name', 'last_name', 'active')
+    column_list = ('username', 'email', 'first_name', 'last_name', 'is_active')
     column_searchable_list = ('username', 'email', 'first_name', 'last_name')
-    column_filters = ('active',)
+    column_filters = ('is_active',)
 
     column_details_list = ('username', 'email', 'first_name', 'last_name',
-                           'active', 'confirmed_at', 'created_at', 'updated_at')
-    column_editable_list = ('active',)
+                           'is_active', 'confirmed_at', 'created_at', 'updated_at')
+    column_editable_list = ('is_active',)
 
     column_formatters = {
         'confirmed_at': macro('column_formatters.datetime'),
@@ -40,7 +40,7 @@ class UserAdmin(ModelAdmin):
 
     form_base_class = BaseUserForm
 
-    form_columns = ('username', 'email', 'first_name', 'last_name', 'roles', 'active')
+    form_columns = ('username', 'email', 'first_name', 'last_name', 'roles', 'is_active')
     form_excluded_columns = ('articles', 'password', 'user_roles')
 
     form_overrides = dict(email=html5.EmailField)
@@ -75,6 +75,6 @@ class UserAdmin(ModelAdmin):
 
         CreateForm.field_order = (
             'username', 'email', 'first_name', 'last_name',
-            'password', 'confirm_password', 'roles', 'active')
+            'password', 'confirm_password', 'roles', 'is_active')
 
         return CreateForm

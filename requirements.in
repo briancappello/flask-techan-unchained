@@ -4,17 +4,21 @@
 
 flask-unchained[api,celery,mail,session,security,sqlalchemy]
 
+aiohttp
 appdirs
 bcrypt
 cachetools
+dask[dataframe]
 gunicorn
 jinja2
 jinja2-time
 markdown
 pandas
+pandas-market-calendars
 pdfquery
 psycopg2-binary
 pymarketstore
+pystore
 python-dateutil
 python-frontmatter
 pytz

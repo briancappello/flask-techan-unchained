@@ -35,7 +35,7 @@ def create_user(email, password, active, confirmed_at, send_email):
     """
     if confirmed_at == 'now':
         confirmed_at = security.datetime_factory()
-    user = user_manager.create(email=email, password=password, active=active,
+    user = user_manager.create(email=email, password=password, is_active=active,
                                confirmed_at=confirmed_at)
     if click.confirm(f'Are you sure you want to create {user!r}?'):
         security_service.register_user(user, allow_login=False, send_email=send_email)
