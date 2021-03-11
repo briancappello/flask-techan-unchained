@@ -18,27 +18,32 @@ class WatchlistResource(Resource):
         return self.jsonify({'watchlist': watchlist.name})
 
     def list(self):
-        watchlists = [dict(key=index.ticker,
-                           label=index.name)
-                      for index in self.index_manager.all()
-                      if 'Russell' not in index.name] + [
+        watchlists = [
+            dict(key=index.ticker, label=index.name)
+            for index in self.index_manager.all()
+            if 'Russell' not in index.name
+         ] + [
             dict(key='most-actives', label='Most Actives'),
             dict(key='trending', label='Trending'),
+            dict(key='crossed-sma', label='Crossed SMA'),
+            dict(key='high-volume', label='High Volume'),
+            dict(key='expanding-bodies', label='Expanding Bodies'),
+            dict(key='new-highs', label='New Highs'),
         ]
         return self.jsonify(watchlists)
 
     def get(self, key):
-        if key == 'most-actives':
-            return dict(key=key, components=self.watchlist_manager.get_most_actives())
-        elif key == 'trending':
-            return dict(key=key, components=self.watchlist_manager.get_trending())
+        try:
+            return self.watchlist_manager.get_watchlist(key)
+        except RuntimeError:
+            pass
 
         # fall back to returning index components
         index = self.index_manager.get_by(ticker=key)
         if index is not None:
-            return self.jsonify(dict(
+            return dict(
                 key=index.ticker,
                 components=self.data_service.get_quotes(
-                    equity.ticker for equity in index.equities
+                    [equity.ticker for equity in index.equities]
                 ),
-            ))
+            )

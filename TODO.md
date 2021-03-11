@@ -1,3 +1,8 @@
+goal: watch aftermarket streaming data for abnormal volume / TA events
+
+reqs: get notified and enter orders
+
+
 watchlists
 ----------
 

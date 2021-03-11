@@ -16,9 +16,9 @@ class HistoryController(Controller):
     marketstore_service: MarketstoreService = injectable
 
     @route('/history/<string(upper=True):ticker>')
-    @param_converter(ticker=Asset, frequency=Frequency)
-    def history(self, asset: Asset, frequency: Frequency):
-        df = self.marketstore_service.get_history(asset.ticker, frequency)
+    @param_converter(frequency=Frequency)
+    def history(self, ticker, frequency: Frequency):
+        df = self.marketstore_service.get_history(ticker, frequency, limit=5000)
         return add_ta(df).rename(columns={
             'Open': 'open',
             'High': 'high',
@@ -32,6 +32,8 @@ class HistoryController(Controller):
 def add_ta(df: pd.DataFrame) -> pd.DataFrame:
     df['sma100'] = ta.SMA(df['Close'], timeperiod=100)
     df['sma200'] = ta.SMA(df['Close'], timeperiod=200)
+    df['sma500'] = ta.SMA(df['Close'], timeperiod=500)
+    df['sma1000'] = ta.SMA(df['Close'], timeperiod=1000)
     df['bbands_upper'], df['sma20'], df['bbands_lower'] = ta.BBANDS(df['Close'],
                                                                     timeperiod=20)
     df['macd'], df['macd_signal'], df['macd_difference'] = ta.MACD(df['Close'])

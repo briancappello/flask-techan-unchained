@@ -24,6 +24,7 @@ export const FREQUENCY = {
 // https://github.com/d3/d3-format#api-reference
 const DEC = ',.2f',
       DEC1 = ',.1f',
+      DEC4 = ',.4f',
       INT = ',.0f',
       SI = ',.3s',
 
@@ -46,10 +47,15 @@ function minutelyTickFormat(date, i, nodes) {
       return null
     }
   }
-  if (date.getMinutes() == 0) {
-    return d3.timeFormat('%_I%p')(date)
+
+  const ampm = date.getHours() < 12 ? 'a' : 'p'
+
+  if (date.getMinutes() === 0) {
+    return d3.timeFormat('%_I')(date) + ampm
+  } else if (date.getHours() === 9 && date.getMinutes() === 30) {
+    return d3.timeFormat('%_m/%d %_I:%M')(date) + ampm
   }
-  return d3.timeFormat('%_I:%M%p')(date)
+  return d3.timeFormat('%_I:%M')(date) + ampm
 }
 
 function dailyTickFormat(d) {
@@ -65,7 +71,14 @@ export const FORMATS = {
   INT: d3.format(INT),
   SI: d3.format(SI),
   SMART: function (num) {
-    if (num < 100) {
+    if (num < 2) {
+      let d4 = d3.format(DEC4)(num)
+      let d2 = d3.format(DEC)(num)
+      if (Number(d2) === Number(d4)) {
+        return d2
+      }
+      return d4
+    } else if (num < 100) {
       return d3.format(DEC)(num)
     } else if (num < 10000) {
       return d3.format(INT)(num)

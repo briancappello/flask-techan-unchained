@@ -113,7 +113,7 @@ def get_df(ticker, start=None, end=None, timeframe='1d'):
     return yfi_json_to_df(r.json(), timeframe)
 
 
-@cached(cache=TTLCache(maxsize=1, ttl=60*60*8))  # 8 hours
+@cached(cache=TTLCache(maxsize=1, ttl=60*60*4))  # 4 hours
 def get_yfi_crumb_and_cookies():
     r = requests.get('https://finance.yahoo.com/most-active')
     html = str(r.content)
@@ -124,10 +124,10 @@ def get_yfi_crumb_and_cookies():
 
 
 def get_most_actives(
-        region='us',
-        min_intraday_vol=2.5e5,
-        min_intraday_price=2,
-        num_results=100
+        region: str = 'us',
+        min_intraday_vol: int = 250_000,
+        min_intraday_price: float = 1.0,
+        num_results: int = 100,
 ) -> pd.DataFrame:
     crumb, cookies = get_yfi_crumb_and_cookies()
 

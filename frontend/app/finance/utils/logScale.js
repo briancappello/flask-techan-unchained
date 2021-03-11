@@ -16,14 +16,14 @@ function countDigits(num) {
   return count
 }
 
-function round(fn, num) {
+function round(fn, num, otherNum) {
   /**
    * FIXME: this logic more or less works, but clearly, it's shit to understand.
    * somewhere out there in the land of maths _must_ be a clean way to do this.
    */
   let digits = countDigits(num)
 
-  if (num > 50) {
+  if (num > 50 && (Math.abs(num - otherNum) > 1)) {
     if (fn == roundUp) {
       num = Math.ceil(num)
     } else {
@@ -31,7 +31,7 @@ function round(fn, num) {
     }
   }
 
-  if (num % (10 ** (digits - 1)) === 0) {
+  if (num % (10 ** (digits - 1)) === 0 || num % 10 === 0) {
     return num
   }
 
@@ -53,15 +53,15 @@ function round(fn, num) {
   return rounded
 }
 
-export function niceLogMax(num) {
-  return round(roundUp, num)
+export function niceLogMax(min, max) {
+  return round(roundUp, max, min)
 }
 
-export function niceLogMin(num) {
-  if (num < 2) {
-    return Math.max(0.01, num * 0.8)
+export function niceLogMin(min, max) {
+  if (min < 2) {
+    return Math.max(0.01, min * 0.8)
   }
-  return Math.max(0.01, round(roundDown, num))
+  return Math.max(0.01, round(roundDown, min, max))
 }
 
 

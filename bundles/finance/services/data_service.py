@@ -228,21 +228,29 @@ class DataService(Service):
         self.session_manager.commit()
         self.print('Added {} {} tickers'.format(len(index.equities), index.name))
 
-    def get_quotes(self, tickers: Iterable[str]):
-        quotes = [self.get_quote(t) for t in tickers]
+    def get_quotes(self, tickers: Iterable[str]) -> List[dict]:
+        if tickers is None or not len(tickers):
+            return []
+
+        data = self.marketstore_service.get_bulk_history(tickers, '1D', limit=2)
+        quotes = [make_quote(ticker, df) for ticker, df in data.items()]
         return [q for q in quotes if q is not None]
 
-    def get_quote(self, ticker: str):
+    def get_quote(self, ticker: str) -> Union[dict, None]:
         df = self.marketstore_service.get_history(ticker, '1D', limit=2)
-        if df is None:
-            return None
+        return make_quote(ticker, df)
 
-        bar = df.iloc[-1]
-        return dict(ticker=ticker,
-                    date=bar.name.to_pydatetime(),
-                    open=bar.Open,
-                    high=bar.High,
-                    low=bar.Low,
-                    close=bar.Close,
-                    volume=bar.Volume,
-                    prev_close=df.iloc[-2].Close if len(df) > 1 else None)
+
+def make_quote(ticker, df) -> Union[dict, None]:
+    if df is None or not len(df):
+        return None
+
+    bar = df.iloc[-1]
+    return dict(ticker=ticker,
+                date=bar.name.to_pydatetime(),
+                open=bar.Open,
+                high=bar.High,
+                low=bar.Low,
+                close=bar.Close,
+                volume=bar.Volume,
+                prev_close=df.iloc[-2].Close if len(df) > 1 else None)

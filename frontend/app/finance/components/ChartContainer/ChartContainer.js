@@ -138,6 +138,7 @@ class ChartContainer extends React.Component {
             <input type="text"
                    placeholder="Ticker Symbol"
                    value={this.state.ticker}
+                   autoFocus={true}
                    onChange={(e) => this.setState({ ticker: e.target.value })}
             />
           </form>

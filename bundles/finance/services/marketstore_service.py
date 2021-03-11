@@ -46,12 +46,16 @@ class MarketstoreService(Service):
     def write(self, df, tbk, isvariablelength=False):
         df.rename(columns=lambda name: name.title(), inplace=True)
 
-        # convert 64bit values to 32bit to make marketstore happy
-        # new_types = df.dtypes.map({
-        #     np.dtype(np.float64): np.float32,
-        #     np.dtype(np.int64): np.int32,
-        # }).to_dict()
-        # df = df.astype(new_types)
+        # convert value types to make marketstore happy
+        new_types = df.dtypes.map({
+            # OHLC float32
+            np.dtype(np.float): np.float32,
+            np.dtype(np.float64): np.float32,
+            # Volume int64
+            np.dtype(np.int): np.int64,
+            np.dtype(np.int32): np.int64,
+        }).to_dict()
+        df = df.astype(new_types)
 
         return self.client.write(df, tbk, isvariablelength)
 
@@ -78,4 +82,4 @@ class MarketstoreService(Service):
                          start=start, end=end,
                          limit=limit, limit_from_start=limit_from_start)
         r = self.client.query(p)
-        return {symbol: ds.df() for symbol, ds in r.by_symbols()}
+        return {symbol: ds.df() for symbol, ds in r.by_symbols().items()}

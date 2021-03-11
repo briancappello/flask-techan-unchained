@@ -1,9 +1,9 @@
 import techan from 'techan'
 
-import './sma100.scss'
+import './sma500.scss'
 
 
-export default class SMA100 {
+export default class SMA500 {
   init({ svg, xScale, yScale }) {
     this.svg = svg
     this.xScale = xScale
@@ -11,18 +11,19 @@ export default class SMA100 {
   }
 
   draw(clipId) {
-    this.sma100 = techan.plot.sma()
+    this.sma500 = techan.plot.sma()
       .xScale(this.xScale)
       .yScale(this.yScale)
 
-    this.sma100.accessor().value((d) => d.sma100)
+    this.sma500.accessor()
+      .value((d) => d.sma500)
 
     this.svg.append('g')
-      .attr('class', 'plot-indicator ma sma100')
+      .attr('class', 'plot-indicator ma sma500')
       .attr('clip-path', `url(#${clipId})`)
   }
 
   drawChartData(data) {
-    this.svg.select('g.plot-indicator.sma100').datum(data).call(this.sma100)
+    this.svg.select('g.plot-indicator.sma500').datum(data).call(this.sma500)
   }
 }
