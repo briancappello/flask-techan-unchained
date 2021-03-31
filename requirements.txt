@@ -172,7 +172,7 @@ llvmlite==0.34.0
     # via numba
 locket==0.2.1
     # via partd
-lxml==4.6.2
+lxml==4.6.3
     # via
     #   flask-unchained
     #   pdfquery
