@@ -16,13 +16,15 @@ BASE_URL = 'https://query1.finance.yahoo.com/v8/finance/chart/{ticker}?{query}'
 
 EST = gettz('America/New_York')
 BST = gettz('Europe/London')
+CEST = gettz('Europe/Berlin')
+IST = gettz('Asia/Kolkata')
 
 # alias dateutil.parser.parse here to more sensible name/defaults
-parse_datetime = functools.partial(_parse_dt,
-                                   default=datetime.combine(
-                                       datetime.now(),
-                                       time(0, tzinfo=timezone.utc)),
-                                   tzinfos={'EDT': EST, 'BST': BST})
+parse_datetime = functools.partial(
+    _parse_dt,
+    default=datetime.combine(datetime.now(), time(0, tzinfo=timezone.utc)),
+    tzinfos={'EDT': EST, 'BST': BST, 'CEST': CEST, 'IST': IST},
+)
 
 
 def to_datetime(dt):
@@ -176,21 +178,19 @@ def get_most_actives(
 def get_trending_tickers():
     url = 'https://finance.yahoo.com/trending-tickers'
     soup = get_soup(url)
-    table = soup.find('table', attrs={'class': 'yfinlist-table'})
+    table = soup.find(attrs={'id': 'list-res-table'}).find('table')
     df = table_to_df(table, index_col='symbol')
 
-    renames = {'change': ['change', 'pct_change'],
-               'avg_vol____month': ['avg_volume']}
     df = (df.drop(['day_chart', 'week_range', 'intraday_high_low'], axis=1)
-            .rename(columns=lambda c: renames[c].pop(0) if renames.get(c, []) else c)
+            .rename(columns={'%_change': 'pct_change'})
             .replace('-', np.nan)
+            .replace('N/A', np.nan)
             .dropna())
 
     df['last_price'] = df['last_price'].apply(to_float)
     df['change'] = df['change'].apply(to_float)
     df['pct_change'] = df['pct_change'].apply(to_percent)
     df['volume'] = df['volume'].apply(kmbt_to_int)
-    df['avg_volume'] = df['avg_volume'].apply(kmbt_to_int)
     df['market_cap'] = df['market_cap'].apply(kmbt_to_int)
 
     # FIXME: yahoo only returns the current time on business days, what does it
