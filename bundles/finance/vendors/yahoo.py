@@ -117,7 +117,9 @@ def get_df(ticker, start=None, end=None, timeframe='1d'):
 
 @cached(cache=TTLCache(maxsize=1, ttl=60*60*4))  # 4 hours
 def get_yfi_crumb_and_cookies():
-    r = requests.get('https://finance.yahoo.com/most-active')
+    r = requests.get('https://finance.yahoo.com/most-active', headers={
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0',
+    })
     html = str(r.content)
     start_search = '"CrumbStore":{"crumb":"'
     start_idx = html.find(start_search) + len(start_search)
@@ -133,7 +135,7 @@ def get_most_actives(
 ) -> pd.DataFrame:
     crumb, cookies = get_yfi_crumb_and_cookies()
 
-    url = 'https://query2.finance.yahoo.com/v1/finance/screener?' + urlencode({
+    url = 'https://query1.finance.yahoo.com/v1/finance/screener?' + urlencode({
         'lang': 'en-US',
         'region': region.upper(),
         'formatted': 'true',
@@ -158,8 +160,9 @@ def get_most_actives(
         'userId': '',
         'userIdType': 'guid',
     }, headers={
-        'Host': 'query2.finance.yahoo.com',
+        'Host': 'query1.finance.yahoo.com',
         'Origin': 'https://finance.yahoo.com',
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0',
     }, cookies=cookies)
 
     data = r.json()['finance']
