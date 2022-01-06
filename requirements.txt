@@ -10,7 +10,7 @@ alembic==1.5.6
     # via
     #   flask-migrate
     #   sqlalchemy-unchained
-amqp==5.0.5
+amqp==5.0.9
     # via kombu
 apispec==3.3.2
     # via flask-unchained
@@ -32,7 +32,7 @@ bcrypt==3.2.0
     #   flask-unchained
 beautifulsoup4==4.9.3
     # via flask-unchained
-billiard==3.6.3.0
+billiard==3.6.4.0
     # via celery
 blinker==1.4
     # via
@@ -42,7 +42,7 @@ cachelib==0.1.1
     # via flask-session
 cachetools==4.2.1
     # via -r requirements.in
-celery==5.0.5
+celery==5.2.2
     # via flask-unchained
 certifi==2020.12.5
     # via requests
@@ -56,13 +56,7 @@ chardet==4.0.0
     #   pdfminer.six
     #   pdfquery
     #   requests
-click-didyoumean==0.0.3
-    # via celery
-click-plugins==1.1.1
-    # via celery
-click-repl==0.1.6
-    # via celery
-click==7.1.2
+click==8.0.3
     # via
     #   celery
     #   click-didyoumean
@@ -71,6 +65,12 @@ click==7.1.2
     #   distributed
     #   flask
     #   flask-unchained
+click-didyoumean==0.0.3
+    # via celery
+click-plugins==1.1.1
+    # via celery
+click-repl==0.2.0
+    # via celery
 cloudpickle==1.6.0
     # via
     #   distributed
@@ -104,6 +104,17 @@ faker==6.5.0
     #   py-yaml-fixtures
 fastparquet==0.5.0
     # via pystore
+flask==1.1.2
+    # via
+    #   flask-babelex
+    #   flask-login
+    #   flask-marshmallow
+    #   flask-migrate
+    #   flask-principal
+    #   flask-session
+    #   flask-sqlalchemy
+    #   flask-unchained
+    #   flask-wtf
 flask-babelex==0.9.4
     # via flask-unchained
 flask-login==0.5.0
@@ -116,27 +127,16 @@ flask-principal==0.4.0
     # via flask-unchained
 flask-session==0.3.2
     # via flask-unchained
-flask-sqlalchemy-unchained==0.7.3
-    # via flask-unchained
 flask-sqlalchemy==2.4.4
     # via
     #   flask-migrate
     #   flask-sqlalchemy-unchained
+flask-sqlalchemy-unchained==0.7.3
+    # via flask-unchained
 flask-unchained[api,celery,mail,security,session,sqlalchemy]==0.8.1
     # via -r requirements.in
 flask-wtf==0.14.3
     # via flask-unchained
-flask==1.1.2
-    # via
-    #   flask-babelex
-    #   flask-login
-    #   flask-marshmallow
-    #   flask-migrate
-    #   flask-principal
-    #   flask-session
-    #   flask-sqlalchemy
-    #   flask-unchained
-    #   flask-wtf
 fsspec==0.8.7
     # via dask
 grpcio==1.36.1
@@ -157,8 +157,6 @@ itsdangerous==1.1.0
     #   flask
     #   flask-unchained
     #   flask-wtf
-jinja2-time==0.2.0
-    # via -r requirements.in
 jinja2==2.11.3
     # via
     #   -r requirements.in
@@ -166,7 +164,9 @@ jinja2==2.11.3
     #   flask-babelex
     #   jinja2-time
     #   py-yaml-fixtures
-kombu==5.0.2
+jinja2-time==0.2.0
+    # via -r requirements.in
+kombu==5.2.3
     # via celery
 llvmlite==0.34.0
     # via numba
@@ -186,17 +186,17 @@ markupsafe==1.1.1
     #   jinja2
     #   mako
     #   wtforms
-marshmallow-sqlalchemy==0.24.2
-    # via flask-unchained
 marshmallow==3.10.0
     # via
     #   flask-marshmallow
     #   flask-unchained
     #   marshmallow-sqlalchemy
-msgpack-python==0.5.6
-    # via pymarketstore
+marshmallow-sqlalchemy==0.24.2
+    # via flask-unchained
 msgpack==1.0.2
     # via distributed
+msgpack-python==0.5.6
+    # via pymarketstore
 multidict==5.1.0
     # via
     #   aiohttp
@@ -221,8 +221,6 @@ numpy==1.20.1
     #   trading-calendars
 packaging==20.9
     # via pytest
-pandas-market-calendars==1.6.1
-    # via -r requirements.in
 pandas==1.2.3
     # via
     #   -r requirements.in
@@ -232,6 +230,8 @@ pandas==1.2.3
     #   pymarketstore
     #   pystore
     #   trading-calendars
+pandas-market-calendars==1.6.1
+    # via -r requirements.in
 partd==1.1.0
     # via
     #   dask
@@ -252,14 +252,14 @@ psutil==5.8.0
     # via distributed
 psycopg2-binary==2.8.6
     # via -r requirements.in
+py==1.10.0
+    # via pytest
 py-meta-utils==0.7.8
     # via
     #   flask-unchained
     #   sqlalchemy-unchained
 py-yaml-fixtures==0.6.1
     # via -r requirements.in
-py==1.10.0
-    # via pytest
 pycparser==2.20
     # via cffi
 pymarketstore==0.18
@@ -334,10 +334,6 @@ soupsieve==2.2
     # via beautifulsoup4
 speaklater==1.3
     # via flask-babelex
-sqlalchemy-unchained==0.11.0
-    # via
-    #   flask-sqlalchemy-unchained
-    #   flask-unchained
 sqlalchemy==1.3.23
     # via
     #   alembic
@@ -345,6 +341,10 @@ sqlalchemy==1.3.23
     #   marshmallow-sqlalchemy
     #   sqlalchemy-unchained
     #   wtforms-sqlalchemy
+sqlalchemy-unchained==0.11.0
+    # via
+    #   flask-sqlalchemy-unchained
+    #   flask-unchained
 ta-lib==0.4.19
     # via -r requirements.in
 tblib==1.7.0
@@ -378,6 +378,7 @@ vine==5.0.0
     # via
     #   amqp
     #   celery
+    #   kombu
 wcwidth==0.2.5
     # via prompt-toolkit
 websocket-client==0.58.0
@@ -386,13 +387,13 @@ werkzeug==1.0.1
     # via
     #   flask
     #   flask-unchained
-wtforms-sqlalchemy==0.2
-    # via flask-unchained
 wtforms==2.3.3
     # via
     #   flask-unchained
     #   flask-wtf
     #   wtforms-sqlalchemy
+wtforms-sqlalchemy==0.2
+    # via flask-unchained
 yarl==1.6.3
     # via aiohttp
 zict==2.0.0
