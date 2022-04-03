@@ -98,7 +98,7 @@ email-validator==1.1.2
     # via flask-unchained
 factory-boy==3.2.0
     # via flask-unchained
-faker==6.5.0
+faker==8.6.0
     # via
     #   factory-boy
     #   py-yaml-fixtures

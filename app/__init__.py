@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from flask_unchained import AppBundle, FlaskUnchained, generate_csrf, session
+from flask_unchained import AppBundle, FlaskUnchained, session
 
 
 class App(AppBundle):
@@ -30,10 +30,3 @@ class App(AppBundle):
         def enable_session_timeout():
             session.permanent = True
             session.modified = True
-
-        # send CSRF token in the cookie
-        @app.after_request
-        def set_csrf_cookie(response):
-            if response:
-                response.set_cookie('csrf_token', generate_csrf())
-            return response

@@ -36,7 +36,7 @@ pip install -r requirements.txt
 pip install -r requirements-dev.txt  # for tests
 
 # configure
-edit `backend/config.py` as necessary
+edit `app/config.py` as necessary
 edit `frontend/app/config.js` as necessary
 
 # set up database

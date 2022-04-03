@@ -1,5 +1,5 @@
 def test_contact_submission_serializer():
-    from backend.serializers import ContactSubmissionSerializer
+    from app.serializers import ContactSubmissionSerializer
 
     serializer = ContactSubmissionSerializer()
 

@@ -25,10 +25,8 @@ class WatchlistResource(Resource):
          ] + [
             dict(key='most-actives', label='Most Actives'),
             dict(key='trending', label='Trending'),
-            dict(key='crossed-sma', label='Crossed SMA'),
-            dict(key='high-volume', label='High Volume'),
-            dict(key='expanding-bodies', label='Expanding Bodies'),
-            dict(key='new-highs', label='New Highs'),
+            dict(key='gainers', label='Gainers'),
+            dict(key='losers', label='Losers'),
         ]
         return self.jsonify(watchlists)
 

@@ -186,15 +186,8 @@ def get_trending_tickers():
 
     df = (df.drop(['day_chart', 'week_range', 'intraday_high_low'], axis=1)
             .rename(columns={'%_change': 'pct_change'})
-            .replace('-', np.nan)
-            .replace('N/A', np.nan)
-            .dropna())
-
-    df['last_price'] = df['last_price'].apply(to_float)
-    df['change'] = df['change'].apply(to_float)
-    df['pct_change'] = df['pct_change'].apply(to_percent)
-    df['volume'] = df['volume'].apply(kmbt_to_int)
-    df['market_cap'] = df['market_cap'].apply(kmbt_to_int)
+            .replace('-', np.nan).replace('N/A', np.nan).dropna())
+    df = _convert_column_types(df)
 
     # FIXME: yahoo only returns the current time on business days, what does it
     # return on the weekends? do we need to set the correct date to the last
@@ -202,4 +195,39 @@ def get_trending_tickers():
     # the weekends?
     df['market_time'] = pd.to_datetime(
         [parse_datetime(dt) for dt in df['market_time']], utc=True)
+    return df
+
+
+def get_gainers_tickers():
+    url = 'https://finance.yahoo.com/gainers'
+    soup = get_soup(url)
+    table = soup.find(attrs={'id': 'scr-res-table'}).find('table')
+    df = table_to_df(table, index_col='symbol')
+
+    df = (df.drop(['pe_ratio__ttm', 'week_range', 'avg_vol____month'], axis=1)
+            .rename(columns={'%_change': 'pct_change',
+                             'price__intraday': 'last_price'})
+            .replace('-', np.nan).replace('N/A', np.nan).dropna())
+    return _convert_column_types(df)
+
+
+def get_losers_tickers():
+    url = 'https://finance.yahoo.com/losers'
+    soup = get_soup(url)
+    table = soup.find(attrs={'id': 'scr-res-table'}).find('table')
+    df = table_to_df(table, index_col='symbol')
+
+    df = (df.drop(['pe_ratio__ttm', 'week_range', 'avg_vol____month'], axis=1)
+            .rename(columns={'%_change': 'pct_change',
+                             'price__intraday': 'last_price'})
+            .replace('-', np.nan).replace('N/A', np.nan).dropna())
+    return _convert_column_types(df)
+
+
+def _convert_column_types(df):
+    df['last_price'] = df['last_price'].apply(to_float)
+    df['change'] = df['change'].apply(to_float)
+    df['pct_change'] = df['pct_change'].apply(to_percent)
+    df['volume'] = df['volume'].apply(kmbt_to_int)
+    df['market_cap'] = df['market_cap'].apply(kmbt_to_int)
     return df

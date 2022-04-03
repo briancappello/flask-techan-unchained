@@ -6,7 +6,7 @@ from flask_unchained.bundles.security.forms import unique_user_email
 from flask_unchained.bundles.admin import ModelAdmin, macro
 from flask_unchained.bundles.admin.forms import ReorderableForm
 
-from backend.utils import utcnow
+from app.utils import utcnow
 
 from ..models import User
 
