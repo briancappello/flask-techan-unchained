@@ -7,6 +7,7 @@ from cachetools import cached, TTLCache
 from datetime import date, datetime, time, timedelta, timezone
 from dateutil.parser import parse as _parse_dt
 from dateutil.tz import gettz
+from typing import Tuple
 from urllib.parse import urlencode
 
 from bundles.finance.utils import get_soup, table_to_df
@@ -56,20 +57,25 @@ def sanitize_dates(start=None, end=None, timeframe='1d'):
     return to_est(start), to_est(end)
 
 
-def get_yfi_url(ticker, start=None, end=None, timeframe='1d'):
+def get_yfi_url_and_cookies(ticker, start=None, end=None, timeframe='1d') -> Tuple[str, dict]:
+    crumb, cookies = get_yfi_crumb_and_cookies(f'https://finance.yahoo.com/chart/{ticker.upper()}')
     start, end = sanitize_dates(start, end, timeframe)
     q = {'symbol': ticker,
          'period1': int(start.timestamp()),
          'period2': int(end.timestamp()),
          'interval': timeframe,
+         'useYfid': 'true',
          'includePrePost': 'false',
          'events': 'div|split|earn',
+         'crumb': crumb,
          'corsDomain': 'finance.yahoo.com',
+         'lang': 'en-US',
+         'region': 'US',
          }
-    return BASE_URL.format(ticker=ticker, query=urlencode(q))
+    return BASE_URL.format(ticker=ticker, query=urlencode(q)), cookies
 
 
-def yfi_json_to_df(json, timeframe='1d'):
+def yfi_json_to_df(json, timeframe='1d') -> pd.DataFrame:
     result = json['chart']
     if result['error']:
         print(result['error'])
@@ -92,21 +98,23 @@ def yfi_json_to_df(json, timeframe='1d'):
             return df
 
         # check if 2 or more rows for the latest date
-        tail = df[df.iloc[-1].name.date():]
+        tail = df[df.iloc[-1].name.round('D'):]
         if len(tail) == 1:
             return df
 
         # and if so, pick the best daily bar by greatest volume
         latest = tail.sort_values('Volume').iloc[-1]
-        return df[:df.iloc[-1].name.date()].append(latest)
+        return pd.concat([df.iloc[:-len(tail)], pd.DataFrame([latest])])
     except Exception as e:
         print(str(e), '\n', data)
         return None
 
 
-def get_df(ticker, start=None, end=None, timeframe='1d'):
-    url = get_yfi_url(ticker, start, end, timeframe)
-    r = requests.get(url)
+def get_df(ticker, start=None, end=None, timeframe='1d') -> pd.DataFrame:
+    url, cookies = get_yfi_url_and_cookies(ticker, start, end, timeframe)
+    r = requests.get(url, cookies=cookies, headers={
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0',
+    })
 
     if r.status_code != 200:
         print(url, r.status_code, r.headers, r.content)
@@ -115,9 +123,8 @@ def get_df(ticker, start=None, end=None, timeframe='1d'):
     return yfi_json_to_df(r.json(), timeframe)
 
 
-@cached(cache=TTLCache(maxsize=1, ttl=60*60*4))  # 4 hours
-def get_yfi_crumb_and_cookies():
-    r = requests.get('https://finance.yahoo.com/most-active', headers={
+def get_yfi_crumb_and_cookies(base_url):
+    r = requests.get(base_url, headers={
         'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0',
     })
     html = str(r.content)
@@ -133,7 +140,7 @@ def get_most_actives(
         min_intraday_price: float = 1.0,
         num_results: int = 100,
 ) -> pd.DataFrame:
-    crumb, cookies = get_yfi_crumb_and_cookies()
+    crumb, cookies = get_yfi_crumb_and_cookies('https://finance.yahoo.com/most-active')
 
     url = 'https://query1.finance.yahoo.com/v1/finance/screener?' + urlencode({
         'lang': 'en-US',

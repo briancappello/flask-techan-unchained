@@ -4,7 +4,6 @@ import talib as ta
 from flask_unchained import Controller, injectable, route, param_converter
 
 from ..enums import Frequency
-from ..models import Asset
 from ..services.data_service import DataService
 from ..services.index_manager import IndexManager
 from ..services.marketstore_service import MarketstoreService
@@ -25,7 +24,7 @@ class HistoryController(Controller):
             'Low': 'low',
             'Close': 'close',
             'Volume': 'volume',
-        }).to_json(orient='split'), 200
+        }).to_json(orient='split'), 200, {'content-type': 'application/json'}
 
 
 # FIXME move to DataService
