@@ -30,7 +30,7 @@ const SCALES = {
   [LOG_SCALE]: d3.scaleLog(),
 }
 
-const MAX_BARS = 500
+const MAX_BARS = 400
 
 export default class Chart extends React.Component {
 

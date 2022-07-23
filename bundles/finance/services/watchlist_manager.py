@@ -1,23 +1,18 @@
-import json
 import pandas as pd
-import numpy as np
 
-from typing import *
-
-from flask_unchained import Service, injectable
+from flask_unchained import injectable
 from flask_unchained.bundles.sqlalchemy import ModelManager
-from flask_unchained.string_utils import kebab_case
 
-from .. import analysis
 from ..models import Watchlist
 from ..vendors import yahoo
 from .data_service import DataService
-from .marketstore_service import MarketstoreService
+from .historical_signals_service import HistoricalSignalsService
 
 
 class WatchlistManager(ModelManager):
     data_service: DataService = injectable
     config = injectable
+    historical_signals_service: HistoricalSignalsService = injectable
 
     class Meta:
         model = Watchlist
@@ -34,13 +29,17 @@ class WatchlistManager(ModelManager):
             tickers = yahoo.get_most_actives().index
         elif key == 'trending':
             tickers = yahoo.get_trending_tickers().index
+        elif key == 'gainers':
+            tickers = yahoo.get_gainers_tickers().index
+        elif key == 'losers':
+            tickers = yahoo.get_losers_tickers().index
 
         if not len(tickers):
-            if key not in {'crossed-sma', 'high-volume', 'expanding-bodies', 'new-highs'}:
+            if key not in self.historical_signals_service.signal_names:
                 raise RuntimeError(f'Watchlist(key={key}) not found')
 
-            with open(f'/home/brian/{key}.json') as f:
-                tickers = json.load(f)
+            watchlists = self.historical_signals_service.get_by_date()
+            tickers = watchlists[key]
 
         return dict(key=key, components=self.data_service.get_quotes(tickers=tickers))
 
@@ -50,44 +49,11 @@ class WatchlistManager(ModelManager):
     def get_trending(self):
         return self.data_service.get_quotes(yahoo.get_trending_tickers().index)
 
+    def get_gainers(self):
+        return self.data_service.get_quotes(yahoo.get_gainers_tickers().index)
 
-def watchlist(fn):
-    setattr(fn, '__watchlist__', kebab_case(fn.__name__))
-    return fn
-
-
-class OpportunityFinder(Service):
-    marketstore_service: MarketstoreService = injectable
-
-    def run(self):
-        data = list(self._get_data(limit=300))
-
-    def _get_data(self,
-                  symbols: Optional[List[str]] = None,
-                  timeframe: str = '1D',
-                  limit: int = 200,
-                  ):
-        symbols = symbols or self.marketstore_service.get_symbols()
-        data = self.marketstore_service.get_bulk_history(symbols, timeframe, limit=limit)
-        for symbol, df in data.items():
-            if analysis.is_trading_safe(df):
-                yield symbol, df
-
-    @watchlist
-    def crossed_sma(self, data):
-        pass
-
-    @watchlist
-    def high_volume(self, data):
-        pass
-
-    @watchlist
-    def expanding_bodies(self, data):
-        pass
-
-    @watchlist
-    def new_highs(self, data):
-        pass
+    def get_losers(self):
+        return self.data_service.get_quotes(yahoo.get_losers_tickers().index)
 
 
 def find_it(df, date=None):

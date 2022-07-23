@@ -1,11 +1,13 @@
 from flask_unchained import Resource, request, injectable
 from flask_unchained.bundles.security import auth_required, current_user
+from flask_unchained.string_utils import title_case
 
-from ..services import DataService, IndexManager, WatchlistManager
+from ..services import DataService, HistoricalSignalsService, IndexManager, WatchlistManager
 
 
 class WatchlistResource(Resource):
     data_service: DataService = injectable
+    historical_signals_service: HistoricalSignalsService = injectable
     index_manager: IndexManager = injectable
     watchlist_manager: WatchlistManager = injectable
 
@@ -27,6 +29,9 @@ class WatchlistResource(Resource):
             dict(key='trending', label='Trending'),
             dict(key='gainers', label='Gainers'),
             dict(key='losers', label='Losers'),
+        ] + [
+            dict(key=signal.name, label=signal.label)
+            for signal in self.historical_signals_service.signals
         ]
         return self.jsonify(watchlists)
 

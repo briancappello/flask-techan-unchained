@@ -1,10 +1,12 @@
 import pandas as pd
 
+from datetime import timedelta
 from flask_unchained.bundles.sqlalchemy import SessionManager
 from flask_unchained import Service, injectable
 from typing import *
 
 from ..vendors import exchanges, indexes
+from ..utils import is_market_open, get_latest_trading_date
 
 from .country_manager import CountryManager
 from .currency_manager import CurrencyManager
@@ -229,8 +231,29 @@ class DataService(Service):
         self.print('Added {} {} tickers'.format(len(index.equities), index.name))
 
     def get_quotes(self, tickers: Iterable[str]) -> List[dict]:
+        """
+        during market hours:
+            yesterday's close, current price
+        after hours:
+            today's open, close
+        """
         if tickers is None or not len(tickers):
             return []
+
+        if is_market_open():
+            todays_data = self.marketstore_service.get_bulk_history(
+                tickers, '1Min', start=get_latest_trading_date())
+            quotes = [agg_minutes(ticker, df) for ticker, df in todays_data.items()]
+            yesterdays_data = self.marketstore_service.get_bulk_history(
+                tickers, '1D', end=get_latest_trading_date() - timedelta(days=1), limit=1)
+            for quote in quotes:
+                if quote is None:
+                    continue
+                if quote['ticker'] in yesterdays_data:
+                    quote['prev_close'] = float(yesterdays_data[quote['ticker']].iloc[-1].Close)
+                else:
+                    quote['prev_close'] = None
+            return [q for q in quotes if q is not None]
 
         data = self.marketstore_service.get_bulk_history(tickers, '1D', limit=2)
         quotes = [make_quote(ticker, df) for ticker, df in data.items()]
@@ -239,6 +262,21 @@ class DataService(Service):
     def get_quote(self, ticker: str) -> Union[dict, None]:
         df = self.marketstore_service.get_history(ticker, '1D', limit=2)
         return make_quote(ticker, df)
+
+
+def agg_minutes(ticker, df) -> Union[dict, None]:
+    if df is None or not len(df):
+        return None
+
+    bars = df.between_time('09:30', '16:00')
+    return dict(ticker=ticker,
+                date=bars.iloc[0].name.to_pydatetime().date(),
+                open=float(bars.iloc[0].Open),
+                high=float(bars.High.max()),
+                low=float(bars.Low.min()),
+                close=float(bars.iloc[-1].Close),
+                volume=int(bars.Volume.sum()),
+                )
 
 
 def make_quote(ticker, df) -> Union[dict, None]:

@@ -8,6 +8,7 @@ from .data_service import DataService
 from .data_vendor_manager import DataVendorManager
 from .equity_manager import EquityManager
 from .exchange_manager import ExchangeManager
+from .historical_signals_service import HistoricalSignalsService
 from .index_manager import IndexManager
 from .industry_manager import IndustryManager
 from .market_manager import MarketManager

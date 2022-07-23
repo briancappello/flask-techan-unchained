@@ -4,7 +4,7 @@ import requests
 from pdfquery import PDFQuery
 from pdfquery.cache import FileCache
 
-from backend.config import Config
+from app.config import Config
 
 
 # urls found at http://www.ftserussell.com/supporting-documents

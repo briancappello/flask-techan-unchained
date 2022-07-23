@@ -9,7 +9,7 @@ def main():
     result = subprocess.run(['pip', 'show', 'pip-tools'], stdout=subprocess.PIPE)
     if not result.stdout.strip():
         print('This script requires the pip-tools package be installed:\n'
-              '    pip install pip-tools', fg='white', bg='red')
+              'pip install pip-tools')
         sys.exit(1)
 
     req_args = ['pip-compile', '--output-file', 'requirements.txt',

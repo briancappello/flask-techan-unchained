@@ -1,29 +1,40 @@
+import numpy as np
 import pandas as pd
-import pystore
-import trading_calendars as tc
+import pandas_market_calendars as mcal
+# import pystore
+import exchange_calendars as tc
 import talib.stream as ta
 
-from datetime import date
+from datetime import date, timedelta
+from typing import *
 
-"""
-analyze in:
-    start_date
-    symbols
-    root_dir
-    analyzers_module_name
 
-interface to fetch data given symbol, timeframe, end_date, limit
-interface to store results given timeframe + dataframe
+def get_latest_trading_date() -> date:
+    today = date.today()
+    return mcal.get_calendar('NYSE').valid_days(
+        today - timedelta(days=5), today, tz='America/New_York',
+    )[-1].date()
 
-filter in:
-    start_date
-    timeframe_dfs ?
-
-interface to fetch data given timeframe + date
-interface to store results given date +
-"""
 
 class Analyze:
+    """
+    analyze in:
+        start_date
+        symbols
+        root_dir
+        analyzers_module_name
+
+    interface to fetch data given symbol, timeframe, end_date, limit
+    interface to store results given timeframe + dataframe
+
+    filter in:
+        start_date
+        timeframe_dfs ?
+
+    interface to fetch data given timeframe + date
+    interface to store results given date +
+    """
+
     analyzers_module_name = 'bundles.finance.analyzers'
     filters_module_name = 'bundles.finance.filters'
 
@@ -64,22 +75,21 @@ class Analyze:
         return self.store.collection(name)
 
 
-def prev_higher_bar(df: pd.DataFrame):
+def prev_higher_bar(df: pd.DataFrame, price: float):
     """
     Returns the most recent prior bar with a higher close than the last bar in `df`.
     """
-    latest = df.Close.iloc[-1]
-    prev_higher_bars = df[df.High >= latest][:-1]
+    prev_higher_bars = df[df.Close > price]
     if not len(prev_higher_bars):
         return None
     return prev_higher_bars.iloc[-1]
 
 
-def num_bars_since_prev_high(df: pd.DataFrame):
+def num_bars_since_prev_high(df: pd.DataFrame, price: Optional[float] = None):
     """
     Counts the number of bars since the prior high.
     """
-    prev_high = prev_higher_bar(df)
+    prev_high = prev_higher_bar(df, price or df.Close.iloc[-1])
     if prev_high is None:
         return len(df) - 1
     ts = prev_high.name
@@ -120,7 +130,23 @@ def median_body(df: pd.DataFrame, num_bars: int = 50) -> float:
 
 
 def volume_multiple_of_median(df: pd.DataFrame, num_bars: int = 50) -> float:
-    return df.Volume.iloc[-1] / median_volume(df, num_bars)
+    median_vol = median_volume(df, num_bars)
+    if median_vol:
+        return df.Volume.iloc[-1] / median_vol
+    return 0
+
+
+def mean_volume(df: pd.DataFrame, num_bars: int = 50) -> float:
+    if len(df) <= num_bars:
+        return float(np.mean(df.Volume))
+    return float(np.mean(df.Volume[-num_bars:]))
+
+
+def volume_multiple_of_mean(df: pd.DataFrame, num_bars: int = 50) -> float:
+    mean_vol = mean_volume(df, num_bars)
+    if mean_vol:
+        return df.Volume.iloc[-1] / mean_vol
+    return 0
 
 
 def volume_sum_of_prior_days(df: pd.DataFrame) -> int:
