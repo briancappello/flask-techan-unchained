@@ -21,10 +21,9 @@ Dependencies:
 
 - Python 3.6+
 - Your virtualenv tool of choice (strongly recommended)
+- Node 14 (`nodejs-lts-fermium` on Arch)
 - PostgreSQL
-- MarketStore
 - Redis (used for sessions persistence and the Celery tasks queue)
-- node.js & npm (v6 or later recommended, only required for development)
 - MailHog (not required, but it's awesome for testing email related tasks)
 
 ```bash
@@ -57,6 +56,11 @@ flask finance init
 
 # frontend dev server:
 npm install
+git clone git@github.com:briancappello/techan.js.git
+cd techan.js
+sudo npm link
+cd fun-techan
+npm link techan
 npm run build:dll
 npm run start
 
