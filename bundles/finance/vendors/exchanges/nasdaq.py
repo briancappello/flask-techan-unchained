@@ -30,7 +30,7 @@ def get_exchange_df(url):
         })
     )
     df = df[~df['ticker'].str.contains(r'\^')].set_index('ticker')
-    df['last_sale'] = df['last_sale'].apply(lambda p: float(p.strip('$')))
+    df['last_sale'] = df['last_sale'].apply(lambda p: float(p.replace(',', '').strip('$')))
     df['market_cap'] = df['market_cap'].apply(lambda mc: int(mc.split('.')[0] or "0"))
     df['volume'] = df['volume'].apply(int)
     return df

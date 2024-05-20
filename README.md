@@ -19,7 +19,7 @@ This assumes you're on a reasonably standard \*nix system. (Tested on Linux)
 
 Dependencies:
 
-- Python 3.6+
+- Python 3.8
 - Your virtualenv tool of choice (strongly recommended)
 - PostgreSQL
 - MarketStore
@@ -41,9 +41,9 @@ edit `frontend/app/config.js` as necessary
 
 # set up database
 sudo -u postgres -i psql
-postgres=# CREATE USER techan_unchained WITH PASSWORD 'techan_unchained';
-postgres=# CREATE DATABASE techan_unchained;
-postgres=# GRANT ALL PRIVILEGES ON DATABASE techan_unchained TO techan_unchained;
+postgres=# CREATE USER fun_techan WITH SUPERUSER PASSWORD 'fun_techan';
+postgres=# CREATE DATABASE fun_techan;
+postgres=# GRANT ALL PRIVILEGES ON DATABASE fun_techan TO fun_techan;
 postgres=# \q  # (quit)
 
 # run db migrations
@@ -57,6 +57,14 @@ flask finance init
 
 # frontend dev server:
 npm install
+
+cd ..
+git clone git@github.com:briancappello/techan.js.git
+cd techan.js
+sudo npm link
+cd flask-techan-unchained
+npm link techan
+
 npm run build:dll
 npm run start
 

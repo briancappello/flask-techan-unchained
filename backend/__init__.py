@@ -14,7 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from flask_unchained import AppBundle, FlaskUnchained, generate_csrf, session
+from flask_unchained import AppBundle, FlaskUnchained, session
+from flask_wtf.csrf import generate_csrf
 
 
 class App(AppBundle):

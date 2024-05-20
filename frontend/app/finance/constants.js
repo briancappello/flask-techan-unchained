@@ -9,11 +9,11 @@ export const LINEAR_SCALE = 'LINEAR'
 export const LOG_SCALE = 'LOG'
 
 export const FREQUENCY = {
-  Minutely: '1m',
-  FiveMinutely: '5m',
-  TenMinutely: '10m',
-  FifteenMinutely: '15m',
-  ThirtyMinutely: '30m',
+  Minutely: '1min',
+  FiveMinutely: '5min',
+  TenMinutely: '10min',
+  FifteenMinutely: '15min',
+  ThirtyMinutely: '30min',
   Hourly: '1hr',
   Daily: 'D',
   Weekly: 'W',

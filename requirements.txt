@@ -168,7 +168,7 @@ jinja2==2.11.3
     #   py-yaml-fixtures
 kombu==5.0.2
     # via celery
-llvmlite==0.34.0
+llvmlite==0.40.1rc1
     # via numba
 locket==0.2.1
     # via partd
@@ -207,9 +207,9 @@ networkx==2.5
     # via
     #   flask-unchained
     #   py-yaml-fixtures
-numba==0.51.2
+numba==0.57.0
     # via fastparquet
-numpy==1.20.1
+numpy==1.24.3
     # via
     #   dask
     #   fastparquet
@@ -218,20 +218,15 @@ numpy==1.20.1
     #   pymarketstore
     #   pystore
     #   ta-lib
-    #   trading-calendars
 packaging==20.9
     # via pytest
-pandas-market-calendars==1.6.1
-    # via -r requirements.in
-pandas==1.2.3
+pandas==1.5.3
     # via
     #   -r requirements.in
     #   dask
     #   fastparquet
-    #   pandas-market-calendars
     #   pymarketstore
     #   pystore
-    #   trading-calendars
 partd==1.1.0
     # via
     #   dask
@@ -281,9 +276,7 @@ python-dateutil==2.8.1
     #   arrow
     #   faker
     #   pandas
-    #   pandas-market-calendars
     #   py-yaml-fixtures
-    #   trading-calendars
 python-editor==1.0.4
     # via alembic
 python-frontmatter==0.5.0
@@ -296,8 +289,6 @@ pytz==2021.1
     #   babel
     #   celery
     #   pandas
-    #   pandas-market-calendars
-    #   trading-calendars
     #   tzlocal
 pyyaml==5.4.1
     # via
@@ -324,7 +315,6 @@ six==1.15.0
     #   python-dateutil
     #   python-frontmatter
     #   thrift
-    #   trading-calendars
     #   websocket-client
 sortedcontainers==2.3.0
     # via
@@ -345,7 +335,7 @@ sqlalchemy==1.3.23
     #   marshmallow-sqlalchemy
     #   sqlalchemy-unchained
     #   wtforms-sqlalchemy
-ta-lib==0.4.19
+ta-lib==0.4.26
     # via -r requirements.in
 tblib==1.7.0
     # via distributed
@@ -361,11 +351,8 @@ toolz==0.11.1
     #   distributed
     #   partd
     #   pystore
-    #   trading-calendars
 tornado==6.1
     # via distributed
-trading-calendars==2.1.1
-    # via pandas-market-calendars
 typing-extensions==3.7.4.3
     # via aiohttp
 tzlocal==2.1

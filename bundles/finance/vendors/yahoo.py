@@ -49,7 +49,7 @@ def sanitize_dates(start=None, end=None, timeframe='1d'):
     end = to_datetime(end)
 
     if start is None:
-        days = 7 if timeframe == '1m' else (365*100 - 1)  # 100 years(ish)
+        days = 7 if timeframe in {'1m', '1min'} else (365*100 - 1)  # 100 years(ish)
         start = end - timedelta(days=days)
     start = to_datetime(start)
 

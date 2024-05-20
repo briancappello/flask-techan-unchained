@@ -1,6 +1,6 @@
 import pandas as pd
-import pystore
-import trading_calendars as tc
+# import pystore
+import exchange_calendars as tc
 import talib.stream as ta
 
 from datetime import date
@@ -28,7 +28,7 @@ class Analyze:
     filters_module_name = 'bundles.finance.filters'
 
     def __init__(self, start_date=None, end_date=None):
-        self.nyse: tc.TradingCalendar = tc.get_calendar('NYSE')
+        self.nyse: tc.ExchangeCalendar = tc.get_calendar('NYSE')
         self.store = pystore.store('finance')
 
         today = pd.Timestamp(date.today(), tz='UTC')
@@ -41,7 +41,7 @@ class Analyze:
 
     def run(self):
         for day in self.sessions:
-            next_session = self.nyse.next_session_label(day)
+            next_session = self.nyse.next_session(day)
             filter_results = self.fetch_collection(f'filters-{day.isoformat()}')
             buys, sells = self.get_trades(filter_results)
             # enter trades at *next* open price

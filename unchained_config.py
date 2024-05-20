@@ -29,6 +29,7 @@ STATIC_FOLDER = folder_or_none('static')
 STATIC_URL_PATH = '/static' if STATIC_FOLDER else None
 
 BUNDLES = [
+    'flask_unchained.bundles.babel',
     'flask_unchained.bundles.api',
     'flask_unchained.bundles.mail',
     'flask_unchained.bundles.celery',

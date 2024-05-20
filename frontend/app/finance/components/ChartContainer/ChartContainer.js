@@ -57,6 +57,22 @@ class ChartContainer extends React.Component {
     }
   }
 
+  componentDidMount() {
+    window.addEventListener('keydown', (e) => {
+      switch (e.key) {
+        case "ArrowLeft":
+          break
+        case "ArrowRight":
+          break
+        case "ArrowUp":
+          break
+        case "ArrowDown":
+          break
+      }
+      console.log(e.key, this.props)
+    })
+  }
+
   onClick = (key, value) => {
     const { ticker, frequency, scale, type } = this.props
     const args = { ticker, frequency, scale, type }

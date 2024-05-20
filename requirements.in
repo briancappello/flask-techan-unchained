@@ -9,12 +9,12 @@ appdirs
 bcrypt
 cachetools
 dask[dataframe]
+exchange-calendars
 gunicorn
 jinja2
 jinja2-time
 markdown
 pandas
-pandas-market-calendars
 pdfquery
 psycopg2-binary
 pymarketstore

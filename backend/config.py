@@ -3,6 +3,7 @@ import redis
 
 from appdirs import AppDirs
 from datetime import timedelta
+
 from flask_unchained import url_for
 from flask_unchained import BundleConfig
 from flask_unchained.utils import get_boolean_env

@@ -4,9 +4,9 @@ import json
 import multiprocessing
 import numpy as np
 import pandas as pd
-import pymarketstore as pymkts
-import pystore
-import pandas_market_calendars as tc
+# import pymarketstore as pymkts
+# import pystore
+import exchange_calendars as tc
 import talib.stream as ta
 
 from collections import defaultdict
@@ -412,4 +412,3 @@ class Analyze:
 # FIXME
 # watch events, eg:
 # if SYMBOL does X (price goes above/below N) then alert me
-
