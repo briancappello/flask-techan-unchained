@@ -13,8 +13,6 @@
     "build:webpack": "NODE_ENV=production webpack --config frontend/internals/webpack/webpack.prod.config.js",
     "build": "npm run clean && npm run build:webpack",
     "clean": "node frontend/internals/scripts/clean.js",
-    "postinstall": "npm run build:dll",
-    "postsetup": "npm run build:dll",
     "start": "node frontend/server",
     "test": "NODE_ENV=test jest",
     "test:watch": "NODE_ENV=test jest --watchAll"
@@ -45,8 +43,8 @@
     "redux": "^3.7.2",
     "redux-form": "^7.1.0",
     "redux-saga": "^0.15.6",
-    "super-skeleton": "briancappello/super-skeleton",
-    "techan": "github:briancappello/techan.js#develop"
+    "super-skeleton": "git+https://github.com/briancappello/super-skeleton.git",
+    "techan": "git+https://github.com/briancappello/techan.js.git#develop"
   },
   "devDependencies": {
     "add-asset-html-webpack-plugin": "^2.1.3",

@@ -29,11 +29,10 @@ Dependencies:
 
 ```bash
 # install
-git clone git@github.com:briancappello/flask-techan-unchained.git
-cd flask-techan-unchained
-mkvirtualenv -p /path/to/python3.6 flask-techan-unchained
-pip install -r requirements.txt
-pip install -r requirements-dev.txt  # for tests
+git clone git@github.com:briancappello/flask-techan-unchained.git fun-techan
+cd fun-techan
+mkvirtualenv fun-techan
+poetry install
 
 # configure
 edit `backend/config.py` as necessary
@@ -49,7 +48,8 @@ postgres=# \q  # (quit)
 # run db migrations
 flask db upgrade
 
-# load db fixtures (optional)
+# load db fixtures (loads users & roles)
+# modify bundles/security/fixtures/*.yaml
 flask db import-fixtures
 
 # initialize finance fixtures

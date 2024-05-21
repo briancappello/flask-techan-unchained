@@ -187,7 +187,7 @@ class DataService(Service):
         for company_name, share_classes in df.groupby('company_name'):
             share_classes = (share_classes
                              .sort_values('sector')
-                             .fillna(method='pad')
+                             .ffill()
                              .sort_values('market_cap', ascending=False))
 
             sector, industry = None, None

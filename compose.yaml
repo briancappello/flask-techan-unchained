@@ -1,0 +1,69 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile
+#      target: development
+    command: poetry run flask db upgrade && poetry run flask db import-fixtures && poetry run flask run --host 0.0.0.0
+    environment:
+      - API_HOST=backend
+      - FLASK_DATABASE_HOST=db
+      - FLASK_REDIS_HOST=redis
+    ports:
+      - 5000:5000
+    networks:
+      - private
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+  db:
+    image: postgres:alpine
+    environment:
+      - POSTGRES_USER=fun_techan
+      - POSTGRES_PASSWORD=fun_techan
+      - POSTGRES_DB=fun_techan
+    restart: always
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - private
+    expose:
+      - 5432
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U fun_techan -d fun_techan" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  redis:
+    image: redis:alpine
+    restart: always
+    networks:
+      - private
+    expose:
+      - 6379
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile
+#      target: development
+    environment:
+      API_HOST: backend
+    ports:
+      - 8888:8888
+#    volumes:
+#      - ./frontend:/home/node/frontend
+#      - ./node_modules:/home/node/node_modules
+    networks:
+      - public
+      - private
+    depends_on:
+      - backend
+networks:
+  public:
+  private:
+    driver: bridge
+volumes:
+  db_data:
+    driver: local
