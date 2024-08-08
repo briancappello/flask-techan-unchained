@@ -21,10 +21,16 @@ class MarketstoreService(Service):
 
     def get_history(self, symbol, timeframe: Frequency, attrgroup="OHLCV",
                     start=None, end=None, limit=None, limit_from_start=False):
-        # if not self.store.has(symbol):
-        #     df = get_df(symbol)
-        #     self.store.write(symbol, df)
         fin_models_freqs = {
+            '1Min': Freq.min_1,
+            '5Min': Freq.min_5,
+            '10Min': Freq.min_10,
+            '15Min': Freq.min_15,
+            '30Min': Freq.min_30,
+            '1H': Freq.hour,
+            '1D': Freq.day,
+            '1M': Freq.month,
+            '1Y': Freq.year,
             Frequency.Minutely: Freq.min_1,
             Frequency.FiveMinutely: Freq.min_5,
             Frequency.TenMinutely: Freq.min_10,

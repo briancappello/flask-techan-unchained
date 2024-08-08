@@ -4,11 +4,11 @@ services:
       context: .
       dockerfile: docker/backend/Dockerfile
 #      target: development
-    command: poetry run flask db upgrade && poetry run flask db import-fixtures && poetry run flask run --host 0.0.0.0
     environment:
       - API_HOST=backend
       - FLASK_DATABASE_HOST=db
       - FLASK_REDIS_HOST=redis
+      - POLYGON_API_KEY=${POLYGON_API_KEY}
     ports:
       - 5000:5000
     networks:
@@ -60,7 +60,6 @@ services:
       - 8888:8888
     volumes:
       - ./frontend:/home/node/frontend
-#      - ./node_modules:/home/node/node_modules
     networks:
       - public
       - private

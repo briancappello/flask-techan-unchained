@@ -23,8 +23,7 @@ COPY db db
 COPY templates templates
 COPY celery_app.py .
 COPY unchained_config.py .
-COPY docker/backend/entrypoint.sh .
 
+COPY docker/backend/entrypoint.sh .
 EXPOSE 5000
-#CMD ["poetry", "run", "flask", "run"]
 ENTRYPOINT ["bash", "entrypoint.sh"]

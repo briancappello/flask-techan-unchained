@@ -1,16 +1,18 @@
 FROM node:14
-RUN apt-get update && apt-get install -y jq inotify-tools
+RUN apt-get update && \
+    apt-get install -y jq inotify-tools && \
+    rm -fr /var/lib/apt/lists/*
+
 RUN npm install -g npm@8
 
 WORKDIR /home/node
-RUN git clone https://github.com/briancappello/techan.js.git
-
-RUN cd techan.js && \
+RUN git clone https://github.com/briancappello/techan.js.git && \
+    cd techan.js && \
     cat package.json | jq 'del(.devDependencies)' > package-new.json && \
     cp package-new.json package.json && \
     npm link && \
-    cd /home/node
-RUN chown -R node:node /home/node
+    cd /home/node && \
+    chown -R node:node /home/node
 
 # very important for npm install to work!
 USER node
@@ -24,5 +26,4 @@ COPY static /home/node/static
 
 RUN npm run build:dll
 EXPOSE 8888
-USER root
 CMD ["npm", "run", "start"]

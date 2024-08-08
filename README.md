@@ -9,9 +9,43 @@ A demo app integrating [Alpaca MarketStore](https://github.com/alpacahq/marketst
 * [TODO](https://github.com/briancappello/flask-techan-unchained#todo)
 * [License](https://github.com/briancappello/flask-techan-unchained#license)
 
-## Deploying to Google Cloud with Kubernetes and Helm
+## Development with Docker Compose
 
-See [gke/README.md](https://github.com/briancappello/flask-techan-unchained/blob/master/gke/README.md)
+### Build containers
+
+```shell
+docker-compose up --build
+
+# rootless PodMan with SELinux
+podman-compose --podman-run-args="--replace --security-opt label=disable" up --build
+```
+
+### Run containers
+
+```shell
+docker-compose up
+
+# rootless PodMan with SELinux
+podman-compose --podman-run-args="--replace --security-opt label=disable" up
+```
+
+### Initialize Financial Data
+
+```shell
+# connect to running backend container
+docker exec -it fun_techan-backend_1 /bin/bash
+
+# in container
+poetry run flask finance init
+poetry run fin init  # requires POLYGON_API_KEY envvar set on host
+```
+
+### View Charts
+
+http://localhost:8888/finance/chart/AMD
+
+* login with user `a@a.com` and password `password`
+
 
 ## Running locally
 
@@ -19,19 +53,16 @@ This assumes you're on a reasonably standard \*nix system. (Tested on Linux)
 
 Dependencies:
 
-- Python 3.8
-- Your virtualenv tool of choice (strongly recommended)
+- Python 3.10+ and Poetry
 - PostgreSQL
-- MarketStore
 - Redis (used for sessions persistence and the Celery tasks queue)
-- node.js & npm (v6 or later recommended, only required for development)
-- MailHog (not required, but it's awesome for testing email related tasks)
+- node.js v14 & npm v8
+- MailHog (not required, but useful for testing email related tasks)
 
 ```bash
 # install
 git clone git@github.com:briancappello/flask-techan-unchained.git fun-techan
 cd fun-techan
-mkvirtualenv fun-techan
 poetry install
 
 # configure
@@ -55,6 +86,9 @@ flask db import-fixtures
 # initialize finance fixtures
 flask finance init
 
+# initialize daily historical data (requires POLYGON_API_KEY envvar)
+fin init
+
 # frontend dev server:
 npm install
 
@@ -62,7 +96,7 @@ cd ..
 git clone git@github.com:briancappello/techan.js.git
 cd techan.js
 sudo npm link
-cd flask-techan-unchained
+cd fun-techan
 npm link techan
 
 npm run build:dll
@@ -78,6 +112,10 @@ flask celery worker
 ## TODO
 
 ### Deployment
+
+#### Deploying to Google Cloud with Kubernetes and Helm
+
+See [gke/README.md](https://github.com/briancappello/flask-techan-unchained/blob/master/gke/README.md)
 
 - convert marketstore PersistentVolumeClaim to StatefulSet (probably also want a ssd StorageClass)
 - set up email & celery, ensure auth system works (registration/forgot password)
