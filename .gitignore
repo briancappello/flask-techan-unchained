@@ -42,3 +42,6 @@ __snapshots__/
 
 # si
 *.mo
+
+# IDEs / OS
+.idea

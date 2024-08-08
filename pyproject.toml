@@ -20,6 +20,7 @@ fin-models = { git = "https://github.com/briancappello/fin-models.git" }
 #sqlalchemy-unchained = { path = "../sqlalchemy-unchained", develop = true }
 #py-meta-utils = { path = "../py-meta-utils", develop = true }
 #fin-models = { path = "../fin-models", develop = true }
+numpy = "<2"
 pandas = "^2.2.0"
 psycopg2 = "^2.9.9"
 requests = "^2.31.0"
