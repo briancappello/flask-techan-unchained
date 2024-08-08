@@ -13,6 +13,12 @@ services:
       - 5000:5000
     networks:
       - private
+    volumes:
+      - fin_data:/root/.fin-models-data
+      - ./backend:/usr/src/app/backend
+      - ./bundles:/usr/src/app/bundles
+      - ./db:/usr/src/app/db
+      - ./templates:/usr/src/app/templates
     depends_on:
       db:
         condition: service_healthy
@@ -52,8 +58,8 @@ services:
       API_HOST: backend
     ports:
       - 8888:8888
-#    volumes:
-#      - ./frontend:/home/node/frontend
+    volumes:
+      - ./frontend:/home/node/frontend
 #      - ./node_modules:/home/node/node_modules
     networks:
       - public
@@ -66,4 +72,6 @@ networks:
     driver: bridge
 volumes:
   db_data:
+    driver: local
+  fin_data:
     driver: local

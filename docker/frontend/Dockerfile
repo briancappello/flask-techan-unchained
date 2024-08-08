@@ -24,4 +24,5 @@ COPY static /home/node/static
 
 RUN npm run build:dll
 EXPOSE 8888
+USER root
 CMD ["npm", "run", "start"]
