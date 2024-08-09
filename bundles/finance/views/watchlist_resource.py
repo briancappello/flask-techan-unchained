@@ -22,13 +22,13 @@ class WatchlistResource(Resource):
             dict(key=index.ticker, label=index.name)
             for index in self.index_manager.all()
             if 'Russell' not in index.name
-         ] + [
-            dict(key='most-actives', label='Most Actives'),
-            dict(key='trending', label='Trending'),
-            dict(key='crossed-sma', label='Crossed SMA'),
-            dict(key='high-volume', label='High Volume'),
-            dict(key='expanding-bodies', label='Expanding Bodies'),
-            dict(key='new-highs', label='New Highs'),
+         # ] + [
+         #    dict(key='most-actives', label='Most Actives'),
+         #    dict(key='trending', label='Trending'),
+         #    dict(key='crossed-sma', label='Crossed SMA'),
+         #    dict(key='high-volume', label='High Volume'),
+         #    dict(key='expanding-bodies', label='Expanding Bodies'),
+         #    dict(key='new-highs', label='New Highs'),
         ]
         return self.jsonify(watchlists)
 
