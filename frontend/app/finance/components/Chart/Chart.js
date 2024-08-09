@@ -579,7 +579,7 @@ export default class Chart extends React.Component {
           </tbody>
           </table>
         </div>
-        <div className="company-name">big fat old enterprise, llc</div>
+        {/*<div className="company-name">Company Name Goes Here</div>*/}
         <div className="ticker">{ticker}</div>
       </div>
     )

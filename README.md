@@ -1,10 +1,12 @@
 # Flask Techan Unchained
 
-A demo app integrating [Alpaca MarketStore](https://github.com/alpacahq/marketstore) with Python/React. Built using [Flask Unchained](https://github.com/briancappello/flask-unchained) and [techan.js](http://techanjs.org/).
+A financial charting and analysis app using Python/React. Built using [Flask Unchained](https://github.com/briancappello/flask-unchained) and [techan.js](http://techanjs.org/).
+
+![Screenshot](chart-screenshot.png)
 
 ## Table of Contents
 
-* [Deploying to Google Cloud with Kubernetes and Helm](https://github.com/briancappello/flask-techan-unchained#deploying-to-google-cloud-with-kubernetes-and-helm)
+* [Development with Docker Compose](https://github.com/briancappello/flask-techan-unchained#development-with-docker-compose)
 * [Running locally](https://github.com/briancappello/flask-techan-unchained#running-locally)
 * [TODO](https://github.com/briancappello/flask-techan-unchained#todo)
 * [License](https://github.com/briancappello/flask-techan-unchained#license)
@@ -29,7 +31,9 @@ docker-compose up
 podman-compose --podman-run-args="--replace --security-opt label=disable" up
 ```
 
-### Initialize Financial Data
+#### Initialize Financial Data
+
+Only needed on the first run.
 
 ```shell
 # connect to running backend container
@@ -44,7 +48,7 @@ poetry run fin init  # requires POLYGON_API_KEY envvar set on host
 
 http://localhost:8888/finance/chart/AMD
 
-* login with user `a@a.com` and password `password`
+* login with user `a@a.com` and password `password` (see `bundles/security/fixtures/User.yaml`)
 
 
 ## Running locally
@@ -55,7 +59,7 @@ Dependencies:
 
 - Python 3.10+ and Poetry
 - PostgreSQL
-- Redis (used for sessions persistence and the Celery tasks queue)
+- Redis (used for auth sessions persistence and the Celery tasks queue)
 - node.js v14 & npm v8
 - MailHog (not required, but useful for testing email related tasks)
 
