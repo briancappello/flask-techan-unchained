@@ -1053,7 +1053,7 @@ ta-lib = "^0.4.29"
 type = "git"
 url = "https://github.com/briancappello/fin-models.git"
 reference = "HEAD"
-resolved_reference = "9813529068602bdfdfe637b2bd00f175ebc611cc"
+resolved_reference = "fa05b8003107cf6c21f6ad1ec5b490f35aa78b11"
 
 [[package]]
 name = "flask"
