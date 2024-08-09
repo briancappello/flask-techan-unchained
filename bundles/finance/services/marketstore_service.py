@@ -43,7 +43,7 @@ class MarketstoreService(Service):
             Frequency.Yearly: Freq.year,
         }
         df = store.get(symbol, fin_models_freqs[timeframe])
-        if limit:
+        if df is not None and limit:
             return df[-limit:]
         return df
 

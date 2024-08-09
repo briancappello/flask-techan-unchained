@@ -36,8 +36,8 @@ podman-compose --podman-run-args="--replace --security-opt label=disable" up
 Only needed on the first run.
 
 ```shell
-# connect to running backend container
-docker exec -it fun_techan-backend_1 /bin/bash
+# connect into running backend container
+podman exec -it $(podman ps --format "{{.Names}}" | grep backend) /bin/bash
 
 # in container
 poetry run flask finance init
