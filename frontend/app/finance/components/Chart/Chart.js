@@ -561,16 +561,21 @@ export default class Chart extends React.Component {
   }
 
   renderChartHeader() {
-    const { ticker } = this.props
+    const { ticker, frequency } = this.props
     const { currentBar, latestBar } = this.state
     const bar = currentBar && currentBar || latestBar
+
+    let dateFormat = FORMATS.DATETIME
+    if (['D', 'W', 'M', 'Y'].includes(frequency)) {
+      dateFormat = FORMATS.DATE
+    }
 
     return (
       <div className="chart-header">
         <div className="ohlc">
           <table>
           <tbody>
-            <tr><th>D</th><td>{bar && FORMATS.DATE(bar.date)}</td></tr>
+            <tr><th>D</th><td>{bar && dateFormat(bar.date)}</td></tr>
             <tr><th>O</th><td>{bar && FORMATS.DEC(bar.open)}</td></tr>
             <tr><th>H</th><td>{bar && FORMATS.DEC(bar.high)}</td></tr>
             <tr><th>L</th><td>{bar && FORMATS.DEC(bar.low)}</td></tr>

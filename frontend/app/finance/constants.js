@@ -30,7 +30,7 @@ const DEC = ',.2f',
 
       // https://github.com/d3/d3-time-format#locale_format
       DATE = '%b %d, %Y',
-      DATETIME = '%a %_m/%d %_I:%M %p'
+      DATETIME = '%b %d, %Y %_I:%M %p'
 
 function minutelyTickFormat(date, i, nodes) {
   if (i > 0) {
