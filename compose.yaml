@@ -19,6 +19,11 @@ services:
       - ./bundles:/usr/src/app/bundles
       - ./db:/usr/src/app/db
       - ./templates:/usr/src/app/templates
+      - ./libs/fin-models:/usr/src/app/libs/fin-models
+      - ./libs/fun:/usr/src/app/libs/fun
+      - ./libs/sqlalchemy-unchained:/usr/src/app/libs/sqlalchemy-unchained
+      - ./libs/flask-sqlalchemy-unchained:/usr/src/app/libs/flask-sqlalchemy-unchained
+      - ./libs/py-meta-utils:/usr/src/app/libs/py-meta-utils
     depends_on:
       db:
         condition: service_healthy

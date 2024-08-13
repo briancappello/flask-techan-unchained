@@ -10,16 +10,19 @@ python = "^3.10"
 aiohttp = "^3.9.3"
 appdirs = "^1.4.4"
 cachetools = "^5.3.2"
+
 flask-unchained = { git = "https://github.com/briancappello/flask-unchained.git", extras = ["api", "celery", "mail", "sqlalchemy", "session", "security" ] }
 flask-sqlalchemy-unchained = { git = "https://github.com/briancappello/flask-sqlalchemy-unchained.git" }
 sqlalchemy-unchained = { git = "https://github.com/briancappello/sqlalchemy-unchained.git" }
 py-meta-utils = { git = "https://github.com/briancappello/py-meta-utils.git" }
 fin-models = { git = "https://github.com/briancappello/fin-models.git" }
-#flask-unchained = { path = "../fun", develop = true, extras = ["api", "celery", "mail", "sqlalchemy", "session", "security" ] }
-#flask-sqlalchemy-unchained = { path = "../flask-sqlalchemy-unchained", develop = true }
-#sqlalchemy-unchained = { path = "../sqlalchemy-unchained", develop = true }
-#py-meta-utils = { path = "../py-meta-utils", develop = true }
-#fin-models = { path = "../fin-models", develop = true }
+
+#flask-unchained = { path = "libs/fun", develop = true, extras = ["api", "celery", "mail", "sqlalchemy", "session", "security" ] }
+#flask-sqlalchemy-unchained = { path = "libs/flask-sqlalchemy-unchained", develop = true }
+#sqlalchemy-unchained = { path = "libs/sqlalchemy-unchained", develop = true }
+#py-meta-utils = { path = "libs/py-meta-utils", develop = true }
+#fin-models = { path = "libs/fin-models", develop = true }
+
 numpy = "<2"
 pandas = "^2.2.0"
 psycopg2 = "^2.9.9"

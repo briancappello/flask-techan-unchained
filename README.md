@@ -13,6 +13,27 @@ A financial charting and analysis app using Python/React. Built using [Flask Unc
 
 ## Development with Docker Compose
 
+### (Optional) Include libraries in editable mode inside the backend container
+
+Expected directory structure:
+
+```
+some-folder-root/fun-techan (this repo)
+some-folder-root/fin-models
+some-folder-root/fun
+some-folder-root/sqlalchemy-unchained
+some-folder-root/flask-sqlalchemy-unchained
+some-folder-root/py-meta-utils
+```
+
+If these exist, they will be symlinked into `$(pwd)/libs`. Otherwise, the repos will be git-cloned into `$(pwd)/libs`.
+
+```shell
+./make-lib-symlinks.sh
+```
+
+The libraries inside `$(pwd)/libs` will then be mounted as volumes inside the backend docker container.
+
 ### Build containers
 
 ```shell
