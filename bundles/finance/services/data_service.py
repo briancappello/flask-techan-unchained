@@ -1,10 +1,9 @@
 import pandas as pd
 
+from fin_models import exchanges, indexes
 from flask_unchained.bundles.sqlalchemy import SessionManager
 from flask_unchained import Service, injectable
 from typing import *
-
-from ..vendors import exchanges, indexes
 
 from .country_manager import CountryManager
 from .currency_manager import CurrencyManager

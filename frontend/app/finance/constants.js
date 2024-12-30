@@ -14,10 +14,11 @@ export const FREQUENCY = {
   TenMinutely: '10min',
   FifteenMinutely: '15min',
   ThirtyMinutely: '30min',
-  Hourly: '1hr',
+  Hourly: 'h',
   Daily: 'D',
   Weekly: 'W',
   Monthly: 'M',
+  Quarter: 'Q',
   Yearly: 'Y',
 }
 

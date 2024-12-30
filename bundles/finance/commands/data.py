@@ -4,22 +4,22 @@ import json
 import multiprocessing
 import numpy as np
 import pandas as pd
-# import pymarketstore as pymkts
-# import pystore
 import exchange_calendars as tc
 import talib.stream as ta
 
 from collections import defaultdict
-from datetime import date, timezone
+from datetime import date
 from flask_unchained import injectable, unchained
 from flask_unchained.cli import click
+from fin_models.enums import Freq
+from fin_models.services import store
+from fin_models.vendors import yahoo
 from typing import *
 
 from .group import finance
 from ..analyzers import AnalyzersRunner
 from ..filters import FiltersRunner
 from ..services import DataService, EquityManager, MarketstoreService
-from ..vendors import yahoo
 
 
 def chunk(string, size):
@@ -49,7 +49,7 @@ def sync(
                     for equity in equity_manager.filter_by_tickers(symbols)}
 
     async def dl(session, symbol):
-        url = yahoo.get_yfi_url(symbol)
+        url, cookies = yahoo.get_yfi_url_and_cookies(symbol)
         try:
             async with session.get(url) as r:
                 data = await r.json()
@@ -92,12 +92,6 @@ def sync(
         equity_manager.commit()
 
     click.echo('Done')
-
-
-def get_df(symbol, timeframe='1D', attrgroup='OHLCV'):
-    client = pymkts.Client()
-    p = pymkts.Param(symbol, timeframe, attrgroup, start='2015-01-01')
-    return client.query(p).first().df()
 
 
 def prev_higher_bar(df: pd.DataFrame):
@@ -284,22 +278,12 @@ def high_volume():
 
 
 def analyze_symbol(symbol):
-    df = get_df(symbol, '1D')
+    df = store.get(symbol, Freq.day)
     if df is None or not len(df):
         return None
 
     median = np.median(df.Volume)
     return dict(symbol=symbol, median=median)
-
-
-@finance.command()
-def clean(marketstore_service: MarketstoreService = injectable):
-    symbols = marketstore_service.get_symbols()
-    for symbol in symbols:
-        if len(symbol) > 4 or not symbol.isupper():
-            print('cleaning ', symbol)
-            marketstore_service.client.destroy(f'{symbol}/1Min/OHLCV')
-            marketstore_service.client.destroy(f'{symbol}/1D/OHLCV')
 
 
 @finance.command()
@@ -327,7 +311,6 @@ class Analyze:
 
     def __init__(self, start_date=None, end_date=None):
         self.nyse: tc.MarketCalendar = tc.get_calendar('NYSE')
-        self.store = pystore.store('finance')
 
         today = pd.Timestamp(date.today(), tz='UTC')
         end_date = end_date and pd.Timestamp(end_date, tz='UTC') or (
@@ -350,7 +333,7 @@ class Analyze:
             print(filters)
 
     def run(self):
-        symbols = self.marketstore_service.get_symbols()
+        symbols = store.symbols()
 
         for day in self.sessions:
             print(day.isoformat())
@@ -396,18 +379,7 @@ class Analyze:
         return filter_runners.run(timeframe_dfs)
 
     def persist(self, collection, name, data, metadata=None):
-        metadata = metadata or {}
-        self.collection(collection).write(name, data, metadata=metadata, overwrite=True)
-
-    def fetch(self, collection, name):
-        return self.collection(collection).item(name).to_pandas(parse_dates=False)
-
-    def has(self, collection, name):
-        collection = self.store.collection(collection)
-        return name in self.collection(collection).list_items()
-
-    def collection(self, name):
-        return self.store.collection(name)
+        raise NotImplementedError
 
 # FIXME
 # watch events, eg:

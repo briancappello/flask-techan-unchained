@@ -1,9 +1,10 @@
 import json
 
+from fin_models.vendors import yahoo
 from flask_unchained import injectable
 from flask_unchained.bundles.sqlalchemy import ModelManager
+
 from ..models import Watchlist
-from ..vendors import yahoo
 from .data_service import DataService
 
 

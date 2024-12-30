@@ -1,10 +1,9 @@
 import pandas as pd
 import talib as ta
 
+from fin_models.enums import Freq
 from flask_unchained import Controller, injectable, route, param_converter
 
-from ..enums import Frequency
-from ..models import Asset
 from ..services.data_service import DataService
 from ..services.index_manager import IndexManager
 from ..services.marketstore_service import MarketstoreService
@@ -16,9 +15,12 @@ class HistoryController(Controller):
     marketstore_service: MarketstoreService = injectable
 
     @route('/history/<string(upper=True):ticker>')
-    @param_converter(frequency=Frequency)
-    def history(self, ticker, frequency: Frequency):
+    @param_converter(frequency=Freq)
+    def history(self, ticker, frequency: Freq):
         df = self.marketstore_service.get_history(ticker, frequency, limit=5000)
+        if df is None or df.empty:
+            return {"columns": [], "index": [], "data": []}
+
         return add_ta(df).rename(columns={
             'Open': 'open',
             'High': 'high',

@@ -1,7 +1,4 @@
 from flask_unchained.bundles.sqlalchemy import db
-from flask_unchained.utils import utcnow
-
-from ..enums import Frequency
 
 
 class AssetDataVendor(db.Model):
@@ -37,23 +34,3 @@ class AssetDataVendor(db.Model):
     @ticker.setter
     def ticker(self, ticker):
         self._ticker = ticker
-
-    def last_updated(self, frequency: Frequency):
-        if frequency == Frequency.Monthly:
-            return self.monthly_last_updated
-        elif frequency == Frequency.Weekly:
-            return self.weekly_last_updated
-        elif frequency == Frequency.Daily:
-            return self.daily_last_updated
-        return self.minutely_last_updated
-
-    def set_last_updated(self, frequency: Frequency, time=None):
-        time = time or utcnow()
-        if frequency == Frequency.Monthly:
-            self.monthly_last_updated = time
-        elif frequency == Frequency.Weekly:
-            self.weekly_last_updated = time
-        elif frequency == Frequency.Daily:
-            self.daily_last_updated = time
-        else:
-            self.minutely_last_updated = time
