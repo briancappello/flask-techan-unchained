@@ -5,11 +5,13 @@ from flask_unchained import injectable
 from flask_unchained.bundles.sqlalchemy import ModelManager
 
 from ..models import Watchlist
+from ..services import IndexManager
 from .data_service import DataService
 
 
 class WatchlistManager(ModelManager):
     data_service: DataService = injectable
+    index_manager: IndexManager = injectable
     config = injectable
 
     class Meta:
@@ -22,7 +24,30 @@ class WatchlistManager(ModelManager):
         return self.q.filter_by(user_id=user.id)
 
     def get_watchlist(self, key):
+        with open(self.config.JSON_WATCHLISTS_PATH) as f:
+            json_watchlists: dict = json.load(f)
+
+        if key in json_watchlists:
+            return dict(
+                key=key,
+                components=self.data_service.get_quotes(
+                    tickers=json_watchlists[key]['tickers'],
+                )
+            )
+
+        index = self.index_manager.get_by(ticker=key)
+        if index is None:
+            return dict(key=key, components=[])
+
+        return dict(
+            key=index.ticker,
+            components=self.data_service.get_quotes(
+                tickers=[equity.ticker for equity in index.equities]
+            )
+        )
+
         tickers = []
+
         if key == 'most-actives':
             tickers = yahoo.get_most_actives().index
         elif key == 'trending':
@@ -31,9 +56,6 @@ class WatchlistManager(ModelManager):
         if not len(tickers):
             if key not in {'crossed-sma', 'high-volume', 'expanding-bodies', 'new-highs'}:
                 raise RuntimeError(f'Watchlist(key={key}) not found')
-
-            with open(f'/home/brian/{key}.json') as f:
-                tickers = json.load(f)
 
         return dict(key=key, components=self.data_service.get_quotes(tickers=tickers))
 

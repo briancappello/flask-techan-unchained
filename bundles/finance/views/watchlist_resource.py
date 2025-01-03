@@ -1,13 +1,15 @@
+import json
+
 from flask_unchained import Resource, request, injectable
 from flask_unchained.bundles.security import auth_required, current_user
 
-from ..services import DataService, IndexManager, WatchlistManager
+from ..services import IndexManager, WatchlistManager
 
 
 class WatchlistResource(Resource):
-    data_service: DataService = injectable
     index_manager: IndexManager = injectable
     watchlist_manager: WatchlistManager = injectable
+    config = injectable
 
     class Meta:
         member_param = '<string:key>'
@@ -18,11 +20,15 @@ class WatchlistResource(Resource):
         return self.jsonify({'watchlist': watchlist.name})
 
     def list(self):
+        with open(self.config.JSON_WATCHLISTS_PATH) as f:
+            json_watchlists: dict = json.load(f)
+
         watchlists = [
             dict(key=index.ticker, label=index.name)
             for index in self.index_manager.all()
             if 'Russell' not in index.name
-         # ] + [
+         ] + [
+            dict(key=key, label=wl['label']) for key, wl in json_watchlists.items()
          #    dict(key='most-actives', label='Most Actives'),
          #    dict(key='trending', label='Trending'),
          #    dict(key='crossed-sma', label='Crossed SMA'),
