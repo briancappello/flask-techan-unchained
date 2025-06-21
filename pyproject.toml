@@ -5,12 +5,22 @@ description = ""
 authors = ["Brian Cappello <briancappello@gmail.com>"]
 readme = "README.md"
 package-mode = false
+requires-python = "~= 3.10"
 
 [tool.poetry.dependencies]
 python = "^3.10"
 aiohttp = "^3.9.3"
 appdirs = "^1.4.4"
 cachetools = "^5.3.2"
+numpy = "<2"
+pandas = "^2.2.0"
+psycopg2 = "^2.9.9"
+requests = "^2.31.0"
+ta-lib = "^0.4.29"
+py-yaml-fixtures = "^0.6.2"
+redis = "^5.0.1"
+pdfquery = "^0.4.3"
+jinja2-time = "^0.2.0"
 
 flask-unchained = { git = "https://github.com/briancappello/flask-unchained.git", extras = ["api", "celery", "mail", "sqlalchemy", "session", "security" ] }
 flask-sqlalchemy-unchained = { git = "https://github.com/briancappello/flask-sqlalchemy-unchained.git" }
@@ -23,16 +33,6 @@ fin-models = { git = "https://github.com/briancappello/fin-models.git" }
 #sqlalchemy-unchained = { path = "libs/sqlalchemy-unchained", develop = true }
 #py-meta-utils = { path = "libs/py-meta-utils", develop = true }
 #fin-models = { path = "libs/fin-models", develop = true }
-
-numpy = "<2"
-pandas = "^2.2.0"
-psycopg2 = "^2.9.9"
-requests = "^2.31.0"
-ta-lib = "^0.4.29"
-py-yaml-fixtures = "^0.6.2"
-redis = "^5.0.1"
-pdfquery = "^0.4.3"
-jinja2-time = "^0.2.0"
 
 [build-system]
 requires = ["poetry-core"]
