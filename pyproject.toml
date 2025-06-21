@@ -5,10 +5,9 @@ description = ""
 authors = ["Brian Cappello <briancappello@gmail.com>"]
 readme = "README.md"
 package-mode = false
-requires-python = "~= 3.10"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "~3.12"
 aiohttp = "^3.9.3"
 appdirs = "^1.4.4"
 cachetools = "^5.3.2"
@@ -16,7 +15,7 @@ numpy = "<2"
 pandas = "^2.2.0"
 psycopg2 = "^2.9.9"
 requests = "^2.31.0"
-ta-lib = "^0.4.29"
+ta-lib = "^0.5"
 py-yaml-fixtures = "^0.6.2"
 redis = "^5.0.1"
 pdfquery = "^0.4.3"
@@ -33,6 +32,10 @@ fin-models = { git = "https://github.com/briancappello/fin-models.git" }
 #sqlalchemy-unchained = { path = "libs/sqlalchemy-unchained", develop = true }
 #py-meta-utils = { path = "libs/py-meta-utils", develop = true }
 #fin-models = { path = "libs/fin-models", develop = true }
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.4.1"
+factory-boy = "^3.3.3"
 
 [build-system]
 requires = ["poetry-core"]
