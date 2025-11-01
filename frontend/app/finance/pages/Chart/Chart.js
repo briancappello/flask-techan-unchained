@@ -25,7 +25,7 @@ Chart.defaultProps = {
 export default connect(
   (state, props) => {
     const { ticker } = props.match.params
-    const { frequency, scale, type } = parse(props.location.search)
-    return { ticker, frequency, scale, type, id: uuid4() }
+    const { frequency, datetime, scale, type } = parse(props.location.search)
+    return { ticker, frequency, datetime, scale, type, id: uuid4() }
   },
 )(Chart)

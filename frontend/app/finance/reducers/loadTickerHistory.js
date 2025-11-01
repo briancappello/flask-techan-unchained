@@ -85,7 +85,12 @@ export const isTickerHistoryLoading = (state, ticker, frequency) => {
   const tickers = selectTickers(state)
   return tickers[ticker] && (tickers[ticker].isLoading == frequency)
 }
-export const selectHistoryByTicker = (state, ticker, frequency) => {
+export const selectHistoryByTicker = (state, ticker, frequency, datetime) => {
   const tickers = selectTickers(state)
-  return tickers[ticker] && tickers[ticker].history[frequency]
+  let rv = tickers[ticker] && tickers[ticker].history[frequency]
+  if (rv && datetime) {
+    let dt = new Date(datetime)
+    return rv.filter(d => d.date.getTime() <= dt.getTime())
+  }
+  return rv
 }

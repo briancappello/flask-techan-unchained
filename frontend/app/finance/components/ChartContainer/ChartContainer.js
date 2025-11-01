@@ -31,29 +31,32 @@ class ChartContainer extends React.Component {
 
   static defaultProps = {
     frequency: FREQUENCY.Daily,
+    datetime: '',
     scale: LINEAR_SCALE,
     type: CANDLE_CHART,
   }
 
   constructor(props) {
     super(props)
+    const { datetime } = props
     this.state = {
       ticker: '',
+      datetime: datetime,
     }
   }
 
   componentWillMount() {
-    const { loadTickerHistory, ticker, frequency } = this.props
-    loadTickerHistory.maybeTrigger({ ticker, frequency })
+    const { loadTickerHistory, ticker, frequency, datetime } = this.props
+    loadTickerHistory.maybeTrigger({ ticker, frequency, datetime })
   }
 
   componentWillReceiveProps(nextProps) {
-    const { loadTickerHistory, ticker: prevTicker, frequency: prevFrequency } = this.props
-    const { ticker, frequency } = nextProps
+    const { loadTickerHistory, ticker: prevTicker, frequency: prevFrequency, datetime: prevDatetime } = this.props
+    const { ticker, frequency, datetime } = nextProps
 
-    if (prevTicker !== ticker || prevFrequency !== frequency) {
-      loadTickerHistory.maybeTrigger({ ticker, frequency })
-      this.setState({ ticker: '' })
+    if (prevTicker !== ticker || prevFrequency !== frequency || prevDatetime !== datetime) {
+      loadTickerHistory.maybeTrigger({ ticker, frequency, datetime })
+      this.setState({ ticker: '', datetime: datetime })
     }
   }
 
@@ -69,22 +72,23 @@ class ChartContainer extends React.Component {
         case "ArrowDown":
           break
       }
-      console.log(e.key, this.props)
+      console.log(`keydown event listener: ${e.key}`)
     })
   }
 
   onClick = (key, value) => {
-    const { ticker, frequency, scale, type } = this.props
-    const args = { ticker, frequency, scale, type }
+    const { ticker, frequency, datetime, scale, type } = this.props
+    const args = { ticker, frequency, datetime, scale, type }
     args[key] = value
     this.pushNewUrl(args)
   }
 
   onSubmit = (e) => {
     e.preventDefault()
-    const { ticker } = this.state
+    const { ticker: currentTicker } = this.props
+    const { ticker, datetime } = this.state
     const { frequency, scale, type } = this.props
-    this.pushNewUrl({ ticker, frequency, scale, type })
+    this.pushNewUrl({ ticker: ticker && ticker || currentTicker, datetime, frequency, scale, type })
   }
 
   pushNewUrl({ ticker, ...queryParams }) {
@@ -116,7 +120,7 @@ class ChartContainer extends React.Component {
   }
 
   render() {
-    const { id, ticker, history, frequency, scale, type } = this.props
+    const { id, ticker, datetime, history, frequency, scale, type } = this.props
 
     return (
       <div className="chart-container-wrap">
@@ -157,8 +161,14 @@ class ChartContainer extends React.Component {
                    autoFocus={true}
                    onChange={(e) => this.setState({ ticker: e.target.value })}
             />
+            <input type="text"
+                   placeholder="Datetime"
+                   value={this.state.datetime}
+                   onChange={(e) => this.setState({ datetime: e.target.value })}
+            />
+            <input type="submit" style={{ display: "none" }} />
           </form>
-          <Watchlists queryParams={this._filterQueryParams({ frequency, scale, type })} />
+          <Watchlists queryParams={this._filterQueryParams({ frequency, datetime, scale, type })} />
         </aside>
       </div>
     )
@@ -170,9 +180,9 @@ const withHistorySagas = injectSagas(require('finance/sagas/loadTickerHistory'))
 
 const withConnect = connect(
   (state, props) => {
-    const { ticker, frequency } = props
+    const { ticker, frequency, datetime } = props
     return {
-      history: selectHistoryByTicker(state, ticker, frequency),
+      history: selectHistoryByTicker(state, ticker, frequency, datetime),
     }
   },
   (dispatch) => ({
