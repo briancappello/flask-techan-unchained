@@ -397,7 +397,7 @@ export default class Chart extends React.Component {
       .axis(this.xAxis)
       .orient('bottom')
       .format(this._isIntraday() ? FORMATS.DATETIME : FORMATS.DATE)
-      .width(this._isIntraday() ? 100 : 75)
+      .width(this._isIntraday() ? 120 : 75)
       .translate([0, this.chartHeight])
 
     // crosshair current price label

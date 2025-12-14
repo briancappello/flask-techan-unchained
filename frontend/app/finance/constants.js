@@ -66,6 +66,19 @@ function dailyTickFormat(d) {
   return d3.timeFormat('%b')(d)
 }
 
+let dateFormatter = new Intl.DateTimeFormat("en-US", {
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+  timeZone: "America/New_York",
+}).format
+
+let timeFormatter = new Intl.DateTimeFormat("en-US", {
+  hour: "numeric",
+  minute: "2-digit",
+  timeZone: "America/New_York",
+}).format
+
 export const FORMATS = {
   DEC: d3.format(DEC),
   DEC1: d3.format(DEC1),
@@ -87,8 +100,8 @@ export const FORMATS = {
       return d3.format(SI)(num)
     }
   },
-  DATE: d3.timeFormat(DATE),
-  DATETIME: d3.timeFormat(DATETIME),
+  DATE: dateFormatter,
+  DATETIME: (dt) => `${dateFormatter(dt)} ${timeFormatter(dt)}`,
   [FREQUENCY.Minutely]: minutelyTickFormat,
   [FREQUENCY.FiveMinutely]: minutelyTickFormat,
   [FREQUENCY.TenMinutely]: minutelyTickFormat,
