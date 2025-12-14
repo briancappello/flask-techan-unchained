@@ -23,8 +23,9 @@ class MarketstoreService(Service):
             '1D': Freq.day,
             '1M': Freq.month,
             '1Y': Freq.year,
+            None: Freq.min_1,
         }
-        df = store.get(symbol, fin_models_freqs.get(timeframe, timeframe))
+        df = store.get(symbol, freq=fin_models_freqs.get(timeframe, timeframe))
         if df is not None and limit:
             return df[-limit:]
         return df

@@ -97,7 +97,8 @@ class Config(BundleConfig):
         pw=os.getenv('FLASK_DATABASE_PASSWORD', 'fun_techan'),
         host=os.getenv('FLASK_DATABASE_HOST', '127.0.0.1'),
         port=os.getenv('FLASK_DATABASE_PORT', 5432),
-        db=os.getenv('FLASK_DATABASE_NAME', 'fun_techan'))
+        db=os.getenv('FLASK_DATABASE_NAME', 'fun_techan'),
+    )
 
     MARKETSTORE_RPC_HOST = os.getenv('MARKETSTORE_RPC_HOST', 'localhost')
     MARKETSTORE_RPC_PORT = os.getenv('MARKETSTORE_RPC_PORT', '5993')

@@ -6,7 +6,11 @@ services:
 #      target: development
     environment:
       - API_HOST=backend
-      - FLASK_DATABASE_HOST=db
+#      - FLASK_DATABASE_HOST=db
+      - FLASK_DATABASE_HOST=host.containers.internal
+#      - FLASK_DATABASE_USER=fin_models
+#      - FLASK_DATABASE_PASSWORD=fin-models
+#      - FLASK_DATABASE_NAME=fin_models
       - FLASK_REDIS_HOST=redis
       - POLYGON_API_KEY=${POLYGON_API_KEY}
     ports:
@@ -14,7 +18,7 @@ services:
     networks:
       - private
     volumes:
-      - fin_data:/root/.fin-models-data
+      - ${HOME}/.fin-models-data:/root/.fin-models-data
       - ./backend:/usr/src/app/backend
       - ./bundles:/usr/src/app/bundles
       - ./db:/usr/src/app/db
@@ -25,28 +29,28 @@ services:
       - ./libs/flask-sqlalchemy-unchained:/usr/src/app/libs/flask-sqlalchemy-unchained
       - ./libs/py-meta-utils:/usr/src/app/libs/py-meta-utils
     depends_on:
-      db:
-        condition: service_healthy
+#      db:
+#        condition: service_healthy
       redis:
         condition: service_started
-  db:
-    image: postgres:alpine
-    environment:
-      - POSTGRES_USER=fun_techan
-      - POSTGRES_PASSWORD=fun_techan
-      - POSTGRES_DB=fun_techan
-    restart: always
-    volumes:
-      - db_data:/var/lib/postgresql/data
-    networks:
-      - private
-    expose:
-      - 5432
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U fun_techan -d fun_techan" ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+#  db:
+#    image: postgres:alpine
+#    environment:
+#      - POSTGRES_USER=fun_techan
+#      - POSTGRES_PASSWORD=fun_techan
+#      - POSTGRES_DB=fun_techan
+#    restart: always
+#    volumes:
+#      - db_data:/var/lib/postgresql/data
+#    networks:
+#      - private
+#    expose:
+#      - 5432
+#    healthcheck:
+#      test: [ "CMD-SHELL", "pg_isready -U fun_techan -d fun_techan" ]
+#      interval: 5s
+#      timeout: 5s
+#      retries: 5
   redis:
     image: redis:alpine
     restart: always
@@ -75,7 +79,7 @@ networks:
   private:
     driver: bridge
 volumes:
-  db_data:
-    driver: local
+#  db_data:
+#    driver: local
   fin_data:
     driver: local

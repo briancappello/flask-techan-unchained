@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from flask_unchained.bundles.mail.pytest import *
 from flask_unchained.bundles.sqlalchemy.pytest import *
 from flask_unchained.bundles.security.pytest import *
+from flask_unchained.bundles.sqlalchemy.model_factory import ModelFactory
 
 from bundles.security.models import User, Role, UserRole
 

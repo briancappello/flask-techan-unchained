@@ -1,3 +1,7 @@
+import os
+import json
+
+from fin_models.config import Config as FinModelsConfig
 from flask_unchained import Resource, request, injectable
 from flask_unchained.bundles.security import auth_required, current_user
 
@@ -22,14 +26,24 @@ class WatchlistResource(Resource):
             dict(key=index.ticker, label=index.name)
             for index in self.index_manager.all()
             if 'Russell' not in index.name
-         # ] + [
-         #    dict(key='most-actives', label='Most Actives'),
-         #    dict(key='trending', label='Trending'),
+         ] + [
+            dict(key='most-actives', label='Most Actives'),
+            dict(key='gainers', label='Gainers'),
+            dict(key='trending', label='Trending'),
+            dict(key='expanding-bbands', label='Expanding BBands'),
          #    dict(key='crossed-sma', label='Crossed SMA'),
          #    dict(key='high-volume', label='High Volume'),
          #    dict(key='expanding-bodies', label='Expanding Bodies'),
          #    dict(key='new-highs', label='New Highs'),
         ]
+        dir = os.path.join(FinModelsConfig.DATA_DIR, 'watchlists')
+        for filename in os.listdir(dir):
+            fname, ext = os.path.splitext(filename)
+            if ext != '.json':
+                continue
+            with open(os.path.join(dir, filename)) as f:
+                data = json.load(f)
+            watchlists.append(dict(key=fname, label=data['label']))
         return self.jsonify(watchlists)
 
     def get(self, key):
@@ -47,3 +61,4 @@ class WatchlistResource(Resource):
                     [equity.ticker for equity in index.equities]
                 ),
             )
+        return []

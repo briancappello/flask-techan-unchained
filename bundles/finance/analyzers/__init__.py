@@ -68,7 +68,7 @@ class TA(SymbolAnalyzer):
 
     @classmethod
     def run(cls, df):
-        bbands_upper, sma20, bbands_lower = ta.BBANDS(df.Close[-20:])
+        bbands_upper, sma20, bbands_lower = ta.BBANDS(df.Close[-20:], timeperiod=20)
         return dict(
             bbands_upper=bbands_upper[-1],
             sma20=sma20[-1],
