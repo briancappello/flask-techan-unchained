@@ -1,12 +1,14 @@
 #!/bin/bash
 
-poetry run flask db upgrade
+echo "Running migrations..."
+uv run flask db upgrade
 
-users_already_populated=$(poetry run flask users list | grep "admin@example.com")
+users_already_populated=$(uv run flask users list | grep "admin@example.com")
 if [ -z "$users_already_populated" ]; then
-  poetry run flask db import-fixtures
-  #poetry run flask finance init
-  #poetry run fin init
+  echo "Loading data..."
+  uv run flask db import-fixtures
+  uv run flask finance init
+  uv run fin init
 fi
 
 editable_libs=(
@@ -20,9 +22,10 @@ editable_libs=(
 for lib in "${editable_libs[@]}"
 do
     if [[ -d "libs/$lib" && ! -z "$(ls -A libs/$lib)" ]]; then
-        poetry run pip install -e libs/$lib &> /dev/null
+        uv add --editable libs/$lib &> /dev/null
         echo "Installed $lib in editable mode"
     fi
 done
 
-poetry run flask run --host 0.0.0.0
+echo "Starting web server..."
+uv run flask run --host 0.0.0.0

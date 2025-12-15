@@ -1,42 +1,51 @@
-[tool.poetry]
+[project]
 name = "flask-techan-unchained"
 version = "0.1.0"
 description = ""
-authors = ["Brian Cappello <briancappello@gmail.com>"]
+authors = [{ name = "Brian Cappello", email = "briancappello@gmail.com" }]
+requires-python = ">=3.12,<3.13"
 readme = "README.md"
-package-mode = false
+dependencies = [
+    "aiohttp>=3.9.3,<4",
+    "appdirs>=1.4.4,<2",
+    "cachetools>=5.3.2,<6",
+    "numpy<2",
+    "pandas>=2.2.0,<3",
+    "psycopg2>=2.9.9,<3",
+    "requests>=2.31.0,<3",
+    "ta-lib>=0.5,<0.6",
+    "py-yaml-fixtures>=0.6.2,<0.7",
+    "redis>=5.0.1,<6",
+    "pdfquery>=0.4.3,<0.5",
+    "jinja2-time>=0.2.0,<0.3",
+    "flask-unchained[api,celery,mail,security,session,sqlalchemy]",
+    "flask-sqlalchemy-unchained",
+    "sqlalchemy-unchained",
+    "py-meta-utils",
+    "fin-models",
+]
 
-[tool.poetry.dependencies]
-python = "~3.12"
-aiohttp = "^3.9.3"
-appdirs = "^1.4.4"
-cachetools = "^5.3.2"
-numpy = "<2"
-pandas = "^2.2.0"
-psycopg2 = "^2.9.9"
-requests = "^2.31.0"
-ta-lib = "^0.5"
-py-yaml-fixtures = "^0.6.2"
-redis = "^5.0.1"
-pdfquery = "^0.4.3"
-jinja2-time = "^0.2.0"
+[dependency-groups]
+dev = [
+    "pytest>=8.4.1,<9",
+    "factory-boy>=3.3.3,<4",
+]
 
-flask-unchained = { git = "https://github.com/briancappello/flask-unchained.git", extras = ["api", "celery", "mail", "sqlalchemy", "session", "security" ] }
+[tool.uv]
+package = false
+
+[tool.uv.sources]
+#fin-models = { path = "../fin-models", editable = true }
+#flask-unchained = { path = "../fun", editable = true }
+#py-yaml-fixtures = { path = "../py-yaml-fixtures", editable = true }
+
+fin-models = { git = "https://github.com/briancappello/fin-models.git" }
+flask-unchained = { git = "https://github.com/briancappello/flask-unchained.git" }
+py-yaml-fixtures = { git = "https://github.com/briancappello/py-yaml-fixtures.git" }
 flask-sqlalchemy-unchained = { git = "https://github.com/briancappello/flask-sqlalchemy-unchained.git" }
 sqlalchemy-unchained = { git = "https://github.com/briancappello/sqlalchemy-unchained.git" }
 py-meta-utils = { git = "https://github.com/briancappello/py-meta-utils.git" }
-fin-models = { git = "https://github.com/briancappello/fin-models.git" }
-
-#flask-unchained = { path = "libs/fun", develop = true, extras = ["api", "celery", "mail", "sqlalchemy", "session", "security" ] }
-#flask-sqlalchemy-unchained = { path = "libs/flask-sqlalchemy-unchained", develop = true }
-#sqlalchemy-unchained = { path = "libs/sqlalchemy-unchained", develop = true }
-#py-meta-utils = { path = "libs/py-meta-utils", develop = true }
-#fin-models = { path = "libs/fin-models", develop = true }
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.4.1"
-factory-boy = "^3.3.3"
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"

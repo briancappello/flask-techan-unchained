@@ -1,3 +1,7 @@
+x-podman:
+  default_net_name_compat: true
+  default_net_behavior_compat: true
+
 services:
   backend:
     build:
@@ -52,7 +56,7 @@ services:
 #      timeout: 5s
 #      retries: 5
   redis:
-    image: redis:alpine
+    image: docker.io/redis:latest
     restart: always
     networks:
       - private

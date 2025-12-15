@@ -1,4 +1,8 @@
-FROM node:14
+FROM node:14-bullseye
+
+# https://debiansupport.com/mirrors/
+# RUN sed -i -e 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list
+
 RUN apt-get update && \
     apt-get install -y jq inotify-tools && \
     rm -fr /var/lib/apt/lists/*

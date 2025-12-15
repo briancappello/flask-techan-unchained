@@ -1,21 +1,24 @@
 FROM python:3.12
 
+# install ta-lib
 RUN curl -L https://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz -o ta-lib.tar.gz
 RUN tar -xvzf ta-lib.tar.gz && \
     cd ta-lib && \
-    cp /usr/share/automake-1.16/config.guess config.guess && \
+    cp /usr/share/automake-$(automake --version | grep "GNU automake" | cut -d ' ' -f 4)/config.guess config.guess && \
     ./configure --prefix=/usr \
     && make \
     && make install
 
-RUN curl -sSL https://install.python-poetry.org | python3 -
+# install uv
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 ENV PATH="$PATH:/root/.local/bin"
 
 WORKDIR /usr/src/app
 
 COPY pyproject.toml ./
-COPY poetry.lock ./
-RUN poetry install --no-root
+COPY uv.lock ./
+COPY .python-version ./
+RUN uv sync --no-dev
 
 COPY backend backend
 COPY bundles bundles

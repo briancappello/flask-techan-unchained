@@ -95,6 +95,16 @@ edit `backend/config.py` as necessary
 edit `frontend/app/config.js` as necessary
 
 # set up database
+
+# for podman to connect to postgres server on host
+sudo vi /var/lib/postgres/data/postgresql.conf
+listen_address = '*'
+# for podman to connect to postgres server on host
+sudo vi /var/lib/postgres/data/pg_hba.conf
+host   all   all   0.0.0.0/0  trust
+
+sudo systemctl restart postgresql
+
 sudo -u postgres -i psql
 postgres=# CREATE USER fun_techan WITH SUPERUSER PASSWORD 'fun_techan';
 postgres=# CREATE DATABASE fun_techan;
