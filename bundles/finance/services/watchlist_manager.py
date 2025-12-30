@@ -46,7 +46,6 @@ class WatchlistManager(ModelManager):
             if os.path.exists(wl_path):
                 with open(wl_path) as f:
                     data = json.load(f)
-                    print(data)
                     tickers = data.get('tickers', [])
 
             elif key not in {'crossed-sma', 'high-volume', 'expanding-bodies', 'new-highs'}:

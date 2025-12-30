@@ -36,12 +36,12 @@ class WatchlistResource(Resource):
          #    dict(key='expanding-bodies', label='Expanding Bodies'),
          #    dict(key='new-highs', label='New Highs'),
         ]
-        dir = os.path.join(FinModelsConfig.DATA_DIR, 'watchlists')
-        for filename in os.listdir(dir):
+        wl_dir = os.path.join(FinModelsConfig.DATA_DIR, 'watchlists')
+        for filename in os.listdir(wl_dir):
             fname, ext = os.path.splitext(filename)
             if ext != '.json':
                 continue
-            with open(os.path.join(dir, filename)) as f:
+            with open(os.path.join(wl_dir, filename)) as f:
                 data = json.load(f)
             watchlists.append(dict(key=fname, label=data['label']))
         return self.jsonify(watchlists)
