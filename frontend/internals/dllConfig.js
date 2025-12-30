@@ -13,6 +13,7 @@ const dllConfig = {
         'normalize.css',
         'super-skeleton',
         'skeleton-scss',
+        'techan',
       ],
       include: [
         'babel-polyfill',

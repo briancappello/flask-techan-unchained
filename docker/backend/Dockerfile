@@ -4,7 +4,7 @@ FROM python:3.12
 RUN curl -L https://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz -o ta-lib.tar.gz
 RUN tar -xvzf ta-lib.tar.gz && \
     cd ta-lib && \
-    cp /usr/share/automake-$(automake --version | grep "GNU automake" | cut -d ' ' -f 4)/config.guess config.guess && \
+    cp /usr/share/automake-$(automake --version | grep "GNU automake" | cut -d ' ' -f 4 | cut -d '.' -f1,2)/config.guess config.guess && \
     ./configure --prefix=/usr \
     && make \
     && make install

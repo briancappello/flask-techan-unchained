@@ -4,7 +4,7 @@ FROM node:14-bullseye
 # RUN sed -i -e 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list
 
 RUN apt-get update && \
-    apt-get install -y jq inotify-tools && \
+    apt-get install -y jq inotify-tools python && \
     rm -fr /var/lib/apt/lists/*
 
 RUN npm install -g npm@8
@@ -18,6 +18,10 @@ RUN git clone https://github.com/briancappello/techan.js.git && \
     cd /home/node && \
     chown -R node:node /home/node
 
+RUN chown -R node:node $(npm config get prefix)/lib/node_modules
+RUN chown -R node:node $(npm config get prefix)/bin
+RUN chown -R node:node $(npm config get prefix)/share
+
 # very important for npm install to work!
 USER node
 
@@ -28,6 +32,6 @@ RUN npm link techan
 COPY frontend /home/node/frontend
 COPY static /home/node/static
 
-RUN npm run build:dll
+COPY docker/frontend/entrypoint.sh .
 EXPOSE 8888
-CMD ["npm", "run", "start"]
+ENTRYPOINT ["bash", "entrypoint.sh"]

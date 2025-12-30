@@ -1,6 +1,7 @@
 x-podman:
   default_net_name_compat: true
   default_net_behavior_compat: true
+  in_pod: false
 
 services:
   backend:
@@ -71,8 +72,10 @@ services:
       API_HOST: backend
     ports:
       - 8888:8888
+    userns_mode: keep-id
     volumes:
-      - ./frontend:/home/node/frontend
+      - "./frontend:/home/node/frontend:z"
+      - "~/dev/techan.js:/home/node/techan.js:z"
     networks:
       - public
       - private
