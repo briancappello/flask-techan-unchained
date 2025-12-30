@@ -100,7 +100,7 @@ class ChartContainer extends React.Component {
   }
 
   _filterQueryParams(queryParams) {
-    ['frequency', 'scale', 'type'].forEach(paramName => {
+    ['frequency', 'scale', 'type', 'datetime'].forEach(paramName => {
       if (queryParams[paramName] == ChartContainer.defaultProps[paramName]) {
         delete queryParams[paramName]
       }

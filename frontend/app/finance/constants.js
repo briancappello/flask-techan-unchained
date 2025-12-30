@@ -22,6 +22,8 @@ export const FREQUENCY = {
   Yearly: 'Y',
 }
 
+export const TZ_OFFSET = ((new Date().getTimezoneOffset()) / 60) - 5;
+
 // https://github.com/d3/d3-format#api-reference
 const DEC = ',.2f',
       DEC1 = ',.1f',
@@ -47,8 +49,6 @@ let timeFormatter = new Intl.DateTimeFormat("en-US", {
   dayPeriod: undefined,
 }).format
 
-let tzOffset = ((new Date().getTimezoneOffset()) / 60) - 5;
-
 function minutelyTickFormat(dt, i, nodes) {
   if (i > 0) {
     const getX = function(node) {
@@ -71,7 +71,7 @@ function minutelyTickFormat(dt, i, nodes) {
 
   if (dt.getMinutes() === 0) {
     return time.replace(":00", "")
-  } else if (dt.getHours() === (9 - tzOffset) && dt.getMinutes() === 30) {
+  } else if (dt.getHours() === (9 - TZ_OFFSET) && dt.getMinutes() === 30) {
     return date + " " + time
   }
   return time;

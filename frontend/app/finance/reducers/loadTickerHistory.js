@@ -1,5 +1,5 @@
 import { loadTickerHistory } from 'finance/actions'
-
+import { TZ_OFFSET } from "finance/constants";
 
 export const KEY = 'loadTickerHistory'
 
@@ -90,6 +90,7 @@ export const selectHistoryByTicker = (state, ticker, frequency, datetime) => {
   let rv = tickers[ticker] && tickers[ticker].history[frequency]
   if (rv && datetime) {
     let dt = new Date(datetime)
+    dt.setHours(dt.getHours() - TZ_OFFSET)
     return rv.filter(d => d.date.getTime() <= dt.getTime())
   }
   return rv
