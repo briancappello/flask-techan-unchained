@@ -33,39 +33,6 @@ const DEC = ',.2f',
       DATE = '%b %d, %Y',
       DATETIME = '%b %d, %Y %_I:%M %p'
 
-function minutelyTickFormat(date, i, nodes) {
-  if (i > 0) {
-    const getX = function(node) {
-      const transform = node.parentElement.attributes.transform.value
-      const re = /translate\(([\d\.]+),([\d\.]+)\)/
-      const matches = transform.match(re)
-      return parseFloat(matches[1])
-    }
-
-    const prevX = getX(nodes[i-1]),
-          thisX = getX(nodes[i])
-    if ((thisX - prevX) < 40) {
-      return null
-    }
-  }
-
-  const ampm = date.getHours() < 12 ? 'a' : 'p'
-
-  if (date.getMinutes() === 0) {
-    return d3.timeFormat('%_I')(date) + ampm
-  } else if (date.getHours() === 9 && date.getMinutes() === 30) {
-    return d3.timeFormat('%_m/%d %_I:%M')(date) + ampm
-  }
-  return d3.timeFormat('%_I:%M')(date) + ampm
-}
-
-function dailyTickFormat(d) {
-  if (d.getMonth() === 0) {
-    return d3.timeFormat('%b %Y')(d)
-  }
-  return d3.timeFormat('%b')(d)
-}
-
 let dateFormatter = new Intl.DateTimeFormat("en-US", {
   month: "short",
   day: "numeric",
@@ -77,7 +44,45 @@ let timeFormatter = new Intl.DateTimeFormat("en-US", {
   hour: "numeric",
   minute: "2-digit",
   timeZone: "America/New_York",
+  dayPeriod: undefined,
 }).format
+
+let tzOffset = ((new Date().getTimezoneOffset()) / 60) - 5;
+
+function minutelyTickFormat(dt, i, nodes) {
+  if (i > 0) {
+    const getX = function(node) {
+      const transform = node.parentElement.attributes.transform.value
+      const re = /translate\(([\d\.]+),([\d\.]+)\)/
+      const matches = transform.match(re)
+      return parseFloat(matches[1])
+    }
+
+    const prevX = getX(nodes[i-1]),
+          thisX = getX(nodes[i])
+
+    if ((thisX - prevX) < 30) {
+      return null
+    }
+  }
+
+  const date = d3.timeFormat('%_m/%d')(dt)
+  const time = timeFormatter(dt).replace(" AM", "a").replace(" PM", "p")
+
+  if (dt.getMinutes() === 0) {
+    return time.replace(":00", "")
+  } else if (dt.getHours() === (9 - tzOffset) && dt.getMinutes() === 30) {
+    return date + " " + time
+  }
+  return time;
+}
+
+function dailyTickFormat(dt) {
+  if (dt.getMonth() === 0) {
+    return d3.timeFormat('%b %Y')(dt)
+  }
+  return d3.timeFormat('%b')(dt)
+}
 
 export const FORMATS = {
   DEC: d3.format(DEC),

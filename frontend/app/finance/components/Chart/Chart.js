@@ -58,14 +58,14 @@ export default class Chart extends React.Component {
 
     this.margin = { top: 10, right: 45, bottom: 20, left: 45 }
 
+    const { chartId, data, frequency, indicators, indicatorHeight, upperIndicators } = props
+
     let visibleBars = 0
     let startIdx = 0
     if (props.data && props.data.length) {
-      visibleBars = Math.min(props.data.length, MAX_BARS)
+      visibleBars = Math.min(props.data.length, frequency === FREQUENCY.Minutely ? 500 : MAX_BARS)
       startIdx = Math.max(props.data.length - visibleBars, 0)
     }
-
-    const { chartId, data, indicators, indicatorHeight, upperIndicators } = props
 
     this.state = {
       clipId: chartId + '-plotClip',
@@ -108,14 +108,14 @@ export default class Chart extends React.Component {
   componentWillReceiveProps(nextProps) {
     log_debug('Chart: componentWillReceiveProps')
 
-    const { data } = nextProps
+    const { data, frequency } = nextProps
 
     let visibleBars = 0
     let startIdx = 0
     let latestBar = {}
 
     if (data && data.length) {
-      visibleBars = Math.min(data.length, MAX_BARS)
+      visibleBars = Math.min(data.length, frequency === FREQUENCY.Minutely ? 500 : MAX_BARS)
       startIdx = Math.max(data.length - visibleBars, 0)
       latestBar = data[data.length - 1]
     }
