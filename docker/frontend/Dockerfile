@@ -4,7 +4,7 @@ FROM node:14-bullseye
 # RUN sed -i -e 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list
 
 RUN apt-get update && \
-    apt-get install -y jq inotify-tools && \
+    apt-get install -y jq inotify-tools python && \
     rm -fr /var/lib/apt/lists/*
 
 RUN npm install -g npm@8
