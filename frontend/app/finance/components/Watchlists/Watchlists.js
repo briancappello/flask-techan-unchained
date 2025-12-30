@@ -61,7 +61,13 @@ class Watchlists extends React.Component {
 
   render() {
     const { watchlists, watchlistComponents, queryParams } = this.props
-    const { watchlist, sidebarListHeight } = this.state
+    let { watchlist, sidebarListHeight } = this.state
+
+    // FIXME save current watchlist in query params?
+    if (watchlist === undefined && watchlists.length > 0) {
+      watchlist = watchlists[0].key
+    }
+
     if (!watchlist || !watchlistComponents || watchlistComponents[watchlist] === undefined) {
       return <p>Loading...</p>
     }
@@ -71,8 +77,8 @@ class Watchlists extends React.Component {
       <div className="watchlists" style={{ height: sidebarListHeight }}>
         <form>
           <select onChange={this.onChange} value={watchlist}>
-            {watchlists.map((watchlist) => {
-              return <option key={watchlist.key} value={watchlist.key}>{watchlist.label}</option>
+            {watchlists.map((wl) => {
+              return <option key={wl.key} value={wl.key}>{wl.label}</option>
             })}
           </select>
         </form>
