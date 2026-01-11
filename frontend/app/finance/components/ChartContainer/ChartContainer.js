@@ -54,10 +54,10 @@ const ChartContainer = ({
   type = DEFAULT_PROPS.type,
 }) => {
   const dispatch = useDispatch()
-  const history = useSelector((state) => selectHistoryByTicker(state, ticker, frequency, initialDatetime))
-
   const [tickerInput, setTickerInput] = useState('')
   const [datetimeInput, setDatetimeInput] = useState(initialDatetime)
+
+  const history = useSelector((state) => selectHistoryByTicker(state, ticker, frequency, datetimeInput))
 
   // Load ticker history when props change
   useEffect(() => {
@@ -91,10 +91,10 @@ const ChartContainer = ({
   }, [dispatch])
 
   const onClick = useCallback((key, value) => {
-    const args = { ticker, frequency, datetime: initialDatetime, scale, type }
+    const args = { ticker, frequency, datetime: datetimeInput, scale, type }
     args[key] = value
     pushNewUrl(args)
-  }, [ticker, frequency, initialDatetime, scale, type, pushNewUrl])
+  }, [ticker, frequency, datetimeInput, scale, type, pushNewUrl])
 
   const onSubmit = useCallback((e) => {
     e.preventDefault()
@@ -165,7 +165,7 @@ const ChartContainer = ({
           />
           <input type="submit" style={{ display: "none" }} />
         </form>
-        <Watchlists queryParams={filterQueryParams({ frequency, datetime: initialDatetime, scale, type })} />
+        <Watchlists queryParams={filterQueryParams({ frequency, datetime: datetimeInput, scale, type })} />
       </aside>
     </div>
   )

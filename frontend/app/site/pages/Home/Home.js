@@ -6,7 +6,7 @@ import { PageContent } from 'components'
 import { flashSuccess } from 'site/actions'
 
 class Home extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     if (window.location.search.indexOf('welcome') > 0) {
       this.props.flashSuccess('Welcome!')
     }

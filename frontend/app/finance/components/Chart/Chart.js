@@ -110,7 +110,37 @@ export default class Chart extends React.Component {
         return new Indicator()
       }),
       indicatorHeight: indicatorHeight,
+      prevData: data,
+      prevFrequency: frequency,
     }
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.data !== prevState.prevData || nextProps.frequency !== prevState.prevFrequency) {
+      log_debug('Chart: getDerivedStateFromProps')
+
+      const { data, frequency } = nextProps
+
+      let visibleBars = 0
+      let startIdx = 0
+      let latestBar = {}
+
+      if (data && data.length) {
+        visibleBars = Math.min(data.length, frequency === FREQUENCY.Minutely ? 500 : MAX_BARS)
+        startIdx = Math.max(data.length - visibleBars, 0)
+        latestBar = data[data.length - 1]
+      }
+
+      return {
+        visibleBars,
+        startIdx,
+        latestBar,
+        prevData: data,
+        prevFrequency: frequency,
+      }
+    }
+
+    return null
   }
 
   _isIntraday() {
@@ -123,35 +153,12 @@ export default class Chart extends React.Component {
   componentDidMount() {
     log_debug('Chart: componentDidMount')
 
-    this.state.totalWidth = this._getTotalWidth()
+    this.setState({ totalWidth: this._getTotalWidth() })
     window.addEventListener('resize', this.handleResize)
-
-    const { data } = this.props
-    if (data && data.length) {
-      this.refreshChart()
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    log_debug('Chart: componentWillReceiveProps')
-
-    const { data, frequency } = nextProps
-
-    let visibleBars = 0
-    let startIdx = 0
-    let latestBar = {}
-
-    if (data && data.length) {
-      visibleBars = Math.min(data.length, frequency === FREQUENCY.Minutely ? 500 : MAX_BARS)
-      startIdx = Math.max(data.length - visibleBars, 0)
-      latestBar = data[data.length - 1]
-    }
-
-    this.setState({ visibleBars, startIdx, latestBar })
   }
 
   shouldChartUpdate(prevProps, prevState) {
-    const propKeys = ['data', 'type', 'scale']
+    const propKeys = ['data', 'type', 'scale', 'frequency']
     for (let key of propKeys) {
       if (this.props[key] != prevProps[key]) {
         return true
