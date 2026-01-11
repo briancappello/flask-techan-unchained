@@ -26,7 +26,7 @@ const ResetPassword = (props) => {
       <h1>Reset Password</h1>
       {error && <DangerAlert>{error}</DangerAlert>}
       <p>Enter a new password and click submit to reset your password and login.</p>
-      <form onSubmit={handleSubmit((values) => resetPassword({ ...values, token }))}>
+      <form onSubmit={handleSubmit((values, dispatch) => resetPassword({ ...values, token }, dispatch))}>
         <PasswordField name="newPassword"
                        autoFocus
         />

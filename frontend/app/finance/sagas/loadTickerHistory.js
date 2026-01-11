@@ -1,8 +1,6 @@
 import { call, put, select, takeEvery, takeLatest } from 'redux-saga/effects'
 import isString from 'lodash/isString'
 
-import { createRoutineSaga } from 'sagas'
-
 import { loadTickerHistory } from 'finance/actions'
 import FinanceApi from 'finance/api'
 import { FREQUENCY } from 'finance/constants'
@@ -19,14 +17,18 @@ export function *maybeLoadTickerHistorySaga({ payload: { ticker, frequency } }) 
   }
 }
 
-export const loadTickerHistorySaga = createRoutineSaga(
-  loadTickerHistory,
-  function *({ ticker, frequency }) {
+export function* loadTickerHistorySaga({ payload: { ticker, frequency } }) {
+  try {
+    yield put(loadTickerHistory.request({ ticker, frequency }))
     let history = yield call(FinanceApi.loadTickerHistory, ticker, frequency)
     history = parseHistoryJson(history, frequency)
     yield put(loadTickerHistory.success({ ticker, frequency, history }))
+  } catch (e) {
+    yield put(loadTickerHistory.failure({ ticker, frequency, ...e }))
+  } finally {
+    yield put(loadTickerHistory.fulfill({ ticker, frequency }))
   }
-)
+}
 
 export default () => [
   takeEvery(loadTickerHistory.MAYBE_TRIGGER, maybeLoadTickerHistorySaga),

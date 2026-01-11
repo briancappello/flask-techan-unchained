@@ -1,5 +1,6 @@
 import React from 'react'
 import { compose } from 'redux'
+import { useDispatch } from 'react-redux'
 import { reduxForm } from 'redux-form'
 import { Helmet } from 'react-helmet-async'
 
@@ -15,6 +16,7 @@ const FORM_NAME = 'signUp'
 
 const SignUp = (props) => {
   const { error, handleSubmit, pristine, submitting } = props
+
   return (
     <PageContent>
       <Helmet>

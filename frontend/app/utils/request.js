@@ -1,4 +1,3 @@
-import fetch from 'isomorphic-fetch'
 import * as Cookies from 'js-cookie'
 import { stringify } from 'query-string'
 
@@ -64,19 +63,16 @@ export function request(url, options) {
   return fetch(url, options)
     .then(_checkStatusAndParseJSON)
     .catch((e) => {
-      return new Promise((_, reject) => {
-        if (e.response) {
-          reject(e)
-        } else {
-          // should only end up here if the backend has gone away
-          e.response = {
-            status: -1,
-            statusText: e.message,
-            error: e.message,
-          }
-          reject(e)
-        }
-      })
+      if (e.response) {
+        throw e
+      }
+      // should only end up here if the backend has gone away or network error
+      e.response = {
+        status: -1,
+        statusText: e.message,
+        error: e.message,
+      }
+      throw e
     })
 }
 

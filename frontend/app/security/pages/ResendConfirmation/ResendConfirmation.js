@@ -16,6 +16,7 @@ const FORM_NAME = 'resendConfirmation'
 
 const ResendConfirmation = (props) => {
   const { error, handleSubmit, pristine, submitting, submitSucceeded } = props
+
   return (
     <PageContent>
       <Helmet>
@@ -41,7 +42,6 @@ const ResendConfirmation = (props) => {
               })}`}
                       type="submit"
                       disabled={pristine || submitting || submitSucceeded}
-                      onClick={this.onSubmit}
               >
                 {submitSucceeded
                   ? 'Email sent!'

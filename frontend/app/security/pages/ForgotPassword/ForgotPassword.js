@@ -1,5 +1,6 @@
 import React from 'react'
 import { compose } from 'redux'
+import { useDispatch } from 'react-redux'
 import { Helmet } from 'react-helmet-async'
 import { reduxForm, reset } from 'redux-form'
 
@@ -15,6 +16,7 @@ const FORM_NAME = 'forgotPassword'
 
 const ForgotPassword = (props) => {
   const { error, handleSubmit, submitting, pristine } = props
+
   return (
     <PageContent>
       <Helmet>

@@ -1,7 +1,6 @@
 import React from 'react'
 import { Helmet } from 'react-helmet-async'
 import { compose } from 'redux'
-import { connect } from 'react-redux'
 import { reduxForm } from 'redux-form'
 import { useSearchParams } from 'react-router-dom'
 
@@ -22,6 +21,10 @@ const Login = (props) => {
   const [searchParams] = useSearchParams()
   const redirect = searchParams.get('next') || '/'
 
+  const onLogin = (values, dispatch) => {
+    return login({ ...values, redirect }, dispatch)
+  }
+
   return (
     <PageContent>
       <Helmet>
@@ -32,7 +35,7 @@ const Login = (props) => {
           <h1>Log in!</h1>
           {error && <DangerAlert>{error}</DangerAlert>}
           {isDev && <p>Hint: a@a.com / password</p>}
-          <form onSubmit={handleSubmit((values) => login({ ...values, redirect }))}>
+          <form onSubmit={handleSubmit(onLogin)}>
             <TextField name="email"
                        label="Email or Username"
                        className="full-width"

@@ -15,6 +15,7 @@ const FORM_NAME = 'updateProfile'
 
 const UpdateProfile = (props) => {
   const { error, handleSubmit, pristine, submitting } = props
+
   return (
     <div>
       <h2>Update Profile!</h2>

@@ -2,6 +2,7 @@ import React, { useEffect, useContext } from 'react'
 import hoistNonReactStatics from 'hoist-non-react-statics'
 import get from 'lodash/get'
 import { ReactReduxContext } from 'react-redux'
+import { all } from 'redux-saga/effects'
 
 import getInjectors from './sagaInjectors'
 
@@ -39,7 +40,8 @@ export default (moduleOrProps) => (WrappedComponent) => {
 
       // create a root saga to inject
       const saga = function *() {
-        yield props.sagas()
+        const effects = props.sagas()
+        yield all(Array.isArray(effects) ? effects : [effects])
       }
 
       injectSaga(props.key, { saga, mode: props.mode }, componentProps)

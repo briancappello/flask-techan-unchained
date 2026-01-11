@@ -1,7 +1,5 @@
 import { call, put, select, takeEvery } from 'redux-saga/effects'
 
-import { createRoutineSaga } from 'sagas'
-
 import { loadWatchlist } from 'finance/actions'
 import FinanceApi from 'finance/api'
 import { isWatchlistLoaded, isWatchlistLoading } from 'finance/selectors'
@@ -17,13 +15,17 @@ export function *maybeLoadWatchlistSaga({ payload: { key } }) {
   }
 }
 
-export const loadWatchlistSaga = createRoutineSaga(
-  loadWatchlist,
-  function *({ key }) {
+export function* loadWatchlistSaga({ payload: { key } }) {
+  try {
+    yield put(loadWatchlist.request({ key }))
     const watchlist = yield call(FinanceApi.loadWatchlist, key)
     yield put(loadWatchlist.success({ key, watchlist }))
+  } catch (e) {
+    yield put(loadWatchlist.failure({ key, ...e }))
+  } finally {
+    yield put(loadWatchlist.fulfill({ key }))
   }
-)
+}
 
 export default () => [
   takeEvery(loadWatchlist.MAYBE_TRIGGER, maybeLoadWatchlistSaga),

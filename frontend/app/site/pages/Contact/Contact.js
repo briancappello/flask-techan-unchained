@@ -15,6 +15,7 @@ const FORM_NAME = 'contact'
 
 const Contact = (props) => {
   const { error, handleSubmit, pristine, submitting } = props
+
   return (
     <PageContent>
       <Helmet>
