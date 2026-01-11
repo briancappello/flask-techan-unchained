@@ -14,15 +14,21 @@ function uuid4() {
 }
 
 
-const Chart = (props) => {
+const Chart = ({
+  frequency: defaultFrequency = FREQUENCY.Daily,
+  scale: defaultScale = LINEAR_SCALE,
+  type: defaultType = CANDLE_CHART,
+  datetime: defaultDatetime,
+  ...props
+}) => {
   const { ticker } = useParams()
   const { search } = useLocation()
   const queryParams = parse(search)
 
-  const frequency = queryParams.frequency || props.frequency
-  const datetime = queryParams.datetime || props.datetime
-  const scale = queryParams.scale || props.scale
-  const type = queryParams.type || props.type
+  const frequency = queryParams.frequency || defaultFrequency
+  const datetime = queryParams.datetime || defaultDatetime
+  const scale = queryParams.scale || defaultScale
+  const type = queryParams.type || defaultType
 
   return (
     <ChartContainer
@@ -35,12 +41,6 @@ const Chart = (props) => {
       id={uuid4()}
     />
   )
-}
-
-Chart.defaultProps = {
-  frequency: FREQUENCY.Daily,
-  scale: LINEAR_SCALE,
-  type: CANDLE_CHART,
 }
 
 export default Chart

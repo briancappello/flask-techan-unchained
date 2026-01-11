@@ -3,8 +3,7 @@ import PropTypes from 'prop-types'
 
 import './spinner.scss'
 
-export const Spinner = (props) => {
-  const { color } = props
+export const Spinner = ({ color = 'black' }) => {
   return (
     <div className={`spinner-loading-indicator ${color}`}>
       <div className="spinner-circle r0" />
@@ -21,10 +20,6 @@ export const Spinner = (props) => {
       <div className="spinner-circle r330" />
     </div>
   )
-}
-
-Spinner.defaultProps = {
-  color: 'black',
 }
 
 Spinner.propTypes = {
