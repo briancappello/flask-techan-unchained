@@ -1,4 +1,4 @@
-@import "finance/styles/variables";
+@use "@finance-styles/variables" as *;
 
 .techan-chart {
   .plot-indicator.sma500 path.line {

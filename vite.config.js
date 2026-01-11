@@ -42,7 +42,10 @@ export default defineConfig({
       'logging': path.resolve(appDir, 'logging'),
       'constants': path.resolve(appDir, 'constants'),
       'constants.js': path.resolve(appDir, 'constants.js'),
-      // Styles
+      // Styles aliases
+      '@styles': path.resolve(appDir, 'styles'),
+      '@finance-styles': path.resolve(appDir, 'finance/styles'),
+      // Legacy Styles
       'main.scss': path.resolve(appDir, 'styles/main.scss'),
     }
   },
@@ -50,8 +53,9 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        // Silence deprecation warnings temporarily
-        silenceDeprecations: ['import', 'global-builtin', 'color-functions', 'slash-div'],
+        additionalData: `
+          @use "@styles/variables" as *;
+        `,
         quietDeps: true,
         includePaths: [
           appDir,

@@ -1,3 +1,31 @@
-@import 'variables';
-@import 'super-skeleton/scss/skeleton';
-@import 'custom';
+@use 'super-skeleton/scss/skeleton';
+
+html,
+body {
+    height: 100%;
+}
+
+#app {
+    min-height: 100%;
+    position: relative;
+}
+
+.container > .flash,
+.content {
+    margin-top: 2rem;
+}
+
+aside.cols {
+    margin-top: .5rem;
+}
+
+main {
+    padding-bottom: $footer-height;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: $footer-height;
+}

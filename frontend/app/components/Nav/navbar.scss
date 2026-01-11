@@ -1,6 +1,5 @@
-
-@import 'super-skeleton/scss/skeleton';
-@import '../../styles/variables';
+@use 'super-skeleton/scss/skeleton' as *;
+//@use 'super-skeleton/scss/base' as *;
 
 .navbar-top {
   a.burger {

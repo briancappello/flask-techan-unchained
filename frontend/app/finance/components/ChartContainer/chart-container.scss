@@ -1,4 +1,4 @@
-@import "finance/styles/variables";
+@use "@finance-styles/variables" as *;
 
 $sidebar-width: 200px; // should match CHART_SIDEBAR_WIDTH in finance/constants.js
 
