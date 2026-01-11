@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 
 import { flashInfo } from 'site/actions'
 
@@ -18,7 +18,7 @@ export const ProtectedRoute = ({ children }) => {
       <Navigate
         to={{
           pathname: '/login',
-          search: `?next=${location.pathname}`,
+          search: `?next=${encodeURIComponent(location.pathname + location.search)}`,
         }}
         replace
       />
@@ -37,13 +37,15 @@ export const AnonymousRoute = ({ children }) => {
   const isAuthenticated = useSelector((state) => state.security.isAuthenticated)
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/')
+      const redirect = searchParams.get('next') || '/'
+      navigate(redirect)
       dispatch(flashInfo('You are already logged in.'))
     }
-  }, [isAuthenticated, dispatch, navigate])
+  }, [isAuthenticated, dispatch, navigate, searchParams])
 
   // Still render children even if authenticated to avoid flash of content
   // The useEffect will handle the redirect

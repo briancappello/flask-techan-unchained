@@ -14,7 +14,6 @@ const hasWindowObject = typeof window === 'object'
 
 const sagaMiddleware = createSagaMiddleware()
 
-// Create redux-first-history context
 const { createReduxHistory, routerMiddleware, routerReducer } = createReduxHistoryContext({
   history: createBrowserHistory(),
 })
@@ -71,7 +70,6 @@ export default function configureStore(initialState) {
     })
   }
 
-  // Create the history object connected to redux
   const history = createReduxHistory(store)
 
   return { store, history }

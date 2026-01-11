@@ -51,16 +51,14 @@ export function createRoutine(routineName) {
   }, {})
 
   const routinePromise = (data, dispatch) => {
-    return new Promise((resolve, reject) => {
-      dispatch({
-        type: ROUTINE_PROMISE,
-        payload: {
-          data,
-          routine,
-          defer: { resolve, reject },
-        },
-      })
-    })
+    return new Promise((resolve, reject) => dispatch({
+      type: ROUTINE_PROMISE,
+      payload: {
+        data,
+        routine,
+        defer: { resolve, reject },
+      },
+    }))
   }
 
   return Object.assign(routinePromise, routine)
