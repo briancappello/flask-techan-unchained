@@ -35,17 +35,19 @@ export const ProtectedRoute = ({ children }) => {
  */
 export const AnonymousRoute = ({ children }) => {
   const isAuthenticated = useSelector((state) => state.security.isAuthenticated)
+  const isFlashVisible = useSelector((state) => state.flash.visible)
   const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
+  const location = useLocation()
 
   useEffect(() => {
-    if (isAuthenticated) {
-      const redirect = searchParams.get('next') || '/'
-      navigate(redirect)
+    if (isAuthenticated && !isFlashVisible && location.pathname === '/login') {
       dispatch(flashInfo('You are already logged in.'))
     }
-  }, [isAuthenticated, dispatch, navigate, searchParams])
+  }, [isAuthenticated, isFlashVisible, dispatch, location.pathname])
+
+  if (isAuthenticated) {
+    return <Navigate to="/" replace />
+  }
 
   // Still render children even if authenticated to avoid flash of content
   // The useEffect will handle the redirect

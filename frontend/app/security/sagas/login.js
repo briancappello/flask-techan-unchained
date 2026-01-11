@@ -16,7 +16,7 @@ export function* loginSaga({ payload }) {
     const { token, user } = yield call(SecurityApi.login, credentials)
     yield put(login.success({ token, user }))
     yield put(push(redirect))
-    yield put(flashSuccess('You have been successfully logged in.'))
+    yield put(flashSuccess('Welcome back!'))
   } catch (e) {
     const error = new SubmissionError({
       _error: e.response?.error || 'Login failed',
@@ -31,4 +31,3 @@ export function* loginSaga({ payload }) {
 export default () => [
   takeLatest(login.TRIGGER, loginSaga),
 ]
-

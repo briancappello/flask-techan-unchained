@@ -36,6 +36,9 @@ function reset() {
 }
 
 function getElAndScroll() {
+  if (!hashFragment) {
+    return
+  }
   const element = document.getElementById(hashFragment)
   if (element !== null) {
     element.scrollIntoView()
