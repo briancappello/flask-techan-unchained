@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from 'redux-saga/effects'
+import { all, call, put, takeEvery } from 'redux-saga/effects'
 import { push } from 'redux-first-history'
 
 import { flashSuccess } from 'site/actions'
@@ -18,11 +18,13 @@ export function* logoutSaga() {
     yield put(flashSuccess('You have been successfully logged out.'))
   } catch (e) {
     yield put(logout.failure(e))
+    // Even if the backend call fails, we should still clear local state and redirect
+    yield put(push(ROUTE_MAP[ROUTES.Home].path))
   } finally {
     yield put(logout.fulfill())
   }
 }
 
 export default () => [
-  takeLatest(logout.TRIGGER, logoutSaga),
+  takeEvery(logout.TRIGGER, logoutSaga),
 ]

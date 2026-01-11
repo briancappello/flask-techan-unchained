@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
-import { compose } from 'redux'
 import { useDispatch } from 'react-redux'
 
+import { PageContent } from 'components'
 import { logout } from 'security/actions'
 import { injectSagas } from 'utils/async'
 import * as logoutSagas from 'security/sagas/logout'
@@ -14,11 +14,14 @@ const Logout = () => {
     dispatch(logout.trigger())
   }, [dispatch])
 
-  return null
+  // return
+  return (
+    <PageContent>
+      <p>Logging out...</p>
+    </PageContent>
+  )
 }
 
 const withSagas = injectSagas(logoutSagas)
 
-export default compose(
-  withSagas,
-)(Logout)
+export default withSagas(Logout)

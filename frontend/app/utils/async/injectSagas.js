@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react'
+import React, { useEffect, useContext, useRef } from 'react'
 import hoistNonReactStatics from 'hoist-non-react-statics'
 import get from 'lodash/get'
 import { ReactReduxContext } from 'react-redux'
@@ -33,21 +33,27 @@ export default (moduleOrProps) => (WrappedComponent) => {
 
   const InjectSaga = (componentProps) => {
     const { store } = useContext(ReactReduxContext)
+    const injectedRef = useRef(false)
+    
+    // create a root saga to inject
+    const saga = function *() {
+      const effects = props.sagas()
+      yield all(Array.isArray(effects) ? effects : [effects])
+    }
+
+    // Inject saga synchronously on first render (before children render)
+    // This ensures that if the child dispatches an action in useEffect,
+    // the saga is already listening.
+    if (!injectedRef.current) {
+      const injectors = getInjectors(store)
+      injectors.injectSaga(props.key, { saga, mode: props.mode }, componentProps)
+      injectedRef.current = true
+    }
     
     useEffect(() => {
-      const injectors = getInjectors(store)
-      const { injectSaga, ejectSaga } = injectors
-
-      // create a root saga to inject
-      const saga = function *() {
-        const effects = props.sagas()
-        yield all(Array.isArray(effects) ? effects : [effects])
-      }
-
-      injectSaga(props.key, { saga, mode: props.mode }, componentProps)
-      
       return () => {
-        ejectSaga(props.key)
+        const injectors = getInjectors(store)
+        injectors.ejectSaga(props.key)
       }
     }, [store])
 
