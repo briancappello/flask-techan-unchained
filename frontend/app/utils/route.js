@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Navigate, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 
 import { flashInfo } from 'site/actions'
-
+import { ROUTE_MAP, ROUTES } from "routes";
 
 /**
  * ProtectedRoute - Only allows authenticated users
@@ -17,7 +17,7 @@ export const ProtectedRoute = ({ children }) => {
     return (
       <Navigate
         to={{
-          pathname: '/login',
+          pathname: `${ROUTE_MAP[ROUTES.Login].path}`,
           search: `?next=${encodeURIComponent(location.pathname + location.search)}`,
         }}
         replace
@@ -40,13 +40,13 @@ export const AnonymousRoute = ({ children }) => {
   const location = useLocation()
 
   useEffect(() => {
-    if (isAuthenticated && !isFlashVisible && location.pathname === '/login') {
+    if (isAuthenticated && !isFlashVisible && location.pathname === `${ROUTE_MAP[ROUTES.Login].path}`) {
       dispatch(flashInfo('You are already logged in.'))
     }
   }, [isAuthenticated, isFlashVisible, dispatch, location.pathname])
 
   if (isAuthenticated) {
-    return <Navigate to="/" replace />
+    return <Navigate to={`${ROUTE_MAP[ROUTES.Home].path}`} replace />
   }
 
   // Still render children even if authenticated to avoid flash of content
