@@ -34,7 +34,7 @@
     "redux-first-history": "^5.2.0",
     "redux-form": "^8.3.10",
     "redux-saga": "^1.4.2",
-    "super-skeleton": "git+https://github.com/briancappello/super-skeleton.git",
+    "super-skeleton": "git+https://github.com/briancappello/super-skeleton.git#chore/update",
     "techan": "git+https://github.com/briancappello/techan.js.git#develop"
   },
   "overrides": {
