@@ -15,10 +15,9 @@ import './watchlists.scss'
 
 
 const getSidebarListHeight = () => {
-  const height = Math.max(document.documentElement.clientHeight, window.innerHeight)
-  const formHeight = 48
-  const paddingTop = 10
-  return height - (formHeight + paddingTop)
+  const height = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
+  const formHeight = 106 // unclear where this number comes from, as the form is only 48 high
+  return height - formHeight
 }
 
 const Watchlists = ({ queryParams }) => {
