@@ -1,3 +1,5 @@
+import * as d3 from 'd3'
+
 export const CHART_HEADER_HEIGHT = 100 // should match $chart-header-height in chart.scss
 export const CHART_SIDEBAR_WIDTH = 200 // should match $sidebar-width in chart-container.scss
 

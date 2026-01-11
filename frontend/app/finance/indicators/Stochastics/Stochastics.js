@@ -1,4 +1,5 @@
-import techan from 'techan'
+import * as d3 from 'd3'
+import techan from 'techanjs'
 
 import { FORMATS, CHART_INDICATOR_LABEL } from 'finance/constants'
 

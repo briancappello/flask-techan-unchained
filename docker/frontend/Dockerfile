@@ -8,13 +8,6 @@ RUN apt-get update && \
     rm -fr /var/lib/apt/lists/*
 
 WORKDIR /home/node
-RUN git clone https://github.com/briancappello/techan.js.git && \
-    cd techan.js && \
-    cat package.json | jq 'del(.devDependencies)' > package-new.json && \
-    cp package-new.json package.json && \
-    npm link && \
-    cd /home/node && \
-    chown -R node:node /home/node
 
 RUN chown -R node:node $(npm config get prefix)/lib/node_modules
 RUN chown -R node:node $(npm config get prefix)/bin
@@ -30,7 +23,6 @@ RUN chown -R node:node /home/node
 USER node
 
 RUN npm install
-RUN npm link techan
 
 COPY frontend /home/node/frontend
 COPY static /home/node/static

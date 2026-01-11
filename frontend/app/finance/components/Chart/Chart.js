@@ -1,8 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import * as d3 from 'd3'
 
 import isFunction from 'lodash/isFunction'
-import techan from 'techan'
+import techan from 'techanjs'
 
 import { log_debug, log_critical } from 'logging'
 
@@ -507,8 +508,8 @@ export default class Chart extends React.Component {
       ])
   }
 
-  handleScroll = () => {
-    const e = d3.event.sourceEvent
+  handleScroll = (event) => {
+    const e = event.sourceEvent
     let barDelta = 0
 
     // double click

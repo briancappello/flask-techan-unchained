@@ -19,7 +19,8 @@ export default defineConfig({
 
   resolve: {
     alias: {
-      'd3': path.resolve(frontendDir, 'd3-shim.js'),
+      // Libraries
+      'techanjs': path.resolve(__dirname, 'node_modules/techanjs/src/techan.js'),
       // App directories
       'components': path.resolve(appDir, 'components'),
       'security': path.resolve(appDir, 'security'),
@@ -81,7 +82,7 @@ export default defineConfig({
   },
 
   optimizeDeps: {
-    include: ['techan'],
+    exclude: ['techanjs'],
     esbuildOptions: {
       loader: {
         '.js': 'jsx',
@@ -91,13 +92,8 @@ export default defineConfig({
 
   build: {
     outDir: path.resolve(__dirname, 'static'),
-    emptyOutDir: false, // Don't delete d3.v4.min.js
     rollupOptions: {
-      external: ['d3'],
       output: {
-        globals: {
-          d3: 'd3'
-        },
         manualChunks: {
           vendor: ['react', 'react-dom', 'redux', 'react-redux', 'redux-saga']
         }

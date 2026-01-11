@@ -1,4 +1,4 @@
-import techan from 'techan'
+import techan from 'techanjs'
 
 import './sma500.scss'
 
