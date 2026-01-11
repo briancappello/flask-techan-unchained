@@ -5,7 +5,6 @@ import { ReactReduxContext } from 'react-redux'
 
 import getInjectors from './reducerInjectors'
 
-
 /**
  * Dynamically injects a reducer
  *
@@ -15,7 +14,7 @@ import getInjectors from './reducerInjectors'
  */
 export default (moduleOrProps) => (WrappedComponent) => {
   let props = moduleOrProps
-  
+
   // Handle ES module format (from dynamic import or require)
   if (get(props, '__esModule', false) || get(props, 'default')) {
     props = {
@@ -27,7 +26,7 @@ export default (moduleOrProps) => (WrappedComponent) => {
   const ReducerInjector = (componentProps) => {
     const { store } = useContext(ReactReduxContext)
     const injectedRef = useRef(false)
-    
+
     // Inject reducer synchronously on first render (before children render)
     if (!injectedRef.current) {
       const injectors = getInjectors(store)
@@ -37,8 +36,8 @@ export default (moduleOrProps) => (WrappedComponent) => {
 
     return <WrappedComponent {...componentProps} />
   }
-  
-  ReducerInjector.displayName = `withReducer(${(WrappedComponent.displayName || WrappedComponent.name || 'Component')})`
+
+  ReducerInjector.displayName = `withReducer(${WrappedComponent.displayName || WrappedComponent.name || 'Component'})`
   ReducerInjector.WrappedComponent = WrappedComponent
 
   return hoistNonReactStatics(ReducerInjector, WrappedComponent)

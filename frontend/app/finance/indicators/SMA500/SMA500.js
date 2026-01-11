@@ -2,7 +2,6 @@ import techan from 'techanjs'
 
 import './sma500.scss'
 
-
 export default class SMA500 {
   init({ svg, xScale, yScale }) {
     this.svg = svg
@@ -11,14 +10,12 @@ export default class SMA500 {
   }
 
   draw(clipId) {
-    this.sma500 = techan.plot.sma()
-      .xScale(this.xScale)
-      .yScale(this.yScale)
+    this.sma500 = techan.plot.sma().xScale(this.xScale).yScale(this.yScale)
 
-    this.sma500.accessor()
-      .value((d) => d.sma500)
+    this.sma500.accessor().value((d) => d.sma500)
 
-    this.svg.append('g')
+    this.svg
+      .append('g')
       .attr('class', 'plot-indicator ma sma500')
       .attr('clip-path', `url(#${clipId})`)
   }

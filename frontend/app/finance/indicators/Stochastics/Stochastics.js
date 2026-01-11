@@ -5,7 +5,6 @@ import { FORMATS, CHART_INDICATOR_LABEL } from 'finance/constants'
 
 import './stochastics.scss'
 
-
 export default class Stochastics {
   init({ svg, xScale, yScale, frequency }) {
     this.svg = svg
@@ -19,60 +18,62 @@ export default class Stochastics {
   }
 
   draw() {
-    this.xGrid = d3.axisBottom(this.xScale)
+    this.xGrid = d3
+      .axisBottom(this.xScale)
       .ticks(this.frequency)
       .tickFormat(() => null)
       .tickSizeInner(this.indicatorHeight)
       .tickSizeOuter(this.indicatorHeight)
 
-    this.svg.append('g')
+    this.svg
+      .append('g')
       .attr('class', 'stochastic x grid')
       .attr('transform', `translate(0, ${this.indicatorY})`)
 
-    this.yAxisLeft = d3.axisLeft(this.yScale)
-      .ticks(5)
-      .tickSizeOuter(-this.chartWidth)
+    this.yAxisLeft = d3.axisLeft(this.yScale).ticks(5).tickSizeOuter(-this.chartWidth)
 
-    this.svg.append('g')
-      .attr('class', 'stochastic axis')
+    this.svg.append('g').attr('class', 'stochastic axis')
 
-    this.yAxisRight = d3.axisRight(this.yScale)
-      .ticks(5)
+    this.yAxisRight = d3.axisRight(this.yScale).ticks(5)
 
-    this.svg.append('g')
+    this.svg
+      .append('g')
       .attr('class', 'stochastic axis right')
       .attr('transform', `translate(${this.chartWidth}, 0)`)
 
-    this.accessor = techan.accessor.stochastic()
+    this.accessor = techan.accessor
+      .stochastic()
       .stochasticK((d) => d.stoch_k)
       .stochasticD((d) => d.stoch_d)
 
-    this.stochastics = techan.plot.stochastic()
+    this.stochastics = techan.plot
+      .stochastic()
       .xScale(this.xScale)
       .yScale(this.yScale)
       .accessor(this.accessor)
 
-    this.svg.append('g')
-      .attr('class', 'indicator stochastic')
+    this.svg.append('g').attr('class', 'indicator stochastic')
   }
 
   drawCrosshairs() {
-    this.yAnnotationLeft = techan.plot.axisannotation()
+    this.yAnnotationLeft = techan.plot
+      .axisannotation()
       .axis(this.yAxisLeft)
       .orient('left')
 
-    this.yAnnotationRight = techan.plot.axisannotation()
+    this.yAnnotationRight = techan.plot
+      .axisannotation()
       .axis(this.yAxisRight)
       .orient('right')
       .translate([this.chartWidth, 0])
 
-    this.crosshair = techan.plot.crosshair()
+    this.crosshair = techan.plot
+      .crosshair()
       .xScale(this.xScale)
       .yScale(this.yScale)
       .yAnnotation([this.yAnnotationLeft, this.yAnnotationRight])
 
-    this.svg.append('g')
-      .attr('class', 'stochastic crosshair')
+    this.svg.append('g').attr('class', 'stochastic crosshair')
 
     return this.crosshair
   }
@@ -89,7 +90,8 @@ export default class Stochastics {
   }
 
   drawLegend(latestBar) {
-    this.legendLabel = this.svg.append('text')
+    this.legendLabel = this.svg
+      .append('text')
       .attr('class', 'stochastic legend label')
       .attr('x', CHART_INDICATOR_LABEL.padding)
       .attr('y', this.indicatorLabelY)
@@ -97,17 +99,19 @@ export default class Stochastics {
 
     let legendBox = this.legendLabel.node().getBBox()
 
-    this.legendKValue = this.svg.append('text')
+    this.legendKValue = this.svg
+      .append('text')
       .attr('class', 'stochastic legend k')
-      .attr('x', legendBox.x + legendBox.width + (CHART_INDICATOR_LABEL.padding * 2))
+      .attr('x', legendBox.x + legendBox.width + CHART_INDICATOR_LABEL.padding * 2)
       .attr('y', this.indicatorLabelY)
       .text(FORMATS.DEC1(latestBar.stoch_k))
 
     legendBox = this.legendKValue.node().getBBox()
 
-    this.legendDValue = this.svg.append('text')
+    this.legendDValue = this.svg
+      .append('text')
       .attr('class', 'stochastic legend d')
-      .attr('x', legendBox.x + legendBox.width + (CHART_INDICATOR_LABEL.padding * 2))
+      .attr('x', legendBox.x + legendBox.width + CHART_INDICATOR_LABEL.padding * 2)
       .attr('y', this.indicatorLabelY)
       .text(FORMATS.DEC1(latestBar.stoch_d))
   }

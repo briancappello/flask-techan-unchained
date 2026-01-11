@@ -10,7 +10,6 @@ import { EmailField, TextArea, TextField } from 'components/Form'
 import { injectSagas } from 'utils/async'
 import * as contactSagas from 'site/sagas/contact'
 
-
 const FORM_NAME = 'contact'
 
 const Contact = (props) => {
@@ -26,26 +25,18 @@ const Contact = (props) => {
       <form onSubmit={handleSubmit(contact)}>
         <div className="row">
           <div className="six cols">
-            <TextField name="name"
-                       label="Name"
-                       className="full-width"
-                       autoFocus
-            />
+            <TextField name="name" label="Name" className="full-width" autoFocus />
           </div>
           <div className="six cols">
-            <EmailField name="email"
-                        className="full-width"
-            />
+            <EmailField name="email" className="full-width" />
           </div>
         </div>
-        <TextArea name="message"
-                  className="full-width"
-                  rows="6"
-        />
+        <TextArea name="message" className="full-width" rows="6" />
         <div className="row">
-          <button type="submit"
-                  className="button-primary"
-                  disabled={pristine || submitting}
+          <button
+            type="submit"
+            className="button-primary"
+            disabled={pristine || submitting}
           >
             {submitting ? 'Submitting...' : 'Submit'}
           </button>
@@ -55,8 +46,8 @@ const Contact = (props) => {
   )
 }
 
-const withConnect = connect(
-  (state) => state.security.isAuthenticated
+const withConnect = connect((state) =>
+  state.security.isAuthenticated
     ? { initialValues: { email: state.security.user.email } }
     : {},
 )
@@ -65,13 +56,9 @@ const withForm = reduxForm({
   form: FORM_NAME,
   onSubmitSuccess: (_, dispatch) => {
     dispatch(reset(FORM_NAME))
-  }
+  },
 })
 
 const withSaga = injectSagas(contactSagas)
 
-export default compose(
-  withConnect,
-  withForm,
-  withSaga,
-)(Contact)
+export default compose(withConnect, withForm, withSaga)(Contact)

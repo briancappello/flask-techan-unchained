@@ -8,7 +8,6 @@ import NavLink from './NavLink'
 
 import './navbar.scss'
 
-
 const NavBar = () => {
   const [menuOpen, setMenuOpen] = useState(false)
   const isAuthenticated = useSelector((state) => state.security.isAuthenticated)
@@ -43,9 +42,13 @@ const NavBar = () => {
         <NavLink end to={ROUTES.Home} className="brand">
           Flask Techan Unchained
         </NavLink>
-        <a href="#"
-           className="burger"
-           onClick={(e) => { e.preventDefault(); toggleResponsiveMenu(); }}
+        <a
+          href="#"
+          className="burger"
+          onClick={(e) => {
+            e.preventDefault()
+            toggleResponsiveMenu()
+          }}
         >
           Menu&nbsp;&nbsp;&#9776;
         </a>
@@ -53,10 +56,7 @@ const NavBar = () => {
           <NavLink to={ROUTES.Contact} />
         </div>
         <div className="menu right">
-          {isAuthenticated
-            ? renderAuthenticatedMenu()
-            : renderUnauthenticatedMenu()
-          }
+          {isAuthenticated ? renderAuthenticatedMenu() : renderUnauthenticatedMenu()}
         </div>
       </div>
     </nav>

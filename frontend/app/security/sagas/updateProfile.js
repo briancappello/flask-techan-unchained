@@ -6,7 +6,6 @@ import { updateProfile } from 'security/actions'
 import SecurityApi from 'security/api'
 import { selectSecurity } from 'security/reducer'
 
-
 export const KEY = 'updateProfile'
 
 export function* updateProfileSaga({ payload }) {
@@ -28,6 +27,4 @@ export function* updateProfileSaga({ payload }) {
   }
 }
 
-export default () => [
-  takeLatest(updateProfile.TRIGGER, updateProfileSaga),
-]
+export default () => [takeLatest(updateProfile.TRIGGER, updateProfileSaga)]

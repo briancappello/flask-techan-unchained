@@ -11,7 +11,6 @@ import { EmailField } from 'components/Form'
 import { injectSagas } from 'utils/async'
 import * as resendConfirmationSagas from 'security/sagas/resendConfirmation'
 
-
 const FORM_NAME = 'resendConfirmation'
 
 const ResendConfirmation = (props) => {
@@ -30,25 +29,26 @@ const ResendConfirmation = (props) => {
         <div className="four cols">
           {error && <DangerAlert>{error}</DangerAlert>}
           <form onSubmit={handleSubmit(resendConfirmationEmail)}>
-            <EmailField name="email"
-                        label="Email address"
-                        className="full-width"
-                        disabled={submitSucceeded}
+            <EmailField
+              name="email"
+              label="Email address"
+              className="full-width"
+              disabled={submitSucceeded}
             />
             <div className="row">
-              <button className={`btn ${classnames({
-                'btn-primary': !submitSucceeded,
-                'btn-success': submitSucceeded,
-              })}`}
-                      type="submit"
-                      disabled={pristine || submitting || submitSucceeded}
+              <button
+                className={`btn ${classnames({
+                  'btn-primary': !submitSucceeded,
+                  'btn-success': submitSucceeded,
+                })}`}
+                type="submit"
+                disabled={pristine || submitting || submitSucceeded}
               >
                 {submitSucceeded
                   ? 'Email sent!'
                   : submitting
                     ? 'Sending...'
-                    : 'Send new confirmation link'
-                }
+                    : 'Send new confirmation link'}
               </button>
             </div>
           </form>
@@ -67,7 +67,4 @@ const withForm = reduxForm({
 
 const withSagas = injectSagas(resendConfirmationSagas)
 
-export default compose(
-  withForm,
-  withSagas,
-)(ResendConfirmation)
+export default compose(withForm, withSagas)(ResendConfirmation)

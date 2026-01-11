@@ -1,7 +1,6 @@
 import { post } from 'utils/request'
 import { v1 } from 'api'
 
-
 export default class Site {
   /**
    * @param {string} name

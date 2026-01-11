@@ -6,7 +6,6 @@ import { all } from 'redux-saga/effects'
 
 import getInjectors from './sagaInjectors'
 
-
 /**
  * Dynamically injects a saga, passes component's props as saga arguments
  *
@@ -21,7 +20,7 @@ import getInjectors from './sagaInjectors'
  */
 export default (moduleOrProps) => (WrappedComponent) => {
   let props = moduleOrProps
-  
+
   // Handle ES module format (from dynamic import or require)
   if (get(props, '__esModule', false) || get(props, 'default')) {
     props = {
@@ -34,9 +33,9 @@ export default (moduleOrProps) => (WrappedComponent) => {
   const InjectSaga = (componentProps) => {
     const { store } = useContext(ReactReduxContext)
     const injectedRef = useRef(false)
-    
+
     // create a root saga to inject
-    const saga = function *() {
+    const saga = function* () {
       const effects = props.sagas()
       yield all(Array.isArray(effects) ? effects : [effects])
     }
@@ -49,7 +48,7 @@ export default (moduleOrProps) => (WrappedComponent) => {
       injectors.injectSaga(props.key, { saga, mode: props.mode }, componentProps)
       injectedRef.current = true
     }
-    
+
     useEffect(() => {
       return () => {
         const injectors = getInjectors(store)
@@ -59,8 +58,8 @@ export default (moduleOrProps) => (WrappedComponent) => {
 
     return <WrappedComponent {...componentProps} />
   }
-  
-  InjectSaga.displayName = `withSaga(${(WrappedComponent.displayName || WrappedComponent.name || 'Component')})`
+
+  InjectSaga.displayName = `withSaga(${WrappedComponent.displayName || WrappedComponent.name || 'Component'})`
   InjectSaga.WrappedComponent = WrappedComponent
 
   return hoistNonReactStatics(InjectSaga, WrappedComponent)

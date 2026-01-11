@@ -5,7 +5,6 @@ import { FORMATS } from 'finance/constants'
 
 import './volume.scss'
 
-
 export default class Volume {
   init({ svg, xScale, yScale, priceChart }) {
     this.svg = svg
@@ -18,28 +17,28 @@ export default class Volume {
   }
 
   draw() {
-    this.volumeScale = d3.scaleLinear()
-      .range([this.plotHeight, this.plotHeight * 0.8])
+    this.volumeScale = d3.scaleLinear().range([this.plotHeight, this.plotHeight * 0.8])
 
     // volume axis is invisible, but used by crosshair annotations to show volume values on hover
-    this.volumeAxis = d3.axisRight(this.volumeScale)
+    this.volumeAxis = d3
+      .axisRight(this.volumeScale)
       .tickFormat(() => null)
       .tickSizeOuter(0)
 
-    this.svg.append('g')
-      .attr('class', 'volume axis')
+    this.svg.append('g').attr('class', 'volume axis')
 
-    this.volumePlot = techan.plot.volume()
-      .accessor(this.priceChart.accessor())  // for determining whether up or down bar
+    this.volumePlot = techan.plot
+      .volume()
+      .accessor(this.priceChart.accessor()) // for determining whether up or down bar
       .xScale(this.xScale)
       .yScale(this.volumeScale)
 
-    this.svg.append('g')
-      .attr('class', 'volumePlot')
+    this.svg.append('g').attr('class', 'volumePlot')
   }
 
   getCrosshairsYAnnotation() {
-    return techan.plot.axisannotation()
+    return techan.plot
+      .axisannotation()
       .axis(this.volumeAxis)
       .orient('right')
       .width(32)

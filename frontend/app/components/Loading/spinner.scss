@@ -1,6 +1,12 @@
 @keyframes circleFadeDelay {
-  0%, 39%, 100% { opacity: 0; }
-  40% { opacity: 1; }
+  0%,
+  39%,
+  100% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
 }
 
 .spinner-loading-indicator {
@@ -32,47 +38,69 @@
 
     &.r30 {
       transform: rotate(30deg);
-      &:before { animation-delay: -1.1s; }
+      &:before {
+        animation-delay: -1.1s;
+      }
     }
     &.r60 {
       transform: rotate(60deg);
-      &:before { animation-delay: -1.0s; }
+      &:before {
+        animation-delay: -1s;
+      }
     }
-    &.r90{
+    &.r90 {
       transform: rotate(90deg);
-      &:before { animation-delay: -0.9s; }
+      &:before {
+        animation-delay: -0.9s;
+      }
     }
-    &.r120{
+    &.r120 {
       transform: rotate(120deg);
-      &:before { animation-delay: -0.8s; }
+      &:before {
+        animation-delay: -0.8s;
+      }
     }
-    &.r150{
+    &.r150 {
       transform: rotate(150deg);
-      &:before { animation-delay: -0.7s; }
+      &:before {
+        animation-delay: -0.7s;
+      }
     }
-    &.r180{
+    &.r180 {
       transform: rotate(180deg);
-      &:before { animation-delay: -0.6s; }
+      &:before {
+        animation-delay: -0.6s;
+      }
     }
-    &.r210{
+    &.r210 {
       transform: rotate(210deg);
-      &:before { animation-delay: -0.5s; }
+      &:before {
+        animation-delay: -0.5s;
+      }
     }
-    &.r240{
+    &.r240 {
       transform: rotate(240deg);
-      &:before { animation-delay: -0.4s; }
+      &:before {
+        animation-delay: -0.4s;
+      }
     }
-    &.r270{
+    &.r270 {
       transform: rotate(270deg);
-      &:before { animation-delay: -0.3s; }
+      &:before {
+        animation-delay: -0.3s;
+      }
     }
-    &.r300{
+    &.r300 {
       transform: rotate(300deg);
-      &:before { animation-delay: -0.2s; }
+      &:before {
+        animation-delay: -0.2s;
+      }
     }
-    &.r330{
+    &.r330 {
       transform: rotate(330deg);
-      &:before { animation-delay: -0.1s; }
+      &:before {
+        animation-delay: -0.1s;
+      }
     }
   }
 

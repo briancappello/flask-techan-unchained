@@ -1,11 +1,5 @@
-import {
-  get,
-  post,
-  patch,
-  url,
-} from 'utils/request'
+import { get, post, patch, url } from 'utils/request'
 import { v1 } from 'api'
-
 
 const PREFIX = '/auth'
 

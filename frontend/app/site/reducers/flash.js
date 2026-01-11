@@ -6,7 +6,6 @@ import {
   FLASH_CLEAR,
 } from 'site/actions'
 
-
 export const initialState = {
   title: null,
   message: null,

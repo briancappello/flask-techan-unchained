@@ -12,9 +12,11 @@ import { selectWatchlists, selectWatchlistComponents } from 'finance/selectors'
 import Watchlist from '../Watchlist'
 import './watchlists.scss'
 
-
 const getSidebarListHeight = () => {
-  const height = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
+  const height = Math.max(
+    document.documentElement.clientHeight || 0,
+    window.innerHeight || 0,
+  )
   const formHeight = 106 // unclear where this number comes from, as the form is only 48 high
   return height - formHeight
 }
@@ -25,20 +27,31 @@ const Watchlists = ({ queryParams }) => {
   const [watchlist, setWatchlist] = useState(undefined)
   const [sidebarListHeight, setSidebarListHeight] = useState(getSidebarListHeight())
 
-  const currentWatchlistKey = watchlist || (watchlists.length > 0 ? watchlists[0].key : undefined)
-  const currentWatchlistData = useSelector(state => {
+  const currentWatchlistKey =
+    watchlist || (watchlists.length > 0 ? watchlists[0].key : undefined)
+  const currentWatchlistData = useSelector((state) => {
     const components = selectWatchlistComponents(state)
     return currentWatchlistKey ? components[currentWatchlistKey] : undefined
   })
 
   // Create bound action creators
   const boundLoadWatchlists = useCallback(
-    () => dispatch(loadWatchlists.maybeTrigger ? loadWatchlists.maybeTrigger() : loadWatchlists.trigger()),
-    [dispatch]
+    () =>
+      dispatch(
+        loadWatchlists.maybeTrigger
+          ? loadWatchlists.maybeTrigger()
+          : loadWatchlists.trigger(),
+      ),
+    [dispatch],
   )
   const boundLoadWatchlist = useCallback(
-    (params) => dispatch(loadWatchlist.maybeTrigger ? loadWatchlist.maybeTrigger(params) : loadWatchlist.trigger(params)),
-    [dispatch]
+    (params) =>
+      dispatch(
+        loadWatchlist.maybeTrigger
+          ? loadWatchlist.maybeTrigger(params)
+          : loadWatchlist.trigger(params),
+      ),
+    [dispatch],
   )
 
   // Load watchlists on mount
@@ -77,14 +90,20 @@ const Watchlists = ({ queryParams }) => {
       <form>
         <select onChange={onChange} value={currentWatchlistKey}>
           {watchlists.map((wl) => {
-            return <option key={wl.key} value={wl.key}>{wl.label}</option>
+            return (
+              <option key={wl.key} value={wl.key}>
+                {wl.label}
+              </option>
+            )
           })}
         </select>
       </form>
-      <Watchlist key={currentWatchlistKey}
-                 watchlist={label}
-                 quotes={components}
-                 queryParams={queryParams} />
+      <Watchlist
+        key={currentWatchlistKey}
+        watchlist={label}
+        quotes={components}
+        queryParams={queryParams}
+      />
     </div>
   )
 }
@@ -92,7 +111,4 @@ const Watchlists = ({ queryParams }) => {
 const withWatchlistSagas = injectSagas(loadWatchlistSagas)
 const withWatchlistsSagas = injectSagas(loadWatchlistsSagas)
 
-export default compose(
-  withWatchlistSagas,
-  withWatchlistsSagas,
-)(Watchlists)
+export default compose(withWatchlistSagas, withWatchlistsSagas)(Watchlists)

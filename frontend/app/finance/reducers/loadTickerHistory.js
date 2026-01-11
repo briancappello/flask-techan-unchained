@@ -1,5 +1,5 @@
 import { loadTickerHistory } from 'finance/actions'
-import { TZ_OFFSET } from "finance/constants";
+import { TZ_OFFSET } from 'finance/constants'
 
 export const KEY = 'loadTickerHistory'
 
@@ -22,23 +22,24 @@ export default function (state = initialState, action) {
   switch (type) {
     case loadTickerHistory.REQUEST:
       tickerState = Object.assign({}, tickerInitialState, state.tickers[ticker])
-      return { ...state,
-        tickers: { ...state.tickers,
-          [ticker]: { ...tickerState,
-            isLoading: frequency,
-          },
+      return {
+        ...state,
+        tickers: {
+          ...state.tickers,
+          [ticker]: { ...tickerState, isLoading: frequency },
         },
       }
 
     case loadTickerHistory.SUCCESS:
       tickerState = Object.assign({}, state.tickers[ticker])
-      return { ...state,
-        tickers: { ...state.tickers,
-          [ticker]: { ...tickerState,
+      return {
+        ...state,
+        tickers: {
+          ...state.tickers,
+          [ticker]: {
+            ...tickerState,
             lastUpdated: new Date(),
-            history: { ...tickerState.history,
-              [frequency]: history,
-            },
+            history: { ...tickerState.history, [frequency]: history },
           },
         },
       }
@@ -46,25 +47,23 @@ export default function (state = initialState, action) {
     // FIXME handle errors more gracefully than just showing no chart
     case loadTickerHistory.FAILURE:
       tickerState = Object.assign({}, state.tickers[ticker])
-      return { ...state,
-        tickers: { ...state.tickers,
-          [ticker]: { ...tickerState,
+      return {
+        ...state,
+        tickers: {
+          ...state.tickers,
+          [ticker]: {
+            ...tickerState,
             lastUpdated: new Date(),
-            history: { ...tickerState.history,
-              [frequency]: { },
-            },
+            history: { ...tickerState.history, [frequency]: {} },
           },
         },
       }
 
     case loadTickerHistory.FULFILL:
       tickerState = Object.assign({}, state.tickers[ticker])
-      return { ...state,
-        tickers: { ...state.tickers,
-          [ticker]: { ...tickerState,
-            isLoading: false,
-          },
-        },
+      return {
+        ...state,
+        tickers: { ...state.tickers, [ticker]: { ...tickerState, isLoading: false } },
       }
 
     default:
@@ -76,14 +75,14 @@ export const selectTickers = (state) => state[KEY].tickers
 export const hasTickerHistory = (state, ticker, frequency) => {
   const tickers = selectTickers(state)
   return !!(
-    tickers[ticker]
-    && tickers[ticker].history
-    && tickers[ticker].history[frequency]
+    tickers[ticker] &&
+    tickers[ticker].history &&
+    tickers[ticker].history[frequency]
   )
 }
 export const isTickerHistoryLoading = (state, ticker, frequency) => {
   const tickers = selectTickers(state)
-  return tickers[ticker] && (tickers[ticker].isLoading == frequency)
+  return tickers[ticker] && tickers[ticker].isLoading == frequency
 }
 export const selectHistoryByTicker = (state, ticker, frequency, datetime) => {
   const tickers = selectTickers(state)
@@ -91,7 +90,7 @@ export const selectHistoryByTicker = (state, ticker, frequency, datetime) => {
   if (rv && datetime) {
     let dt = new Date(datetime)
     dt.setHours(dt.getHours() - TZ_OFFSET)
-    return rv.filter(d => d.date.getTime() <= dt.getTime())
+    return rv.filter((d) => d.date.getTime() <= dt.getTime())
   }
   return rv
 }

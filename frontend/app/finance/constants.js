@@ -25,55 +25,55 @@ export const FREQUENCY = {
 }
 
 // FIXME: daylight savings time
-export const TZ_OFFSET = ((new Date().getTimezoneOffset()) / 60) - 5;
+export const TZ_OFFSET = new Date().getTimezoneOffset() / 60 - 5
 
 // https://github.com/d3/d3-format#api-reference
 const DEC = ',.2f',
-      DEC1 = ',.1f',
-      DEC4 = ',.4f',
-      INT = ',.0f',
-      SI = ',.3s'
+  DEC1 = ',.1f',
+  DEC4 = ',.4f',
+  INT = ',.0f',
+  SI = ',.3s'
 
-let dateFormatter = new Intl.DateTimeFormat("en-US", {
-  month: "short",
-  day: "numeric",
-  year: "numeric",
-  timeZone: "America/New_York",
+let dateFormatter = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+  timeZone: 'America/New_York',
 }).format
 
-let timeFormatter = new Intl.DateTimeFormat("en-US", {
-  hour: "numeric",
-  minute: "2-digit",
-  timeZone: "America/New_York",
+let timeFormatter = new Intl.DateTimeFormat('en-US', {
+  hour: 'numeric',
+  minute: '2-digit',
+  timeZone: 'America/New_York',
   dayPeriod: undefined,
 }).format
 
 function minutelyTickFormat(dt, i, nodes) {
   if (i > 0) {
-    const getX = function(node) {
+    const getX = function (node) {
       const transform = node.parentElement.attributes.transform.value
       const re = /translate\(([\d\.]+),([\d\.]+)\)/
       const matches = transform.match(re)
       return parseFloat(matches[1])
     }
 
-    const prevX = getX(nodes[i-1]),
-          thisX = getX(nodes[i])
+    const prevX = getX(nodes[i - 1]),
+      thisX = getX(nodes[i])
 
-    if ((thisX - prevX) < 30) {
+    if (thisX - prevX < 30) {
       return null
     }
   }
 
   const date = d3.timeFormat('%_m/%d')(dt)
-  const time = timeFormatter(dt).replace(" AM", "a").replace(" PM", "p")
+  const time = timeFormatter(dt).replace(' AM', 'a').replace(' PM', 'p')
 
   if (dt.getMinutes() === 0) {
-    return time.replace(":00", "")
-  } else if (dt.getHours() === (9 - TZ_OFFSET) && dt.getMinutes() === 30) {
-    return date + " " + time
+    return time.replace(':00', '')
+  } else if (dt.getHours() === 9 - TZ_OFFSET && dt.getMinutes() === 30) {
+    return date + ' ' + time
   }
-  return time;
+  return time
 }
 
 function dailyTickFormat(dt) {

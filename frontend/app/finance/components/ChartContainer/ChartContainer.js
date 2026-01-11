@@ -27,7 +27,6 @@ import Watchlists from 'finance/components/Watchlists'
 
 import './chart-container.scss'
 
-
 const DEFAULT_PROPS = {
   frequency: FREQUENCY.Daily,
   datetime: '',
@@ -37,7 +36,7 @@ const DEFAULT_PROPS = {
 
 const filterQueryParams = (queryParams) => {
   const filtered = { ...queryParams }
-  ;['frequency', 'scale', 'type', 'datetime'].forEach(paramName => {
+  ;['frequency', 'scale', 'type', 'datetime'].forEach((paramName) => {
     if (filtered[paramName] === DEFAULT_PROPS[paramName]) {
       delete filtered[paramName]
     }
@@ -57,11 +56,15 @@ const ChartContainer = ({
   const [tickerInput, setTickerInput] = useState('')
   const [datetimeInput, setDatetimeInput] = useState(initialDatetime)
 
-  const history = useSelector((state) => selectHistoryByTicker(state, ticker, frequency, initialDatetime))
+  const history = useSelector((state) =>
+    selectHistoryByTicker(state, ticker, frequency, initialDatetime),
+  )
 
   // Load ticker history when props change
   useEffect(() => {
-    dispatch(loadTickerHistory.trigger({ ticker, frequency, datetime: initialDatetime }))
+    dispatch(
+      loadTickerHistory.trigger({ ticker, frequency, datetime: initialDatetime }),
+    )
     setTickerInput('')
     setDatetimeInput(initialDatetime)
   }, [ticker, frequency, initialDatetime, dispatch])
@@ -70,10 +73,10 @@ const ChartContainer = ({
   useEffect(() => {
     const handleKeyDown = (e) => {
       switch (e.key) {
-        case "ArrowLeft":
-        case "ArrowRight":
-        case "ArrowUp":
-        case "ArrowDown":
+        case 'ArrowLeft':
+        case 'ArrowRight':
+        case 'ArrowUp':
+        case 'ArrowDown':
           break
       }
       console.log(`keydown event listener: ${e.key}`)
@@ -82,38 +85,49 @@ const ChartContainer = ({
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [])
 
-  const pushNewUrl = useCallback(({ ticker: newTicker, ...queryParams }) => {
-    const filteredParams = filterQueryParams(queryParams)
-    dispatch(push({
-      pathname: ROUTE_MAP[ROUTES.Chart].toPath({ ticker: newTicker.toUpperCase() }),
-      search: Object.keys(filteredParams).length ? `?${stringify(filteredParams)}` : '',
-    }))
-  }, [dispatch])
+  const pushNewUrl = useCallback(
+    ({ ticker: newTicker, ...queryParams }) => {
+      const filteredParams = filterQueryParams(queryParams)
+      dispatch(
+        push({
+          pathname: ROUTE_MAP[ROUTES.Chart].toPath({ ticker: newTicker.toUpperCase() }),
+          search: Object.keys(filteredParams).length
+            ? `?${stringify(filteredParams)}`
+            : '',
+        }),
+      )
+    },
+    [dispatch],
+  )
 
-  const onClick = useCallback((key, value) => {
-    const args = { ticker, frequency, datetime: initialDatetime, scale, type }
-    args[key] = value
-    pushNewUrl(args)
-  }, [ticker, frequency, initialDatetime, scale, type, pushNewUrl])
+  const onClick = useCallback(
+    (key, value) => {
+      const args = { ticker, frequency, datetime: initialDatetime, scale, type }
+      args[key] = value
+      pushNewUrl(args)
+    },
+    [ticker, frequency, initialDatetime, scale, type, pushNewUrl],
+  )
 
-  const onSubmit = useCallback((e) => {
-    e.preventDefault()
-    pushNewUrl({
-      ticker: tickerInput || ticker,
-      datetime: datetimeInput,
-      frequency,
-      scale,
-      type
-    })
-  }, [tickerInput, ticker, datetimeInput, frequency, scale, type, pushNewUrl])
+  const onSubmit = useCallback(
+    (e) => {
+      e.preventDefault()
+      pushNewUrl({
+        ticker: tickerInput || ticker,
+        datetime: datetimeInput,
+        frequency,
+        scale,
+        type,
+      })
+    },
+    [tickerInput, ticker, datetimeInput, frequency, scale, type, pushNewUrl],
+  )
 
   const renderButton = (key, value, label) => {
     const currentValue = { frequency, scale, type }[key]
     const active = value === currentValue
     return (
-      <button onClick={() => onClick(key, value)}
-              className={classnames({ active })}
-      >
+      <button onClick={() => onClick(key, value)} className={classnames({ active })}>
         {label}
       </button>
     )
@@ -148,24 +162,40 @@ const ChartContainer = ({
             {renderButton('scale', LOG_SCALE, 'Log')}
           </div>
         </div>
-        <Chart id={id} data={history} ticker={ticker} frequency={frequency} scale={scale} type={type} />
+        <Chart
+          id={id}
+          data={history}
+          ticker={ticker}
+          frequency={frequency}
+          scale={scale}
+          type={type}
+        />
       </div>
       <aside className="sidebar">
         <form onSubmit={onSubmit}>
-          <input type="text"
-                 placeholder="Ticker Symbol"
-                 value={tickerInput}
-                 autoFocus={true}
-                 onChange={(e) => setTickerInput(e.target.value)}
+          <input
+            type="text"
+            placeholder="Ticker Symbol"
+            value={tickerInput}
+            autoFocus={true}
+            onChange={(e) => setTickerInput(e.target.value)}
           />
-          <input type="text"
-                 placeholder="Datetime"
-                 value={datetimeInput}
-                 onChange={(e) => setDatetimeInput(e.target.value)}
+          <input
+            type="text"
+            placeholder="Datetime"
+            value={datetimeInput}
+            onChange={(e) => setDatetimeInput(e.target.value)}
           />
-          <input type="submit" style={{ display: "none" }} />
+          <input type="submit" style={{ display: 'none' }} />
         </form>
-        <Watchlists queryParams={filterQueryParams({ frequency, datetime: initialDatetime, scale, type })} />
+        <Watchlists
+          queryParams={filterQueryParams({
+            frequency,
+            datetime: initialDatetime,
+            scale,
+            type,
+          })}
+        />
       </aside>
     </div>
   )
@@ -174,7 +204,4 @@ const ChartContainer = ({
 const withHistoryReducer = injectReducer(loadTickerHistoryReducer)
 const withHistorySagas = injectSagas(loadTickerHistorySagas)
 
-export default compose(
-  withHistoryReducer,
-  withHistorySagas,
-)(ChartContainer)
+export default compose(withHistoryReducer, withHistorySagas)(ChartContainer)

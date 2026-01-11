@@ -16,7 +16,21 @@ class Home extends React.Component {
     return (
       <PageContent>
         <h1>Welcome to Flask Techan Unchained!</h1>
-        <p>A demo app integrating <a href="https://github.com/alpacahq/marketstore" target="_blank">Alpaca MarketStore</a> with Python/React. Built using <a href="https://github.com/briancappello/flask-unchained" target="_blank">Flask Unchained</a> and <a href="http://techanjs.org/" target="_blank">techanjs</a>.</p>
+        <p>
+          A demo app integrating{' '}
+          <a href="https://github.com/alpacahq/marketstore" target="_blank">
+            Alpaca MarketStore
+          </a>{' '}
+          with Python/React. Built using{' '}
+          <a href="https://github.com/briancappello/flask-unchained" target="_blank">
+            Flask Unchained
+          </a>{' '}
+          and{' '}
+          <a href="http://techanjs.org/" target="_blank">
+            techanjs
+          </a>
+          .
+        </p>
         <div className="row">
           <h2>License</h2>
           <p>Apache 2.0</p>

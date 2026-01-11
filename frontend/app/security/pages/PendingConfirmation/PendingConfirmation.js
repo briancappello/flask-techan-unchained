@@ -3,7 +3,6 @@ import { Helmet } from 'react-helmet-async'
 
 import { PageContent } from 'components/Content'
 
-
 export default () => (
   <PageContent>
     <Helmet>

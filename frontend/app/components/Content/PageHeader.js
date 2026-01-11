@@ -1,6 +1,5 @@
 import React from 'react'
 
-
 /**
  * PageHeader
  *
@@ -47,9 +46,7 @@ export default class PageHeader extends React.Component {
     return (
       <header className="page-header-wrap" style={inlineStyles}>
         <div className="container">
-          <div className="page-header">
-            {this.props.children}
-          </div>
+          <div className="page-header">{this.props.children}</div>
         </div>
       </header>
     )

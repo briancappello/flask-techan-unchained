@@ -8,9 +8,13 @@ import techan from 'techanjs'
 import { log_debug, log_critical } from 'logging'
 
 import {
-  CHART_HEADER_HEIGHT, CHART_SIDEBAR_WIDTH,
-  BAR_CHART, CANDLE_CHART, LINE_CHART,
-  LINEAR_SCALE, LOG_SCALE,
+  CHART_HEADER_HEIGHT,
+  CHART_SIDEBAR_WIDTH,
+  BAR_CHART,
+  CANDLE_CHART,
+  LINE_CHART,
+  LINEAR_SCALE,
+  LOG_SCALE,
   FREQUENCY,
   FORMATS,
   CHART_INDICATOR,
@@ -43,7 +47,6 @@ const INDICATORS = {
   Volume,
 }
 
-
 const CHART_TYPES = {
   [LINE_CHART]: techan.plot.close(),
   [CANDLE_CHART]: techan.plot.candlestick(),
@@ -58,7 +61,6 @@ const SCALES = {
 const MAX_BARS = 300
 
 export default class Chart extends React.Component {
-
   static propTypes = {
     id: PropTypes.string.isRequired,
     ticker: PropTypes.string.isRequired,
@@ -83,14 +85,15 @@ export default class Chart extends React.Component {
 
     this.margin = { top: 10, right: 45, bottom: 20, left: 45 }
 
-    const { chartId, data, frequency, indicators, indicatorHeight, upperIndicators } = props
+    const { chartId, data, frequency, indicators, indicatorHeight, upperIndicators } =
+      props
 
     let visibleBars = 0
     let startIdx = 0
     if (props.data && props.data.length) {
       visibleBars = Math.min(
         props.data.length,
-        frequency === FREQUENCY.Minutely ? 500 : MAX_BARS
+        frequency === FREQUENCY.Minutely ? 500 : MAX_BARS,
       )
       startIdx = Math.max(props.data.length - visibleBars, 0)
     }
@@ -117,7 +120,10 @@ export default class Chart extends React.Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.data !== prevState.prevData || nextProps.frequency !== prevState.prevFrequency) {
+    if (
+      nextProps.data !== prevState.prevData ||
+      nextProps.frequency !== prevState.prevFrequency
+    ) {
       log_debug('Chart: getDerivedStateFromProps')
 
       const { data, frequency } = nextProps
@@ -127,7 +133,10 @@ export default class Chart extends React.Component {
       let latestBar = {}
 
       if (data && data.length) {
-        visibleBars = Math.min(data.length, frequency === FREQUENCY.Minutely ? 500 : MAX_BARS)
+        visibleBars = Math.min(
+          data.length,
+          frequency === FREQUENCY.Minutely ? 500 : MAX_BARS,
+        )
         startIdx = Math.max(data.length - visibleBars, 0)
         latestBar = data[data.length - 1]
       }
@@ -145,10 +154,12 @@ export default class Chart extends React.Component {
   }
 
   _isIntraday() {
-    return ![FREQUENCY.Daily,
-                    FREQUENCY.Weekly,
-                    FREQUENCY.Monthly,
-                    FREQUENCY.Yearly].includes(this.props.frequency)
+    return ![
+      FREQUENCY.Daily,
+      FREQUENCY.Weekly,
+      FREQUENCY.Monthly,
+      FREQUENCY.Yearly,
+    ].includes(this.props.frequency)
   }
 
   componentDidMount() {
@@ -214,20 +225,24 @@ export default class Chart extends React.Component {
     this.chartWidth = totalWidth - this.margin.left - this.margin.right
 
     this.priceChartWidth = this.chartWidth
-    this.priceChartHeight = this.chartHeight - 35 - (
-        indicators.length * (indicatorHeight + CHART_INDICATOR.padding)
-    )
+    this.priceChartHeight =
+      this.chartHeight -
+      35 -
+      indicators.length * (indicatorHeight + CHART_INDICATOR.padding)
 
-    let rootSvg = d3.select(`#${chartId}`).append('svg')
+    let rootSvg = d3
+      .select(`#${chartId}`)
+      .append('svg')
       .attr('height', totalHeight)
       .attr('width', totalWidth)
 
     // the chart viewport (everything inside the declared margins)
-    this.svg = rootSvg.append('g')
+    this.svg = rootSvg
+      .append('g')
       .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`)
       .call(d3.zoom().on('zoom', this.handleScroll))
 
-    this._drawAxes()  // must come before priceChart & indicators
+    this._drawAxes() // must come before priceChart & indicators
     this._drawPriceChart()
 
     indicators.forEach((indicator, i) => {
@@ -244,7 +259,8 @@ export default class Chart extends React.Component {
     if (showCrosshairs) {
       this._drawPriceChartCrosshairs()
       for (let indicator of indicators) {
-        indicator.drawCrosshairs()
+        indicator
+          .drawCrosshairs()
           .xAnnotation([this.dateAnnotation])
           .verticalWireRange([0, this.chartHeight])
           .on('move', this.crosshairMove)
@@ -264,23 +280,21 @@ export default class Chart extends React.Component {
     // FIXME: hacky render fix for drawing a single bar
     if (xDomain.length === 1) {
       const d = new Date()
-      d.setDate(xDomain[0].getDate()-1)
+      d.setDate(xDomain[0].getDate() - 1)
       xDomain.splice(0, 0, d) // prepend one prior day
     }
     this.xScale.domain(xDomain)
 
     // calculate y domain based on min/max of both price and bbands (if possible)
-    let yMin = Math.min(...data.map(d => d.low))
-    let yMax = Math.max(...data.map(d => d.high))
+    let yMin = Math.min(...data.map((d) => d.low))
+    let yMax = Math.max(...data.map((d) => d.high))
     let yDomain = [yMin, yMax]
 
     if (this.props.upperIndicators.includes('BBands')) {
-      let bbandsMin = Math.min(...data.map(d => d.bbands_lower))
-      let bbandsMax = Math.max(...data.map(d => d.bbands_upper))
+      let bbandsMin = Math.min(...data.map((d) => d.bbands_lower))
+      let bbandsMax = Math.max(...data.map((d) => d.bbands_upper))
       yDomain = [
-        bbandsMin > 0
-          ? Math.min(yMin, bbandsMin)
-          : yMin,
+        bbandsMin > 0 ? Math.min(yMin, bbandsMin) : yMin,
         Math.max(yMax, bbandsMax),
       ]
     }
@@ -331,68 +345,70 @@ export default class Chart extends React.Component {
     const tickFormat = FORMATS[frequency]
 
     // x axis
-    this.xScale = techan.scale.financetime()
-      .range([0, this.chartWidth])
-      .outerPadding(1)
+    this.xScale = techan.scale.financetime().range([0, this.chartWidth]).outerPadding(1)
 
-    this.xAxis = d3.axisBottom(this.xScale)
+    this.xAxis = d3
+      .axisBottom(this.xScale)
       // axis labels at bottom of chart
       .ticks(frequency)
       .tickFormat(tickFormat)
       .tickSizeOuter(0)
 
-    this.svg.append('g')
+    this.svg
+      .append('g')
       .attr('class', 'x axis')
       .attr('transform', `translate(0, ${this.chartHeight})`)
 
-    this.priceChartXAxisLabels = d3.axisBottom(this.xScale)
+    this.priceChartXAxisLabels = d3
+      .axisBottom(this.xScale)
       // axis labels below price chart
       .ticks(frequency)
       .tickFormat(tickFormat)
       .tickSizeOuter(0)
 
-    this.svg.append('g')
+    this.svg
+      .append('g')
       .attr('class', 'x axis labels')
       .attr('transform', `translate(0, ${this.priceChartHeight})`)
 
     // x grid
-    this.xGrid = d3.axisBottom(this.xScale)
+    this.xGrid = d3
+      .axisBottom(this.xScale)
       .ticks(frequency)
       .tickFormat(() => null)
       .tickSizeInner(-this.priceChartHeight)
       .tickSizeOuter(-this.priceChartHeight)
 
-    this.svg.append('g')
+    this.svg
+      .append('g')
       .attr('class', 'x grid')
       .attr('transform', `translate(0, ${this.priceChartHeight})`)
 
     // y axis
-    this.yScale = SCALES[this.props.scale]
-      .range([this.priceChartHeight, 0])
+    this.yScale = SCALES[this.props.scale].range([this.priceChartHeight, 0])
 
-    this.yAxis = d3.axisLeft(this.yScale)
+    this.yAxis = d3.axisLeft(this.yScale).tickSizeOuter(0).tickFormat(FORMATS.SMART)
+
+    this.svg.append('g').attr('class', 'y axis')
+
+    this.yAxisRight = d3
+      .axisRight(this.yScale)
       .tickSizeOuter(0)
       .tickFormat(FORMATS.SMART)
 
-    this.svg.append('g')
-      .attr('class', 'y axis')
-
-    this.yAxisRight = d3.axisRight(this.yScale)
-      .tickSizeOuter(0)
-      .tickFormat(FORMATS.SMART)
-
-    this.svg.append('g')
+    this.svg
+      .append('g')
       .attr('class', 'y axis right')
       .attr('transform', `translate(${this.chartWidth}, 0)`)
 
     // y grid
-    this.yGrid = d3.axisLeft(this.yScale)
+    this.yGrid = d3
+      .axisLeft(this.yScale)
       .tickFormat(() => null)
       .tickSizeInner(-this.chartWidth)
       .tickSizeOuter(-this.chartWidth)
 
-    this.svg.append('g')
-      .attr('class', 'y grid')
+    this.svg.append('g').attr('class', 'y grid')
   }
 
   _drawPriceChart() {
@@ -402,11 +418,11 @@ export default class Chart extends React.Component {
       .xScale(this.xScale)
       .yScale(this.yScale)
 
-    this.svg.append('g')
-      .attr('class', 'price-chart')
+    this.svg.append('g').attr('class', 'price-chart')
 
     // create a clip path so that indicators don't visually overflow the price plot viewport
-    this.svg.append('defs')
+    this.svg
+      .append('defs')
       .append('clipPath')
       .attr('id', clipId)
       .append('rect')
@@ -428,7 +444,8 @@ export default class Chart extends React.Component {
 
   _drawPriceChartCrosshairs() {
     // crosshair current date label
-    this.dateAnnotation = techan.plot.axisannotation()
+    this.dateAnnotation = techan.plot
+      .axisannotation()
       .axis(this.xAxis)
       .orient('bottom')
       .format(this._isIntraday() ? FORMATS.DATETIME : FORMATS.DATE)
@@ -436,12 +453,14 @@ export default class Chart extends React.Component {
       .translate([0, this.chartHeight])
 
     // crosshair current price label
-    this.cursorPriceLevelAnnotation = techan.plot.axisannotation()
+    this.cursorPriceLevelAnnotation = techan.plot
+      .axisannotation()
       .axis(this.yAxis)
       .orient('left')
       .format(FORMATS.DEC)
 
-    this.cursorPriceLevelAnnotationRight = techan.plot.axisannotation()
+    this.cursorPriceLevelAnnotationRight = techan.plot
+      .axisannotation()
       .axis(this.yAxisRight)
       .orient('right')
       .format(FORMATS.DEC)
@@ -464,7 +483,8 @@ export default class Chart extends React.Component {
     }
 
     // priceChart crosshairs
-    this.priceChartCrosshair = techan.plot.crosshair()
+    this.priceChartCrosshair = techan.plot
+      .crosshair()
       .xScale(this.xScale)
       .yScale(this.yScale)
       .xAnnotation([this.dateAnnotation])
@@ -474,37 +494,39 @@ export default class Chart extends React.Component {
       .on('out', this.crosshairOut)
 
     // add crosshair group container to the svg
-    this.svg.append('g')
-      .attr('class', 'price-chart crosshair')
+    this.svg.append('g').attr('class', 'price-chart crosshair')
 
     // this serves as an index lookup for mouse events (to get the current bar)
-    this.dataIndexScale = d3.scaleLinear()
+    this.dataIndexScale = d3
+      .scaleLinear()
       .domain([0, this.state.visibleBars])
       .range([0, this.chartWidth])
   }
 
   _getIndicatorScale(number, domain = [0, 100]) {
     const { indicators, indicatorHeight } = this.state
-    if (number < 1 || number > indicators.length) throw new Error(
-      `Indicator number must be between 1 and ${indicators.length} (${number} given).`
-    )
+    if (number < 1 || number > indicators.length)
+      throw new Error(
+        `Indicator number must be between 1 and ${indicators.length} (${number} given).`,
+      )
 
-    const indicatorScaleHelper = d3.scaleLinear()
+    const indicatorScaleHelper = d3
+      .scaleLinear()
       .domain([1, indicators.length])
       .range([
         // top of first indicator
-        this.chartHeight - (
-            indicators.length * (indicatorHeight + CHART_INDICATOR.padding)
-        ),
+        this.chartHeight -
+          indicators.length * (indicatorHeight + CHART_INDICATOR.padding),
         // top of last indicator
-        this.chartHeight - indicatorHeight
+        this.chartHeight - indicatorHeight,
       ])
 
-    return d3.scaleLinear()
+    return d3
+      .scaleLinear()
       .domain(domain)
       .range([
         indicatorScaleHelper(number) + indicatorHeight,
-        indicatorScaleHelper(number)
+        indicatorScaleHelper(number),
       ])
   }
 
@@ -525,7 +547,7 @@ export default class Chart extends React.Component {
         barDelta = 1
       }
 
-    // click'n'drag
+      // click'n'drag
     } else {
       barDelta = -Math.ceil(e.movementX / this._getBarWidth())
     }
@@ -592,13 +614,15 @@ export default class Chart extends React.Component {
   }
 
   _getBarIndex = (xCoord) => {
-    return this.state.startIdx + Math.floor(this.dataIndexScale.invert(this.xScale(xCoord)))
+    return (
+      this.state.startIdx + Math.floor(this.dataIndexScale.invert(this.xScale(xCoord)))
+    )
   }
 
   renderChartHeader() {
     const { ticker, frequency } = this.props
     const { currentBar, latestBar } = this.state
-    const bar = currentBar && currentBar || latestBar
+    const bar = (currentBar && currentBar) || latestBar
 
     let dateFormat = FORMATS.DATETIME
     if (['D', 'W', 'M', 'Y'].includes(frequency)) {
@@ -609,14 +633,32 @@ export default class Chart extends React.Component {
       <div className="chart-header">
         <div className="ohlc">
           <table>
-          <tbody>
-            <tr><th>D</th><td>{bar && dateFormat(bar.date)}</td></tr>
-            <tr><th>O</th><td>{bar && FORMATS.DEC(bar.open)}</td></tr>
-            <tr><th>H</th><td>{bar && FORMATS.DEC(bar.high)}</td></tr>
-            <tr><th>L</th><td>{bar && FORMATS.DEC(bar.low)}</td></tr>
-            <tr><th>C</th><td>{bar && FORMATS.DEC(bar.close)}</td></tr>
-            <tr><th>V</th><td>{bar && FORMATS.SI(bar.volume)}</td></tr>
-          </tbody>
+            <tbody>
+              <tr>
+                <th>D</th>
+                <td>{bar && dateFormat(bar.date)}</td>
+              </tr>
+              <tr>
+                <th>O</th>
+                <td>{bar && FORMATS.DEC(bar.open)}</td>
+              </tr>
+              <tr>
+                <th>H</th>
+                <td>{bar && FORMATS.DEC(bar.high)}</td>
+              </tr>
+              <tr>
+                <th>L</th>
+                <td>{bar && FORMATS.DEC(bar.low)}</td>
+              </tr>
+              <tr>
+                <th>C</th>
+                <td>{bar && FORMATS.DEC(bar.close)}</td>
+              </tr>
+              <tr>
+                <th>V</th>
+                <td>{bar && FORMATS.SI(bar.volume)}</td>
+              </tr>
+            </tbody>
           </table>
         </div>
         {/*<div className="company-name">Company Name Goes Here</div>*/}

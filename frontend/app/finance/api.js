@@ -1,7 +1,6 @@
 import { v1 } from 'api'
 import { get, post } from 'utils/request'
 
-
 function finance(uri, queryParams) {
   return v1(`/finance${uri}`, queryParams)
 }

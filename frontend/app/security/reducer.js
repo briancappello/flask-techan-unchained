@@ -8,7 +8,6 @@ import {
 } from 'security/actions'
 import { storage } from 'utils'
 
-
 export const initialState = {
   isAuthenticated: false,
   isAuthenticating: false,
@@ -20,7 +19,7 @@ export const initialState = {
   },
 }
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   const { type, payload } = action
   switch (type) {
     case login.REQUEST:

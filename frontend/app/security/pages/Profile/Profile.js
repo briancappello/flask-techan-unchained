@@ -8,7 +8,6 @@ import { PageContent } from 'components/Content'
 import UpdateProfile from './UpdateProfile'
 import ChangePassword from './ChangePassword'
 
-
 export default () => (
   <PageContent>
     <Helmet>
@@ -16,10 +15,10 @@ export default () => (
     </Helmet>
     <div className="row">
       <div className="six cols">
-        <UpdateProfile/>
+        <UpdateProfile />
       </div>
       <div className="six cols">
-        <ChangePassword/>
+        <ChangePassword />
       </div>
     </div>
   </PageContent>

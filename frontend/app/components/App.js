@@ -11,9 +11,7 @@ import 'main.scss'
 
 const AppLayout = () => (
   <div className="fixed-nav-top">
-    <Helmet titleTemplate={`%s - ${SITE_NAME}`}
-            defaultTitle={SITE_NAME}
-    />
+    <Helmet titleTemplate={`%s - ${SITE_NAME}`} defaultTitle={SITE_NAME} />
     <ProgressBar />
     <Routes />
   </div>

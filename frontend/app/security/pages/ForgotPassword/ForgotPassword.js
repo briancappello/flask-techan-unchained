@@ -11,7 +11,6 @@ import { EmailField } from 'components/Form'
 import { injectSagas } from 'utils/async'
 import * as forgotPasswordSagas from 'security/sagas/forgotPassword'
 
-
 const FORM_NAME = 'forgotPassword'
 
 const ForgotPassword = (props) => {
@@ -27,15 +26,17 @@ const ForgotPassword = (props) => {
           <h1>Forgot Password</h1>
           {error && <DangerAlert>{error}</DangerAlert>}
           <form onSubmit={handleSubmit(forgotPassword)}>
-            <EmailField name="email"
-                        label="Email Address"
-                        className="full-width"
-                        autoFocus
+            <EmailField
+              name="email"
+              label="Email Address"
+              className="full-width"
+              autoFocus
             />
             <div className="row">
-              <button type="submit"
-                      className="btn btn-primary"
-                      disabled={pristine || submitting}
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={pristine || submitting}
               >
                 {submitting ? 'Submitting...' : 'Submit'}
               </button>
@@ -56,7 +57,4 @@ const withForm = reduxForm({
 
 const withSagas = injectSagas(forgotPasswordSagas)
 
-export default compose(
-  withForm,
-  withSagas,
-)(ForgotPassword)
+export default compose(withForm, withSagas)(ForgotPassword)

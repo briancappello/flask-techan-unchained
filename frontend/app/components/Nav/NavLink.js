@@ -5,14 +5,23 @@ import { stringify } from 'query-string'
 
 import { ROUTE_MAP } from 'routes'
 
-
-const LoadableNavLink = ({ children, to, params = {}, queryParams = {}, className, ...props }) => {
+const LoadableNavLink = ({
+  children,
+  to,
+  params = {},
+  queryParams = {},
+  className,
+  ...props
+}) => {
   const route = useMemo(() => ROUTE_MAP[to], [to])
 
-  const toPath = useMemo(() => ({
-    pathname: route ? route.toPath(params) : to,
-    search: Object.keys(queryParams).length ? `?${stringify(queryParams)}` : '',
-  }), [route, to, params, queryParams])
+  const toPath = useMemo(
+    () => ({
+      pathname: route ? route.toPath(params) : to,
+      search: Object.keys(queryParams).length ? `?${stringify(queryParams)}` : '',
+    }),
+    [route, to, params, queryParams],
+  )
 
   return (
     <NavLink

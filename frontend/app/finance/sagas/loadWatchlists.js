@@ -6,8 +6,7 @@ import { areWatchlistsLoaded, areWatchlistsLoading } from 'finance/selectors'
 
 export const KEY = 'loadWatchlists'
 
-
-export function *maybeLoadWatchlistsSaga() {
+export function* maybeLoadWatchlistsSaga() {
   const isLoaded = yield select(areWatchlistsLoaded)
   const isLoading = yield select(areWatchlistsLoading)
   if (!(isLoaded || isLoading)) {

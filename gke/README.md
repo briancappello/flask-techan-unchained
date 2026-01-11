@@ -1,9 +1,11 @@
 # commands are assumed to be run from inside the gke/ directory
 
 # 1. create a gcloud project:
+
 gcloud projects create project-id --set-as-default
 
 # 2: build & push docker images
+
 gcloud auth configure-docker
 
 docker build -f docker/flask/Dockerfile.prod -t gcr.io/project-id/backend .
@@ -19,6 +21,7 @@ docker build -f docker/react/Dockerfile.prod -t gcr.io/project-id/react .
 docker push gcr.io/project-id/react
 
 # 3. deploy cluster
+
 ```bash
 # edit environment variables at top, then run init cluster:
 bash 1-init-cluster.sh
@@ -29,7 +32,7 @@ bash 2-install-secure-helm.sh
 # install nginx-ingress
 helm install --tls stable/nginx-ingress --name project-id
 
-# configure DNS 
+# configure DNS
 #
 # get ClusterIP of `project-id-nginx-ingress-controller        LoadBalancer`
 kubectl get svc

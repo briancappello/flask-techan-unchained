@@ -4,11 +4,10 @@ import { push } from 'react-router-redux'
 import { login, logout } from 'security/actions'
 import { loginSaga, logoutSaga } from '../auth'
 
-
 describe('auth login saga', () => {
   let loginGenerator
   const redirect = '/',
-        payload = { email: 'a@a.com', password: 'foobar' }
+    payload = { email: 'a@a.com', password: 'foobar' }
 
   beforeEach(() => {
     loginGenerator = loginSaga({ payload: { redirect, ...payload } })
@@ -28,10 +27,10 @@ describe('auth login saga', () => {
       user: {
         email: 'a@a.com',
         username: 'success',
-      }
+      },
     }
 
-    const putDescriptor = loginGenerator.next(response).value;
+    const putDescriptor = loginGenerator.next(response).value
     expect(putDescriptor).toEqual(put(login.success(response)))
   })
 
@@ -68,7 +67,7 @@ describe('auth logout saga', () => {
   it('should dispatch logout.success if successful', () => {
     const response = { logout: true }
 
-    const putDescriptor = logoutGenerator.next(response).value;
+    const putDescriptor = logoutGenerator.next(response).value
     expect(putDescriptor).toEqual(put(logout.success(response)))
   })
 

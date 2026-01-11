@@ -2,7 +2,6 @@ import React, { Suspense, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { showLoading, hideLoading } from 'react-redux-loading-bar'
 
-
 /**
  * Loading fallback component that integrates with react-redux-loading-bar
  *
@@ -41,9 +40,8 @@ export const withSuspense = (LazyComponent) => {
  *   - createLoadable({ loader: () => import('./MyComponent') })
  */
 export const createLoadable = (importFnOrConfig) => {
-  const importFn = typeof importFnOrConfig === 'function'
-    ? importFnOrConfig
-    : importFnOrConfig.loader
+  const importFn =
+    typeof importFnOrConfig === 'function' ? importFnOrConfig : importFnOrConfig.loader
   const LazyComponent = React.lazy(importFn)
   return withSuspense(LazyComponent)
 }

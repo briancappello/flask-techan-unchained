@@ -10,7 +10,6 @@ import { EmailField, TextField } from 'components/Form'
 import { injectSagas } from 'utils/async'
 import * as updateProfileSagas from 'security/sagas/updateProfile'
 
-
 const FORM_NAME = 'updateProfile'
 
 const UpdateProfile = (props) => {
@@ -21,16 +20,15 @@ const UpdateProfile = (props) => {
       <h2>Update Profile!</h2>
       {error && <DangerAlert>{error}</DangerAlert>}
       <form onSubmit={handleSubmit(updateProfile)}>
-        <TextField name="firstName"
-                   autoFocus
-        />
+        <TextField name="firstName" autoFocus />
         <TextField name="lastName" />
         <TextField name="username" />
         <EmailField name="email" />
         <div className="row">
-          <button type="submit"
-                  className="btn btn-primary"
-                  disabled={pristine || submitting}
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={pristine || submitting}
           >
             {submitting ? 'Saving...' : 'Save'}
           </button>
@@ -42,14 +40,8 @@ const UpdateProfile = (props) => {
 
 const withForm = reduxForm({ form: FORM_NAME })
 
-const withConnect = connect(
-  (state) => ({ initialValues: state.security.user }),
-)
+const withConnect = connect((state) => ({ initialValues: state.security.user }))
 
 const withSagas = injectSagas(updateProfileSagas)
 
-export default compose(
-  withConnect,
-  withForm,
-  withSagas,
-)(UpdateProfile)
+export default compose(withConnect, withForm, withSagas)(UpdateProfile)

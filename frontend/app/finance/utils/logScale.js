@@ -1,4 +1,3 @@
-
 function roundUp(num, precision) {
   return Math.ceil(num / precision) * precision
 }
@@ -23,7 +22,7 @@ function round(fn, num, otherNum) {
    */
   let digits = countDigits(num)
 
-  if (num > 50 && (Math.abs(num - otherNum) > 1)) {
+  if (num > 50 && Math.abs(num - otherNum) > 1) {
     if (fn == roundUp) {
       num = Math.ceil(num)
     } else {
@@ -31,7 +30,7 @@ function round(fn, num, otherNum) {
     }
   }
 
-  if (num % (10 ** (digits - 1)) === 0 || num % 10 === 0) {
+  if (num % 10 ** (digits - 1) === 0 || num % 10 === 0) {
     return num
   }
 
@@ -46,7 +45,7 @@ function round(fn, num, otherNum) {
 
   // really while (rounded == num) { ... } but, floating point
   let rounded = num
-  while (Math.abs(rounded - num) < .000001) {
+  while (Math.abs(rounded - num) < 0.000001) {
     rounded = fn(num, precision)
     precision *= 10
   }
@@ -64,19 +63,18 @@ export function niceLogMin(min, max) {
   return Math.max(0.01, round(roundDown, min, max))
 }
 
-
 export function getLogTickValues(logMin, logMax) {
   const steps = [0.01, 0.05, 0.1, 0.2, 0.25, 0.5, 1]
   let multiplier = 1,
-      yInterval = (logMax - logMin) / 10,
-      searching = true
+    yInterval = (logMax - logMin) / 10,
+    searching = true
 
   while (searching) {
     for (let i = 1; i < steps.length; i++) {
       const step = steps[i] * multiplier
-      const numLines = (logMax - logMin) / (steps[i-1] * multiplier)
+      const numLines = (logMax - logMin) / (steps[i - 1] * multiplier)
       if (yInterval <= step && numLines < 16) {
-        yInterval = steps[i-1] * multiplier
+        yInterval = steps[i - 1] * multiplier
         searching = false
         break
       }
@@ -85,8 +83,8 @@ export function getLogTickValues(logMin, logMax) {
   }
 
   let tickValues = []
-  for (let i = 0;; i++) {
-    const tick = logMax - (yInterval * i)
+  for (let i = 0; ; i++) {
+    const tick = logMax - yInterval * i
     if (tick < logMin) {
       break
     }

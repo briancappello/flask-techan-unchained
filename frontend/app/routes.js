@@ -3,9 +3,7 @@ import { Routes, Route } from 'react-router-dom'
 import startCase from 'lodash/startCase'
 import { compile } from 'path-to-regexp'
 
-import {
-  Chart,
-} from 'finance/pages'
+import { Chart } from 'finance/pages'
 
 import {
   ForgotPassword,
@@ -18,14 +16,9 @@ import {
   ResetPassword,
 } from 'security/pages'
 
-import {
-  Contact,
-  Home,
-  NotFound,
-} from 'site/pages'
+import { Contact, Home, NotFound } from 'site/pages'
 
 import { AnonymousRoute, ProtectedRoute } from 'utils/route'
-
 
 /**
  * ROUTES: The canonical store of frontend routes. Routes throughout the system
@@ -180,11 +173,7 @@ export default () => (
     {routes.map((route) => {
       const { component: Component, path, routeType } = ROUTE_MAP[route.key]
       return (
-        <Route
-          key={path}
-          path={path}
-          element={wrapComponent(Component, routeType)}
-        />
+        <Route key={path} path={path} element={wrapComponent(Component, routeType)} />
       )
     })}
     <Route path="*" element={<NotFound />} />

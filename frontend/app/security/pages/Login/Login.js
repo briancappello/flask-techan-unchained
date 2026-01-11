@@ -12,7 +12,6 @@ import { ROUTES } from 'routes'
 import { injectSagas } from 'utils/async'
 import * as loginSagas from 'security/sagas/login'
 
-
 const FORM_NAME = 'login'
 
 const Login = (props) => {
@@ -36,24 +35,25 @@ const Login = (props) => {
           {error && <DangerAlert>{error}</DangerAlert>}
           {isDev && <p>Hint: a@a.com / password</p>}
           <form onSubmit={handleSubmit(onLogin)}>
-            <TextField name="email"
-                       label="Email or Username"
-                       className="full-width"
-                       autoFocus
+            <TextField
+              name="email"
+              label="Email or Username"
+              className="full-width"
+              autoFocus
             />
-            <PasswordField name="password"
-                           className="full-width"
-            />
+            <PasswordField name="password" className="full-width" />
             <div className="row">
-              <button type="submit"
-                      className="btn btn-primary"
-                      disabled={pristine || submitting}
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={pristine || submitting}
               >
                 {submitting ? 'Logging in...' : 'Submit'}
               </button>
-              <NavLink to={ROUTES.ForgotPassword}
-                       className="pull-right"
-                       style={{lineHeight: '38px'}}
+              <NavLink
+                to={ROUTES.ForgotPassword}
+                className="pull-right"
+                style={{ lineHeight: '38px' }}
               />
             </div>
           </form>
@@ -67,7 +67,4 @@ const withForm = reduxForm({ form: FORM_NAME })
 
 const withSagas = injectSagas(loginSagas)
 
-export default compose(
-  withForm,
-  withSagas,
-)(Login)
+export default compose(withForm, withSagas)(Login)

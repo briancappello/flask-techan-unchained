@@ -9,7 +9,7 @@ test('createRoutine should return an object of action creators and constants', (
     const actionCreatorName = camelCase(actionType)
     expect(myRoutine).toHaveProperty(actionType, actionName)
     expect(myRoutine).toHaveProperty(actionCreatorName)
-    expect(myRoutine[actionCreatorName]({ foo: 'bar'})).toEqual({
+    expect(myRoutine[actionCreatorName]({ foo: 'bar' })).toEqual({
       type: actionName,
       payload: { foo: 'bar' },
     })
@@ -19,7 +19,7 @@ test('createRoutine should return an object of action creators and constants', (
 test('bindRoutineCreators should return an object of bound action creators', () => {
   const routineName = 'MY_ROUTINE'
   const myRoutine = createRoutine(routineName)
-  const boundRoutine = bindRoutineCreators({ myRoutine }, f => f)
+  const boundRoutine = bindRoutineCreators({ myRoutine }, (f) => f)
   actionTypes.forEach((actionType) => {
     const actionName = `${routineName}_${actionType}`
     const actionCreatorName = camelCase(actionType)
@@ -31,12 +31,12 @@ test('bindRoutineCreators should return an object of bound action creators', () 
 })
 
 test('bindRoutineCreators should return an empty object if not passed any routines', () => {
-  expect(bindRoutineCreators({}, f => f)).toEqual({})
+  expect(bindRoutineCreators({}, (f) => f)).toEqual({})
 })
 
 test('bindRoutineCreators should throw an error if passed incorrect routines parameter', () => {
   expect(() => {
-    bindRoutineCreators('fail', f => f)
+    bindRoutineCreators('fail', (f) => f)
   }).toThrowError(/routines must be an object/)
 })
 

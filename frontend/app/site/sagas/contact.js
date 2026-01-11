@@ -4,7 +4,6 @@ import { SubmissionError } from 'redux-form'
 import { contact, flashSuccess } from 'site/actions'
 import SiteApi from 'site/api'
 
-
 export const KEY = 'contact'
 
 export function* contactSaga({ payload }) {
@@ -12,7 +11,11 @@ export function* contactSaga({ payload }) {
     yield put(contact.request())
     const response = yield call(SiteApi.contact, payload)
     yield put(contact.success(response))
-    yield put(flashSuccess('Your contact submission has been sent. We will do our best to respond in a timely manner!'))
+    yield put(
+      flashSuccess(
+        'Your contact submission has been sent. We will do our best to respond in a timely manner!',
+      ),
+    )
   } catch (e) {
     const error = new SubmissionError({
       _error: e.response?.error || 'Contact submission failed',
@@ -24,6 +27,4 @@ export function* contactSaga({ payload }) {
   }
 }
 
-export default () => [
-  takeLatest(contact.TRIGGER, contactSaga)
-]
+export default () => [takeLatest(contact.TRIGGER, contactSaga)]

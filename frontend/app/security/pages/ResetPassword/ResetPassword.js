@@ -11,7 +11,6 @@ import { PasswordField } from 'components/Form'
 import { injectSagas } from 'utils/async'
 import * as resetPasswordSagas from 'security/sagas/resetPassword'
 
-
 const FORM_NAME = 'resetPassword'
 
 const ResetPassword = (props) => {
@@ -26,17 +25,18 @@ const ResetPassword = (props) => {
       <h1>Reset Password</h1>
       {error && <DangerAlert>{error}</DangerAlert>}
       <p>Enter a new password and click submit to reset your password and login.</p>
-      <form onSubmit={handleSubmit((values, dispatch) => resetPassword({ ...values, token }, dispatch))}>
-        <PasswordField name="newPassword"
-                       autoFocus
-        />
-        <PasswordField name="confirmNewPassword"
-                       label="Confirm New Password"
-        />
+      <form
+        onSubmit={handleSubmit((values, dispatch) =>
+          resetPassword({ ...values, token }, dispatch),
+        )}
+      >
+        <PasswordField name="newPassword" autoFocus />
+        <PasswordField name="confirmNewPassword" label="Confirm New Password" />
         <div className="row">
-          <button type="submit"
-                  className="btn btn-primary"
-                  disabled={pristine || submitting}
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={pristine || submitting}
           >
             {submitting ? 'Submitting...' : 'Submit'}
           </button>
@@ -50,7 +50,4 @@ const withForm = reduxForm({ form: FORM_NAME })
 
 const withSagas = injectSagas(resetPasswordSagas)
 
-export default compose(
-  withForm,
-  withSagas,
-)(ResetPassword)
+export default compose(withForm, withSagas)(ResetPassword)

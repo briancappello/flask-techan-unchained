@@ -3,22 +3,22 @@ import { stringify } from 'query-string'
 
 import { SERVER_URL } from 'config'
 
-
 export function url(uri, queryParams) {
   const baseUrl = `${SERVER_URL}${uri}`
-  return queryParams
-    ? `${baseUrl}?${stringify(queryParams)}`
-    : baseUrl
+  return queryParams ? `${baseUrl}?${stringify(queryParams)}` : baseUrl
 }
 
 export function get(url, kwargs = {}) {
   const { token, ...options } = kwargs
   const defaults = {
     credentials: 'include',
-    headers: Object.assign({
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    }, token ? { 'Authentication-Token': token } : {}),
+    headers: Object.assign(
+      {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      token ? { 'Authentication-Token': token } : {},
+    ),
     method: 'GET',
   }
   return request(url, _mergeOptions(defaults, options))
@@ -28,11 +28,14 @@ export function post(url, data, kwargs = {}) {
   const { token, ...options } = kwargs
   const defaults = {
     credentials: 'include',
-    headers: Object.assign({
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'X-CSRFToken': Cookies.get('csrf_token'),
-    }, token ? { 'Authentication-Token': token } : {}),
+    headers: Object.assign(
+      {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-CSRFToken': Cookies.get('csrf_token'),
+      },
+      token ? { 'Authentication-Token': token } : {},
+    ),
     method: 'POST',
     body: JSON.stringify(data),
   }
@@ -80,7 +83,8 @@ export function request(url, options) {
 
 function _checkStatusAndParseJSON(response) {
   return new Promise((resolve, reject) => {
-    response.json()
+    response
+      .json()
       // response with json body
       .then((json) => {
         if (_checkStatus(response)) {
@@ -110,7 +114,7 @@ function _mergeOptions(defaults, options) {
     headers: {
       ...defaults.headers,
       ...options.headers,
-    }
+    },
   })
 }
 
@@ -124,10 +128,13 @@ function _checkStatus(response) {
 
 function _responseError(response, json) {
   const error = new Error(response.statusText)
-  error.response = Object.assign({
-    status: response.status,
-    statusText: response.statusText,
-  }, json)
+  error.response = Object.assign(
+    {
+      status: response.status,
+      statusText: response.statusText,
+    },
+    json,
+  )
   return error
 }
 

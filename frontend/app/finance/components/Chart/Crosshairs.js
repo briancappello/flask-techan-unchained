@@ -3,7 +3,6 @@ import techan from 'techanjs'
 
 import { FORMATS } from 'finance/constants'
 
-
 export default class Crosshairs {
   init({ svg, xAxis, yAxis, yAxisRight, chartHeight }) {
     this.svg = svg
@@ -15,7 +14,8 @@ export default class Crosshairs {
 
   draw() {
     // crosshair current date label
-    this.dateAnnotation = techan.plot.axisannotation()
+    this.dateAnnotation = techan.plot
+      .axisannotation()
       .axis(this.xAxis)
       .orient('bottom')
       .format(FORMATS.DATE)
@@ -23,12 +23,14 @@ export default class Crosshairs {
       .translate([0, this.chartHeight])
 
     // crosshair current price label
-    this.cursorPriceLevelAnnotation = techan.plot.axisannotation()
+    this.cursorPriceLevelAnnotation = techan.plot
+      .axisannotation()
       .axis(this.yAxis)
       .orient('left')
       .format(FORMATS.DEC)
 
-    this.cursorPriceLevelAnnotationRight = techan.plot.axisannotation()
+    this.cursorPriceLevelAnnotationRight = techan.plot
+      .axisannotation()
       .axis(this.yAxisRight)
       .orient('right')
       .format(FORMATS.DEC)
@@ -51,7 +53,8 @@ export default class Crosshairs {
     }
 
     // plot crosshairs
-    this.plotCrosshair = techan.plot.crosshair()
+    this.plotCrosshair = techan.plot
+      .crosshair()
       .xScale(this.xScale)
       .yScale(this.yScale)
       .xAnnotation([this.dateAnnotation])
@@ -61,14 +64,13 @@ export default class Crosshairs {
       .on('out', this.crosshairOut)
 
     // add crosshair group container to the svg
-    this.svg.append('g')
-      .attr('class', 'plot crosshair')
+    this.svg.append('g').attr('class', 'plot crosshair')
 
     // this serves as an index lookup for mouse events (to get the current bar)
-    this.dataIndexScale = d3.scaleLinear()
+    this.dataIndexScale = d3
+      .scaleLinear()
       .domain([0, this.state.visibleBars])
       .range([0, this.chartWidth])
-
   }
 
   initIndicators(indicators) {
@@ -77,8 +79,8 @@ export default class Crosshairs {
     }
 
     for (let indicator of indicators) {
-
-      indicator.drawCrosshairs()
+      indicator
+        .drawCrosshairs()
         .xAnnotation([this.dateAnnotation])
         .verticalWireRange([0, this.chartHeight])
         .on('move', this.crosshairMove)

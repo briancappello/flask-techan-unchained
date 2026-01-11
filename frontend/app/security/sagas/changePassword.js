@@ -5,7 +5,6 @@ import { flashSuccess } from 'site/actions'
 import { changePassword } from 'security/actions'
 import SecurityApi from 'security/api'
 
-
 export const KEY = 'changePassword'
 
 export function* changePasswordSaga({ payload }) {
@@ -27,6 +26,4 @@ export function* changePasswordSaga({ payload }) {
   }
 }
 
-export default () => [
-  takeLatest(changePassword.TRIGGER, changePasswordSaga),
-]
+export default () => [takeLatest(changePassword.TRIGGER, changePasswordSaga)]

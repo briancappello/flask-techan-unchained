@@ -5,7 +5,6 @@ import Flash from 'components/Flash'
 import { NavBar, ScrollIntoView } from 'components/Nav'
 import { COPYRIGHT } from 'config'
 
-
 const PageContent = ({ children, className = '' }) => {
   const location = useLocation()
   const hash = location.hash
@@ -18,13 +17,13 @@ const PageContent = ({ children, className = '' }) => {
       <div className="container">
         <Flash />
         <div className={`${className} content`}>
-          <ScrollIntoView id={hash && hash.slice(1) || null}>
+          <ScrollIntoView id={(hash && hash.slice(1)) || null}>
             {children}
           </ScrollIntoView>
         </div>
       </div>
       <footer className="center">
-         Copyright {new Date().getFullYear()} {COPYRIGHT}
+        Copyright {new Date().getFullYear()} {COPYRIGHT}
       </footer>
     </main>
   )

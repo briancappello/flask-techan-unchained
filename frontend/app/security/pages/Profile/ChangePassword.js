@@ -9,7 +9,6 @@ import { PasswordField } from 'components/Form'
 import { injectSagas } from 'utils/async'
 import * as changePasswordSagas from 'security/sagas/changePassword'
 
-
 const FORM_NAME = 'changePassword'
 
 const ChangePassword = (props) => {
@@ -25,10 +24,7 @@ const ChangePassword = (props) => {
   }, [submitSucceeded, dispatch])
 
   const renderShowFormButton = () => (
-    <button type="button"
-            className="btn"
-            onClick={() => setFormVisible(true)}
-    >
+    <button type="button" className="btn" onClick={() => setFormVisible(true)}>
       Click to change your password
     </button>
   )
@@ -37,30 +33,24 @@ const ChangePassword = (props) => {
     <div>
       {error && <DangerAlert>{error}</DangerAlert>}
       <form onSubmit={handleSubmit(changePassword)}>
-        <PasswordField name="password"
-                       label="Current Password"
-                       autoFocus
-        />
-        <PasswordField name="newPassword"
-                       label="New Password"
-        />
-        <PasswordField name="confirmNewPassword"
-                       label="Confirm New Password"
-        />
+        <PasswordField name="password" label="Current Password" autoFocus />
+        <PasswordField name="newPassword" label="New Password" />
+        <PasswordField name="confirmNewPassword" label="Confirm New Password" />
         <div className="row">
-          <button type="submit"
-                  className="btn btn-primary"
-                  disabled={pristine || submitting}
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={pristine || submitting}
           >
             {submitting ? 'Saving...' : 'Save'}
-          </button>
-          {' '}
-          <button type="button"
-                  className="btn"
-                  onClick={() => {
-                    setFormVisible(false)
-                    dispatch(reset(FORM_NAME))
-                  }}
+          </button>{' '}
+          <button
+            type="button"
+            className="btn"
+            onClick={() => {
+              setFormVisible(false)
+              dispatch(reset(FORM_NAME))
+            }}
           >
             Cancel
           </button>
@@ -81,7 +71,4 @@ const withForm = reduxForm({ form: FORM_NAME })
 
 const withSagas = injectSagas(changePasswordSagas)
 
-export default compose(
-  withForm,
-  withSagas,
-)(ChangePassword)
+export default compose(withForm, withSagas)(ChangePassword)

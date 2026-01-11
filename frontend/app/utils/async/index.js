@@ -8,7 +8,7 @@
 export {
   DAEMON,
   ONCE_TILL_UNMOUNT,
-  RESTART_ON_REMOUNT,  // default mode if unspecified
+  RESTART_ON_REMOUNT, // default mode if unspecified
 } from './constants'
 
 export { default as injectReducer } from './injectReducer'

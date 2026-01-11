@@ -5,7 +5,6 @@ import { flashSuccess } from 'site/actions'
 import { resendConfirmationEmail } from 'security/actions'
 import SecurityApi from 'security/api'
 
-
 export const KEY = 'resendConfirmation'
 
 export function* resendConfirmationEmailSaga({ payload: { email } }) {

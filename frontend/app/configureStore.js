@@ -8,15 +8,15 @@ import createReducer from 'reducers'
 import getSagas from 'sagas'
 import { flashClearMiddleware } from 'site/middleware/flash'
 
-
 const isDev = import.meta.env.MODE !== 'production'
 const hasWindowObject = typeof window === 'object'
 
 const sagaMiddleware = createSagaMiddleware()
 
-const { createReduxHistory, routerMiddleware, routerReducer } = createReduxHistoryContext({
-  history: createBrowserHistory(),
-})
+const { createReduxHistory, routerMiddleware, routerReducer } =
+  createReduxHistoryContext({
+    history: createBrowserHistory(),
+  })
 
 export { routerReducer }
 
@@ -28,9 +28,7 @@ export default function configureStore(initialState) {
     flashClearMiddleware,
   ]
 
-  const enhancers = [
-    applyMiddleware(...middlewares),
-  ]
+  const enhancers = [applyMiddleware(...middlewares)]
 
   const composeEnhancers =
     isDev && hasWindowObject && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
@@ -40,7 +38,7 @@ export default function configureStore(initialState) {
   const store = createStore(
     createReducer(routerReducer),
     initialState,
-    composeEnhancers(...enhancers)
+    composeEnhancers(...enhancers),
   )
 
   // extensions
@@ -49,7 +47,7 @@ export default function configureStore(initialState) {
   store.injectedSagas = {}
   store.routerReducer = routerReducer
 
-  let runningSagas = sagaMiddleware.run(function *() {
+  let runningSagas = sagaMiddleware.run(function* () {
     yield getSagas()
   })
 
@@ -63,7 +61,7 @@ export default function configureStore(initialState) {
       const { default: nextGetSagas } = await import('./sagas')
       runningSagas.cancel()
       runningSagas.done.then(() => {
-        runningSagas = sagaMiddleware.run(function *() {
+        runningSagas = sagaMiddleware.run(function* () {
           yield nextGetSagas()
         })
       })

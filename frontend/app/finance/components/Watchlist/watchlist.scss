@@ -1,4 +1,4 @@
-@use "@finance-styles/variables" as *;
+@use '@finance-styles/variables' as *;
 
 .watchlist {
   .watchlist-key {
@@ -46,7 +46,7 @@
         border-top: 1px solid #eee;
       }
       &:after {
-        content: "";
+        content: '';
         display: table;
         clear: both;
       }

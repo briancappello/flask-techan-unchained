@@ -1,4 +1,4 @@
-@use "@finance-styles/variables" as *;
+@use '@finance-styles/variables' as *;
 
 .chart-header {
   height: $chart-header-height;
@@ -19,7 +19,8 @@
       font-family: sans-serif;
       font-size: 14px;
       tbody {
-        tr, tr:hover {
+        tr,
+        tr:hover {
           background-color: $bg-color;
           color: $text-color;
         }
@@ -115,12 +116,12 @@
     path.wire {
       fill: $crosshair-color;
       stroke: $crosshair-color;
-      stroke-width: .5;
+      stroke-width: 0.5;
       stroke-dasharray: none;
       opacity: 1;
 
       &.horizontal {
-        stroke-width: .5;
+        stroke-width: 0.5;
       }
     }
 

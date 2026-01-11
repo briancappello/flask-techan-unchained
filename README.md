@@ -6,10 +6,10 @@ A financial charting and analysis app using Python/React. Built using [Flask Unc
 
 ## Table of Contents
 
-* [Development with Docker Compose](https://github.com/briancappello/flask-techan-unchained#development-with-docker-compose)
-* [Running locally](https://github.com/briancappello/flask-techan-unchained#running-locally)
-* [TODO](https://github.com/briancappello/flask-techan-unchained#todo)
-* [License](https://github.com/briancappello/flask-techan-unchained#license)
+- [Development with Docker Compose](https://github.com/briancappello/flask-techan-unchained#development-with-docker-compose)
+- [Running locally](https://github.com/briancappello/flask-techan-unchained#running-locally)
+- [TODO](https://github.com/briancappello/flask-techan-unchained#todo)
+- [License](https://github.com/briancappello/flask-techan-unchained#license)
 
 ## Development with Docker Compose
 
@@ -69,8 +69,7 @@ poetry run fin init  # requires POLYGON_API_KEY envvar set on host
 
 http://localhost:8888/finance/chart/AMD
 
-* login with user `a@a.com` and password `password` (see `bundles/security/fixtures/User.yaml`)
-
+- login with user `a@a.com` and password `password` (see `bundles/security/fixtures/User.yaml`)
 
 ## Running locally
 

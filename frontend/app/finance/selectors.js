@@ -14,9 +14,8 @@ export const areWatchlistsLoading = (state) => {
 
 export const selectWatchlistsMap = (state) => selectWatchlistsState(state).watchlists
 
-export const selectWatchlists = createSelector(
-  [selectWatchlistsMap],
-  (watchlists) => Object.keys(watchlists).map(key => watchlists[key])
+export const selectWatchlists = createSelector([selectWatchlistsMap], (watchlists) =>
+  Object.keys(watchlists).map((key) => watchlists[key]),
 )
 
 // individual watchlists
@@ -38,7 +37,7 @@ export const selectWatchlistComponents = createSelector(
   (watchlists) => {
     const result = {}
     let hasChanged = false
-    Object.keys(watchlists).forEach(key => {
+    Object.keys(watchlists).forEach((key) => {
       const watchlistState = watchlists[key]
       if (watchlistState.isLoaded) {
         result[key] = {
@@ -48,5 +47,5 @@ export const selectWatchlistComponents = createSelector(
       }
     })
     return result
-  }
+  },
 )

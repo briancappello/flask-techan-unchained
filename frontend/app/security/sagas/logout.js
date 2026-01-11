@@ -6,7 +6,6 @@ import { ROUTES, ROUTE_MAP } from 'routes'
 import { logout } from 'security/actions'
 import SecurityApi from 'security/api'
 
-
 export const KEY = 'logout'
 
 export function* logoutSaga() {
@@ -25,6 +24,4 @@ export function* logoutSaga() {
   }
 }
 
-export default () => [
-  takeEvery(logout.TRIGGER, logoutSaga),
-]
+export default () => [takeEvery(logout.TRIGGER, logoutSaga)]

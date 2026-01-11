@@ -6,7 +6,6 @@ import { flashClear } from 'site/actions'
 
 import './flash.scss'
 
-
 class Flash extends React.Component {
   static propTypes = {
     title: PropTypes.string,
@@ -28,12 +27,8 @@ class Flash extends React.Component {
         <a className="close" href="#" onClick={this.close}>
           &times;
         </a>
-        <div className="flash-title">
-          {title}
-        </div>
-        <div className="flash-message">
-          {message}
-        </div>
+        <div className="flash-title">{title}</div>
+        <div className="flash-message">{message}</div>
       </div>
     )
   }

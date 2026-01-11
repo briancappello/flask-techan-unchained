@@ -6,7 +6,6 @@ import { flashSuccess } from 'site/actions'
 import { login } from 'security/actions'
 import SecurityApi from 'security/api'
 
-
 export const KEY = 'login'
 
 export function* loginSaga({ payload }) {
@@ -28,6 +27,4 @@ export function* loginSaga({ payload }) {
   }
 }
 
-export default () => [
-  takeLatest(login.TRIGGER, loginSaga),
-]
+export default () => [takeLatest(login.TRIGGER, loginSaga)]

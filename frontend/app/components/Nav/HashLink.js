@@ -20,7 +20,6 @@ import isString from 'lodash/isString'
 
 import { CONTENT_TOP } from 'constants.js'
 
-
 // file-level "global" variables, necessitated by MutationObserver's Api :(
 let hashFragment = ''
 let observer = null
@@ -69,14 +68,12 @@ function scroll() {
   }, 0)
 }
 
-
 /**
  * ScrollIntoView
  *
  * Content wrapper to automatically scroll to an element id on page-load
  */
 export class ScrollIntoView extends React.Component {
-
   static propTypes = {
     children: PropTypes.node,
     id: PropTypes.string,
@@ -100,14 +97,12 @@ export class ScrollIntoView extends React.Component {
   }
 }
 
-
 /**
  * HashLink component for linking to anchor tag hash links
  *
  * Handles correctly scrolling to the element id on click
  */
 export class HashLink extends React.Component {
-
   static propTypes = {
     children: PropTypes.node,
     to: PropTypes.oneOfType([
@@ -137,7 +132,7 @@ export class HashLink extends React.Component {
   }
 
   render() {
-    const { children, ...props} = this.props
+    const { children, ...props } = this.props
     return (
       <Link {...props} onClick={this.handleClick}>
         {children}

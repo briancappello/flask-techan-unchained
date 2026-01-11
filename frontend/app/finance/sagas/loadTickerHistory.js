@@ -4,12 +4,14 @@ import isString from 'lodash/isString'
 import { loadTickerHistory } from 'finance/actions'
 import FinanceApi from 'finance/api'
 import { FREQUENCY } from 'finance/constants'
-import { hasTickerHistory, isTickerHistoryLoading } from 'finance/reducers/loadTickerHistory'
+import {
+  hasTickerHistory,
+  isTickerHistoryLoading,
+} from 'finance/reducers/loadTickerHistory'
 
 export const KEY = 'loadTickerHistory'
 
-
-export function *maybeLoadTickerHistorySaga({ payload: { ticker, frequency } }) {
+export function* maybeLoadTickerHistorySaga({ payload: { ticker, frequency } }) {
   const hasTicker = yield select(hasTickerHistory, ticker, frequency)
   const isLoading = yield select(isTickerHistoryLoading, ticker, frequency)
   if (!(hasTicker || isLoading)) {
@@ -35,7 +37,6 @@ export default () => [
   takeLatest(loadTickerHistory.TRIGGER, loadTickerHistorySaga),
 ]
 
-
 export function parseHistoryJson(json, frequency) {
   const { columns, data, index } = json
   const dateOnly = [
@@ -55,7 +56,7 @@ export function parseHistoryJson(json, frequency) {
     for (let col_i = 0; col_i < values.length; col_i++) {
       // convert empty strings to null, all other values to numbers
       let val = values[col_i]
-      val = (val === null || (isString(val) && val.length === 0)) ? null : +val
+      val = val === null || (isString(val) && val.length === 0) ? null : +val
       row[columns[col_i]] = val
     }
     return row

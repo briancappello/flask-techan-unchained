@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Navigate, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 
 import { flashInfo } from 'site/actions'
-import { ROUTE_MAP, ROUTES } from "routes";
+import { ROUTE_MAP, ROUTES } from 'routes'
 
 /**
  * ProtectedRoute - Only allows authenticated users
@@ -28,7 +28,6 @@ export const ProtectedRoute = ({ children }) => {
   return children
 }
 
-
 /**
  * AnonymousRoute - Only allows non-authenticated users
  * Redirects to home page if already authenticated
@@ -40,7 +39,11 @@ export const AnonymousRoute = ({ children }) => {
   const location = useLocation()
 
   useEffect(() => {
-    if (isAuthenticated && !isFlashVisible && location.pathname === `${ROUTE_MAP[ROUTES.Login].path}`) {
+    if (
+      isAuthenticated &&
+      !isFlashVisible &&
+      location.pathname === `${ROUTE_MAP[ROUTES.Login].path}`
+    ) {
       dispatch(flashInfo('You are already logged in.'))
     }
   }, [isAuthenticated, isFlashVisible, dispatch, location.pathname])
