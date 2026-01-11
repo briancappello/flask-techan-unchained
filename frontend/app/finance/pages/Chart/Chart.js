@@ -1,5 +1,5 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import { useParams, useLocation } from 'react-router-dom'
 import { parse } from 'query-string'
 
 import ChartContainer from 'finance/components/ChartContainer'
@@ -14,7 +14,28 @@ function uuid4() {
 }
 
 
-const Chart = (props) => <ChartContainer {...props} />
+const Chart = (props) => {
+  const { ticker } = useParams()
+  const { search } = useLocation()
+  const queryParams = parse(search)
+
+  const frequency = queryParams.frequency || props.frequency
+  const datetime = queryParams.datetime || props.datetime
+  const scale = queryParams.scale || props.scale
+  const type = queryParams.type || props.type
+
+  return (
+    <ChartContainer
+      {...props}
+      ticker={ticker}
+      frequency={frequency}
+      datetime={datetime}
+      scale={scale}
+      type={type}
+      id={uuid4()}
+    />
+  )
+}
 
 Chart.defaultProps = {
   frequency: FREQUENCY.Daily,
@@ -22,10 +43,4 @@ Chart.defaultProps = {
   type: CANDLE_CHART,
 }
 
-export default connect(
-  (state, props) => {
-    const { ticker } = props.match.params
-    const { frequency, datetime, scale, type } = parse(props.location.search)
-    return { ticker, frequency, datetime, scale, type, id: uuid4() }
-  },
-)(Chart)
+export default Chart

@@ -20,7 +20,7 @@ export function injectReducerFactory(store, isValid) {
     if (Reflect.has(store.injectedReducers, key) && store.injectedReducers[key] === reducer) return
 
     store.injectedReducers[key] = reducer
-    store.replaceReducer(createReducer(store.injectedReducers))
+    store.replaceReducer(createReducer(store.routerReducer, store.injectedReducers))
   }
 }
 

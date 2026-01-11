@@ -48,6 +48,7 @@ export default function configureStore(initialState) {
   store.runSaga = sagaMiddleware.run
   store.injectedReducers = {}
   store.injectedSagas = {}
+  store.routerReducer = routerReducer
 
   let runningSagas = sagaMiddleware.run(function *() {
     yield getSagas()
