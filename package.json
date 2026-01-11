@@ -34,7 +34,6 @@
     "react-redux-loading-bar": "^5.0.8",
     "react-router": "^6.30.3",
     "react-router-dom": "^6.30.3",
-    "react-svg": "^2.1.22",
     "redux": "^4.2.1",
     "redux-first-history": "^5.2.0",
     "redux-form": "^8.3.10",
