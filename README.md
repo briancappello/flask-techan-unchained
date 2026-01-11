@@ -88,7 +88,7 @@ Dependencies:
 # install
 git clone git@github.com:briancappello/flask-techan-unchained.git fun-techan
 cd fun-techan
-poetry install
+uv sync
 
 # configure
 edit `backend/config.py` as necessary
@@ -134,8 +134,7 @@ sudo npm link
 cd fun-techan
 npm link techan
 
-npm run build:dll
-npm run start
+npm run dev
 
 # backend dev server:
 flask run

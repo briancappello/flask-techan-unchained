@@ -8,5 +8,4 @@ cd /home/node/techan.js && \
 cd /home/node || exit
 
 npm link techan
-npm run build:dll
-npm run start
+npm run dev

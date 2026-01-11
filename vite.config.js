@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { defineConfig, searchForWorkspaceRoot } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 
@@ -16,16 +16,10 @@ export default defineConfig({
     include: /frontend\/.*\.js$/,
     exclude: [],
   },
-  optimizeDeps: {
-    esbuildOptions: {
-      loader: {
-        '.js': 'jsx',
-      },
-    },
-  },
 
   resolve: {
     alias: {
+      'd3': path.resolve(frontendDir, 'd3-shim.js'),
       // App directories
       'components': path.resolve(appDir, 'components'),
       'security': path.resolve(appDir, 'security'),
@@ -67,24 +61,43 @@ export default defineConfig({
   },
 
   server: {
+    host: true,
     port: 8888,
+    fs: {
+      allow: [
+        searchForWorkspaceRoot(process.cwd()),
+      ]
+    },
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        target: `http://${process.env.API_HOST || 'localhost'}:5000`,
         changeOrigin: true
       },
       '/auth': {
-        target: 'http://localhost:5000',
+        target: `http://${process.env.API_HOST || 'localhost'}:5000`,
         changeOrigin: true
       }
     }
+  },
+
+  optimizeDeps: {
+    include: ['techan'],
+    esbuildOptions: {
+      loader: {
+        '.js': 'jsx',
+      },
+    },
   },
 
   build: {
     outDir: path.resolve(__dirname, 'static'),
     emptyOutDir: false, // Don't delete d3.v4.min.js
     rollupOptions: {
+      external: ['d3'],
       output: {
+        globals: {
+          d3: 'd3'
+        },
         manualChunks: {
           vendor: ['react', 'react-dom', 'redux', 'react-redux', 'redux-saga']
         }
