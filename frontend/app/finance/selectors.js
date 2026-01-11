@@ -1,3 +1,5 @@
+import { createSelector } from 'reselect'
+
 export const selectWatchlistsState = (state) => state.finance.watchlists
 
 // all watchlists
@@ -10,10 +12,12 @@ export const areWatchlistsLoading = (state) => {
   return selectWatchlistsState(state).isLoading
 }
 
-export const selectWatchlists = (state) => {
-  const watchlists = selectWatchlistsState(state).watchlists
-  return Object.keys(watchlists).map(key => watchlists[key])
-}
+export const selectWatchlistsMap = (state) => selectWatchlistsState(state).watchlists
+
+export const selectWatchlists = createSelector(
+  [selectWatchlistsMap],
+  (watchlists) => Object.keys(watchlists).map(key => watchlists[key])
+)
 
 // individual watchlists
 
@@ -29,16 +33,20 @@ export const isWatchlistLoading = (state, key) => {
 
 // chart watchlists
 // FIXME: make selected watchlists on a per-chart basis
-export const selectWatchlistComponents = (state) => {
-  const watchlistsState = selectWatchlistsState(state)
-  return Object.keys(watchlistsState.watchlists).reduce((watchlists, key) => {
-    let watchlistState = watchlistsState.watchlists[key]
-    if (watchlistState.isLoaded) {
-      watchlists[key] = {
-        label: watchlistState.label,
-        components: watchlistState.components,
+export const selectWatchlistComponents = createSelector(
+  [selectWatchlistsMap],
+  (watchlists) => {
+    const result = {}
+    let hasChanged = false
+    Object.keys(watchlists).forEach(key => {
+      const watchlistState = watchlists[key]
+      if (watchlistState.isLoaded) {
+        result[key] = {
+          label: watchlistState.label,
+          components: watchlistState.components,
+        }
       }
-    }
-    return watchlists
-  }, {})
-}
+    })
+    return result
+  }
+)

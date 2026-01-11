@@ -24,10 +24,14 @@ const getSidebarListHeight = () => {
 const Watchlists = ({ queryParams }) => {
   const dispatch = useDispatch()
   const watchlists = useSelector(selectWatchlists)
-  const watchlistComponents = useSelector(selectWatchlistComponents)
-
   const [watchlist, setWatchlist] = useState(undefined)
   const [sidebarListHeight, setSidebarListHeight] = useState(getSidebarListHeight())
+
+  const currentWatchlistKey = watchlist || (watchlists.length > 0 ? watchlists[0].key : undefined)
+  const currentWatchlistData = useSelector(state => {
+    const components = selectWatchlistComponents(state)
+    return currentWatchlistKey ? components[currentWatchlistKey] : undefined
+  })
 
   // Create bound action creators
   const boundLoadWatchlists = useCallback(
@@ -46,12 +50,10 @@ const Watchlists = ({ queryParams }) => {
 
   // Load first watchlist when watchlists are available
   useEffect(() => {
-    if (watchlist === undefined && watchlists && watchlists.length) {
-      const firstWatchlist = watchlists[0].key
-      boundLoadWatchlist({ key: firstWatchlist })
-      setWatchlist(firstWatchlist)
+    if (currentWatchlistKey) {
+      boundLoadWatchlist({ key: currentWatchlistKey })
     }
-  }, [watchlists, watchlist, boundLoadWatchlist])
+  }, [currentWatchlistKey, boundLoadWatchlist])
 
   // Handle resize
   useEffect(() => {
@@ -64,31 +66,24 @@ const Watchlists = ({ queryParams }) => {
 
   const onChange = (e) => {
     e.preventDefault()
-    boundLoadWatchlist({ key: e.target.value })
     setWatchlist(e.target.value)
   }
 
-  let currentWatchlist = watchlist
-  // FIXME save current watchlist in query params?
-  if (currentWatchlist === undefined && watchlists.length > 0) {
-    currentWatchlist = watchlists[0].key
-  }
-
-  if (!currentWatchlist || !watchlistComponents || watchlistComponents[currentWatchlist] === undefined) {
+  if (!currentWatchlistKey || !currentWatchlistData) {
     return <p>Loading...</p>
   }
 
-  const { label, components } = watchlistComponents[currentWatchlist]
+  const { label, components } = currentWatchlistData
   return (
     <div className="watchlists" style={{ height: sidebarListHeight }}>
       <form>
-        <select onChange={onChange} value={currentWatchlist}>
+        <select onChange={onChange} value={currentWatchlistKey}>
           {watchlists.map((wl) => {
             return <option key={wl.key} value={wl.key}>{wl.label}</option>
           })}
         </select>
       </form>
-      <Watchlist key={currentWatchlist}
+      <Watchlist key={currentWatchlistKey}
                  watchlist={label}
                  quotes={components}
                  queryParams={queryParams} />
