@@ -1,30 +1,24 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { compose } from 'redux'
-import { connect } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
-import { bindRoutineCreators } from 'actions'
 import { logout } from 'security/actions'
 import { injectSagas } from 'utils/async'
+import * as logoutSagas from 'security/sagas/logout'
 
 
-class Logout extends React.Component {
-  componentWillMount() {
-    this.props.logout.trigger()
-  }
+const Logout = () => {
+  const dispatch = useDispatch()
+  
+  useEffect(() => {
+    dispatch(logout.trigger())
+  }, [dispatch])
 
-  render() {
-    return null
-  }
+  return null
 }
 
-const withConnect = connect(
-  (state) => ({}),
-  (dispatch) => bindRoutineCreators({ logout }, dispatch),
-)
-
-const withSagas = injectSagas(require('security/sagas/logout'))
+const withSagas = injectSagas(logoutSagas)
 
 export default compose(
-  withConnect,
   withSagas,
 )(Logout)

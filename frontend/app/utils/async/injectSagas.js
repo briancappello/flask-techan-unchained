@@ -1,7 +1,7 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React, { useEffect, useContext } from 'react'
 import hoistNonReactStatics from 'hoist-non-react-statics'
 import get from 'lodash/get'
+import { ReactReduxContext } from 'react-redux'
 
 import getInjectors from './sagaInjectors'
 
@@ -18,8 +18,11 @@ import getInjectors from './sagaInjectors'
  *   - constants.ONCE_TILL_UNMOUNT — behaves like 'RESTART_ON_REMOUNT' but never runs it again.
  *
  */
-export default (props) => (WrappedComponent) => {
-  if (get(props, '__esModule', false)) {
+export default (moduleOrProps) => (WrappedComponent) => {
+  let props = moduleOrProps
+  
+  // Handle ES module format (from dynamic import or require)
+  if (get(props, '__esModule', false) || get(props, 'default')) {
     props = {
       key: props.KEY,
       sagas: props.default,
@@ -27,36 +30,30 @@ export default (props) => (WrappedComponent) => {
     }
   }
 
-  class InjectSaga extends React.Component {
-    static WrappedComponent = WrappedComponent
-    static contextTypes = {
-      store: PropTypes.object.isRequired,
-    }
-    static displayName = `withSaga(${(WrappedComponent.displayName || WrappedComponent.name || 'Component')})`
-
-    componentWillMount() {
-      const { injectSaga } = this.injectors
+  const InjectSaga = (componentProps) => {
+    const { store } = useContext(ReactReduxContext)
+    
+    useEffect(() => {
+      const injectors = getInjectors(store)
+      const { injectSaga, ejectSaga } = injectors
 
       // create a root saga to inject
       const saga = function *() {
         yield props.sagas()
       }
 
-      injectSaga(props.key, { saga, mode: props.mode }, this.props)
-    }
+      injectSaga(props.key, { saga, mode: props.mode }, componentProps)
+      
+      return () => {
+        ejectSaga(props.key)
+      }
+    }, [store])
 
-    componentWillUnmount() {
-      const { ejectSaga } = this.injectors
-
-      ejectSaga(props.key)
-    }
-
-    injectors = getInjectors(this.context.store)
-
-    render() {
-      return <WrappedComponent {...this.props} />
-    }
+    return <WrappedComponent {...componentProps} />
   }
+  
+  InjectSaga.displayName = `withSaga(${(WrappedComponent.displayName || WrappedComponent.name || 'Component')})`
+  InjectSaga.WrappedComponent = WrappedComponent
 
   return hoistNonReactStatics(InjectSaga, WrappedComponent)
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Provider } from 'react-redux'
-import { ConnectedRouter } from 'react-router-redux'
-import Helmet from 'react-helmet'
+import { HistoryRouter as Router } from 'redux-first-history/rr6'
+import { HelmetProvider, Helmet } from 'react-helmet-async'
 
 import { ProgressBar } from 'components'
 import { SITE_NAME } from 'config'
@@ -21,8 +21,10 @@ const AppLayout = () => (
 
 export default (props) => (
   <Provider store={props.store}>
-    <ConnectedRouter history={props.history}>
-      <AppLayout />
-    </ConnectedRouter>
+    <HelmetProvider>
+      <Router history={props.history}>
+        <AppLayout />
+      </Router>
+    </HelmetProvider>
   </Provider>
 )

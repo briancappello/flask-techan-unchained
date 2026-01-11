@@ -1,9 +1,9 @@
 import React from 'react'
-import Helmet from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
-import reduxForm from 'redux-form/es/reduxForm'
-import { parse } from 'query-string'
+import { reduxForm } from 'redux-form'
+import { useSearchParams } from 'react-router-dom'
 
 import { login } from 'security/actions'
 import { DangerAlert, PageContent } from 'components'
@@ -11,13 +11,17 @@ import { NavLink } from 'components/Nav'
 import { HiddenField, PasswordField, TextField } from 'components/Form'
 import { ROUTES } from 'routes'
 import { injectSagas } from 'utils/async'
+import * as loginSagas from 'security/sagas/login'
 
 
 const FORM_NAME = 'login'
 
 const Login = (props) => {
-  const isDev = process.env.NODE_ENV !== 'production'
+  const isDev = import.meta.env.MODE !== 'production'
   const { error, handleSubmit, submitting, pristine } = props
+  const [searchParams] = useSearchParams()
+  const redirect = searchParams.get('next') || '/'
+
   return (
     <PageContent>
       <Helmet>
@@ -28,8 +32,7 @@ const Login = (props) => {
           <h1>Log in!</h1>
           {error && <DangerAlert>{error}</DangerAlert>}
           {isDev && <p>Hint: a@a.com / password</p>}
-          <form onSubmit={handleSubmit(login)}>
-            <HiddenField name="redirect" />
+          <form onSubmit={handleSubmit((values) => login({ ...values, redirect }))}>
             <TextField name="email"
                        label="Email or Username"
                        className="full-width"
@@ -59,18 +62,9 @@ const Login = (props) => {
 
 const withForm = reduxForm({ form: FORM_NAME })
 
-const withConnect = connect(
-  (state, props) => ({
-    initialValues: {
-      redirect: parse(props.location.search).next || '/',
-    }
-  })
-)
-
-const withSagas = injectSagas(require('security/sagas/login'))
+const withSagas = injectSagas(loginSagas)
 
 export default compose(
-  withConnect,
   withForm,
   withSagas,
 )(Login)

@@ -1,7 +1,7 @@
 import React from 'react'
 import classnames from 'classnames'
 import startCase from 'lodash/startCase'
-import Field from 'redux-form/es/Field'
+import { Field } from 'redux-form'
 
 
 export const EmailField = (props) =>

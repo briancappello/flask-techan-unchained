@@ -1,15 +1,14 @@
 import React from 'react'
-import Helmet from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
-import reduxForm from 'redux-form/es/reduxForm'
-import formActions from 'redux-form/es/actions'
-const { reset } = formActions
+import { reduxForm, reset } from 'redux-form'
 
 import { contact } from 'site/actions'
 import { DangerAlert, PageContent } from 'components'
 import { EmailField, TextArea, TextField } from 'components/Form'
 import { injectSagas } from 'utils/async'
+import * as contactSagas from 'site/sagas/contact'
 
 
 const FORM_NAME = 'contact'
@@ -68,7 +67,7 @@ const withForm = reduxForm({
   }
 })
 
-const withSaga = injectSagas(require('site/sagas/contact'))
+const withSaga = injectSagas(contactSagas)
 
 export default compose(
   withConnect,

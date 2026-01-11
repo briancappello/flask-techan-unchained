@@ -1,5 +1,6 @@
 import { applyMiddleware, compose, createStore } from 'redux'
-import { routerMiddleware } from 'react-router-redux'
+import { createReduxHistoryContext } from 'redux-first-history'
+import { createBrowserHistory } from 'history'
 import { loadingBarMiddleware } from 'react-redux-loading-bar'
 import createSagaMiddleware from 'redux-saga'
 
@@ -8,15 +9,22 @@ import getSagas from 'sagas'
 import { flashClearMiddleware } from 'site/middleware/flash'
 
 
-const isDev = process.env.NODE_ENV !== 'production'
+const isDev = import.meta.env.MODE !== 'production'
 const hasWindowObject = typeof window === 'object'
 
 const sagaMiddleware = createSagaMiddleware()
 
-export default function configureStore(initialState, history) {
+// Create redux-first-history context
+const { createReduxHistory, routerMiddleware, routerReducer } = createReduxHistoryContext({
+  history: createBrowserHistory(),
+})
+
+export { routerReducer }
+
+export default function configureStore(initialState) {
   const middlewares = [
     sagaMiddleware,
-    routerMiddleware(history),
+    routerMiddleware,
     loadingBarMiddleware({ promiseTypeSuffixes: ['REQUEST', 'FULFILL'] }),
     flashClearMiddleware,
   ]
@@ -31,7 +39,7 @@ export default function configureStore(initialState, history) {
       : compose
 
   const store = createStore(
-    createReducer(),
+    createReducer(routerReducer),
     initialState,
     composeEnhancers(...enhancers)
   )
@@ -45,14 +53,14 @@ export default function configureStore(initialState, history) {
     yield getSagas()
   })
 
-  if (module.hot) {
-    module.hot.accept('./reducers', () => {
-      const nextCreateReducer = require('./reducers').default
-      store.replaceReducer(nextCreateReducer(store.injectedReducers))
+  if (import.meta.hot) {
+    import.meta.hot.accept('./reducers', async () => {
+      const { default: nextCreateReducer } = await import('./reducers')
+      store.replaceReducer(nextCreateReducer(routerReducer, store.injectedReducers))
     })
 
-    module.hot.accept('./sagas', () => {
-      const nextGetSagas = require('./sagas').default
+    import.meta.hot.accept('./sagas', async () => {
+      const { default: nextGetSagas } = await import('./sagas')
       runningSagas.cancel()
       runningSagas.done.then(() => {
         runningSagas = sagaMiddleware.run(function *() {
@@ -62,5 +70,8 @@ export default function configureStore(initialState, history) {
     })
   }
 
-  return store
+  // Create the history object connected to redux
+  const history = createReduxHistory(store)
+
+  return { store, history }
 }

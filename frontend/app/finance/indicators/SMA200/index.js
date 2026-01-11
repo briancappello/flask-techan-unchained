@@ -1,1 +1,1 @@
-export default from './SMA200'
+export { default } from './SMA200'

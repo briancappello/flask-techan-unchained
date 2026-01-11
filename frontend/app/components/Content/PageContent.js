@@ -1,39 +1,33 @@
 import React from 'react'
-import { connect } from 'react-redux'
-import { withRouter } from 'react-router'
+import { useLocation } from 'react-router-dom'
 
 import Flash from 'components/Flash'
 import { NavBar, ScrollIntoView } from 'components/Nav'
 import { COPYRIGHT } from 'config'
 
 
-class PageContent extends React.Component {
+const PageContent = ({ children, className = '' }) => {
+  const location = useLocation()
+  const hash = location.hash
 
-  static defaultProps = {
-    className: '',
-  }
-
-  render() {
-    const { children, className, location: { hash } } = this.props
-    return (
-      <main>
-        <header>
-          <NavBar />
-        </header>
-        <div className="container">
-          <Flash />
-          <div className={`${className} content`}>
-            <ScrollIntoView id={hash && hash.slice(1) || null}>
-              {children}
-            </ScrollIntoView>
-          </div>
+  return (
+    <main>
+      <header>
+        <NavBar />
+      </header>
+      <div className="container">
+        <Flash />
+        <div className={`${className} content`}>
+          <ScrollIntoView id={hash && hash.slice(1) || null}>
+            {children}
+          </ScrollIntoView>
         </div>
-        <footer className="center">
-           Copyright {new Date().getFullYear()} {COPYRIGHT}
-        </footer>
-      </main>
-    )
-  }
+      </div>
+      <footer className="center">
+         Copyright {new Date().getFullYear()} {COPYRIGHT}
+      </footer>
+    </main>
+  )
 }
 
-export default withRouter(PageContent)
+export default PageContent

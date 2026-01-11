@@ -1,20 +1,23 @@
 import React from 'react'
 import { compose } from 'redux'
-import { connect } from 'react-redux'
-import reduxForm from 'redux-form/es/reduxForm'
-import Helmet from 'react-helmet'
+import { reduxForm } from 'redux-form'
+import { Helmet } from 'react-helmet-async'
+import { useParams } from 'react-router-dom'
 
 import { resetPassword } from 'security/actions'
 import { DangerAlert } from 'components/Alert'
 import { PageContent } from 'components/Content'
-import { HiddenField, PasswordField } from 'components/Form'
+import { PasswordField } from 'components/Form'
 import { injectSagas } from 'utils/async'
+import * as resetPasswordSagas from 'security/sagas/resetPassword'
 
 
 const FORM_NAME = 'resetPassword'
 
 const ResetPassword = (props) => {
   const { error, handleSubmit, pristine, submitting } = props
+  const { token } = useParams()
+
   return (
     <PageContent>
       <Helmet>
@@ -23,8 +26,7 @@ const ResetPassword = (props) => {
       <h1>Reset Password</h1>
       {error && <DangerAlert>{error}</DangerAlert>}
       <p>Enter a new password and click submit to reset your password and login.</p>
-      <form onSubmit={handleSubmit(resetPassword)}>
-        <HiddenField name="token" />
+      <form onSubmit={handleSubmit((values) => resetPassword({ ...values, token }))}>
         <PasswordField name="newPassword"
                        autoFocus
         />
@@ -46,18 +48,9 @@ const ResetPassword = (props) => {
 
 const withForm = reduxForm({ form: FORM_NAME })
 
-const withConnect = connect(
-  (state, props) => ({
-    initialValues: {
-      token: props.match.params.token,
-    },
-  }),
-)
-
-const withSagas = injectSagas(require('security/sagas/resetPassword'))
+const withSagas = injectSagas(resetPasswordSagas)
 
 export default compose(
-  withConnect,
   withForm,
   withSagas,
 )(ResetPassword)

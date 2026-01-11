@@ -1,1 +1,1 @@
-export default from './RSI'
+export { default } from './RSI'

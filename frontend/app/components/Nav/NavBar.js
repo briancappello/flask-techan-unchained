@@ -1,7 +1,6 @@
-import React from 'react'
-import { compose } from 'redux'
-import { connect } from 'react-redux'
-import { withRouter } from 'react-router'
+import React, { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
+import { useLocation } from 'react-router-dom'
 import classnames from 'classnames'
 
 import { ROUTES } from 'routes'
@@ -10,76 +9,58 @@ import NavLink from './NavLink'
 import './navbar.scss'
 
 
-class NavBar extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      menuOpen: false,
-    }
+const NavBar = () => {
+  const [menuOpen, setMenuOpen] = useState(false)
+  const isAuthenticated = useSelector((state) => state.security.isAuthenticated)
+  const location = useLocation()
+
+  // Close menu on location change
+  useEffect(() => {
+    setMenuOpen(false)
+  }, [location])
+
+  const toggleResponsiveMenu = () => {
+    setMenuOpen(!menuOpen)
   }
 
-  componentWillReceiveProps() {
-    this.setState({ menuOpen: false })
-  }
+  const renderAuthenticatedMenu = () => (
+    <div>
+      <NavLink to={ROUTES.Profile} />
+      <NavLink to={ROUTES.Logout} />
+    </div>
+  )
 
-  render() {
-    const { isAuthenticated } = this.props
-    const { menuOpen } = this.state
+  const renderUnauthenticatedMenu = () => (
+    <div>
+      <NavLink to={ROUTES.SignUp} />
+      <NavLink to={ROUTES.Login} />
+    </div>
+  )
 
-    return (
-      <nav className={classnames({ 'menu-open': menuOpen })}>
-        <div className="container navbar-top">
-          <NavLink exact to={ROUTES.Home} className="brand">
-            Flask Techan Unchained
-          </NavLink>
-          <a href="javascript:void(0);"
-             className="burger"
-             onClick={this.toggleResponsiveMenu}
-          >
-            Menu&nbsp;&nbsp;&#9776;
-          </a>
-          <div className="menu left">
-            <NavLink to={ROUTES.Contact} />
-          </div>
-          <div className="menu right">
-            {isAuthenticated
-              ? this.renderAuthenticatedMenu()
-              : this.renderUnauthenticatedMenu()
-            }
-          </div>
+  return (
+    <nav className={classnames({ 'menu-open': menuOpen })}>
+      <div className="container navbar-top">
+        <NavLink end to={ROUTES.Home} className="brand">
+          Flask Techan Unchained
+        </NavLink>
+        <a href="#"
+           className="burger"
+           onClick={(e) => { e.preventDefault(); toggleResponsiveMenu(); }}
+        >
+          Menu&nbsp;&nbsp;&#9776;
+        </a>
+        <div className="menu left">
+          <NavLink to={ROUTES.Contact} />
         </div>
-      </nav>
-    )
-  }
-
-  toggleResponsiveMenu = () => {
-    this.setState({ menuOpen: !this.state.menuOpen })
-  }
-
-  renderAuthenticatedMenu() {
-    return (
-      <div>
-        <NavLink to={ROUTES.Profile} />
-        <NavLink to={ROUTES.Logout} />
+        <div className="menu right">
+          {isAuthenticated
+            ? renderAuthenticatedMenu()
+            : renderUnauthenticatedMenu()
+          }
+        </div>
       </div>
-    )
-  }
-
-  renderUnauthenticatedMenu() {
-    return (
-      <div>
-        <NavLink to={ROUTES.SignUp} />
-        <NavLink to={ROUTES.Login} />
-      </div>
-    )
-  }
+    </nav>
+  )
 }
 
-const withConnect = connect(
-  (state) => ({ isAuthenticated: state.security.isAuthenticated }),
-)
-
-export default compose(
-  withRouter,  // required for NavLinks to determine whether they're active or not
-  withConnect,
-)(NavBar)
+export default NavBar

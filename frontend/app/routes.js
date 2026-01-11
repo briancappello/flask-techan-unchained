@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import startCase from 'lodash/startCase'
 import { compile } from 'path-to-regexp'
 
@@ -54,14 +54,14 @@ export const ROUTES = {
  *  - key: component class name
  *  - path: the path for the component (in react router notation)
  *  - component: The component to use
- *  - routeComponent: optional, AnonymousRoute, ProtectedRoute or Route (default: Route)
+ *  - routeType: optional, 'anonymous', 'protected', or null (default: null for public)
  *  - label: optional, label to use for links (default: startCase(key))
  */
 const routes = [
   {
     key: ROUTES.Chart,
     path: '/finance/chart/:ticker',
-    routeComponent: ProtectedRoute,
+    routeType: 'protected',
     component: Chart,
   },
   {
@@ -73,7 +73,7 @@ const routes = [
     key: ROUTES.ForgotPassword,
     path: '/login/forgot-password',
     component: ForgotPassword,
-    routeComponent: AnonymousRoute,
+    routeType: 'anonymous',
     label: 'Forgot password?',
   },
   {
@@ -85,7 +85,7 @@ const routes = [
     key: ROUTES.Login,
     path: '/login',
     component: Login,
-    routeComponent: AnonymousRoute,
+    routeType: 'anonymous',
     label: 'Login',
   },
   {
@@ -98,35 +98,35 @@ const routes = [
     key: ROUTES.PendingConfirmation,
     path: '/sign-up/pending-confirm-email',
     component: PendingConfirmation,
-    routeComponent: AnonymousRoute,
+    routeType: 'anonymous',
     label: 'Pending Confirm Email',
   },
   {
     key: ROUTES.Profile,
     path: '/profile',
     component: Profile,
-    routeComponent: ProtectedRoute,
+    routeType: 'protected',
     label: 'Profile',
   },
   {
     key: ROUTES.ResendConfirmation,
     path: '/sign-up/resend-confirmation-email',
     component: ResendConfirmation,
-    routeComponent: AnonymousRoute,
+    routeType: 'anonymous',
     label: 'Resend Confirmation Email',
   },
   {
     key: ROUTES.ResetPassword,
     path: '/login/reset-password/:token',
     component: ResetPassword,
-    routeComponent: AnonymousRoute,
+    routeType: 'anonymous',
     label: 'Reset Password',
   },
   {
     key: ROUTES.SignUp,
     path: '/sign-up',
     component: SignUp,
-    routeComponent: AnonymousRoute,
+    routeType: 'anonymous',
     label: 'Sign Up',
   },
 ]
@@ -136,7 +136,7 @@ const routes = [
  */
 export const ROUTE_MAP = {}
 routes.forEach((route) => {
-  let { component, key, label, path, routeComponent } = route
+  let { component, key, label, path, routeType } = route
 
   if (!component) {
     throw new Error(`component was not specified for the ${key} route!`)
@@ -149,23 +149,44 @@ routes.forEach((route) => {
     path,
     toPath: compile(path),
     component,
-    routeComponent: routeComponent || Route,
+    routeType: routeType || null,
     label: label || startCase(key),
   }
 })
 
 /**
- * React Router 4 re-renders all child components of Switch statements on
- * every page change. Therefore, we render routes ahead of time once.
+ * Wrap component based on route type
  */
-const cachedRoutes = routes.map((route) => {
-  const { component, path, routeComponent: RouteComponent } = ROUTE_MAP[route.key]
-  return <RouteComponent exact path={path} component={component} key={path} />
-})
-cachedRoutes.push(<Route component={NotFound} key="*" />)
+const wrapComponent = (Component, routeType) => {
+  if (routeType === 'protected') {
+    return (
+      <ProtectedRoute>
+        <Component />
+      </ProtectedRoute>
+    )
+  }
+  if (routeType === 'anonymous') {
+    return (
+      <AnonymousRoute>
+        <Component />
+      </AnonymousRoute>
+    )
+  }
+  return <Component />
+}
 
 export default () => (
-  <Switch>
-    {cachedRoutes}
-  </Switch>
+  <Routes>
+    {routes.map((route) => {
+      const { component: Component, path, routeType } = ROUTE_MAP[route.key]
+      return (
+        <Route
+          key={path}
+          path={path}
+          element={wrapComponent(Component, routeType)}
+        />
+      )
+    })}
+    <Route path="*" element={<NotFound />} />
+  </Routes>
 )

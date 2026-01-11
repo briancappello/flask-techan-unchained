@@ -1,1 +1,1 @@
-export default from './MACD'
+export { default } from './MACD'

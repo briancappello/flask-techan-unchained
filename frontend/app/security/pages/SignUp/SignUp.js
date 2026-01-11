@@ -1,13 +1,14 @@
 import React from 'react'
 import { compose } from 'redux'
-import reduxForm from 'redux-form/es/reduxForm'
-import Helmet from 'react-helmet'
+import { reduxForm } from 'redux-form'
+import { Helmet } from 'react-helmet-async'
 
 import { signUp } from 'security/actions'
 import { DangerAlert } from 'components/Alert'
 import { PageContent } from 'components/Content'
 import { EmailField, PasswordField, TextField } from 'components/Form'
 import { injectSagas } from 'utils/async'
+import * as signUpSagas from 'security/sagas/signUp'
 
 
 const FORM_NAME = 'signUp'
@@ -57,7 +58,7 @@ const SignUp = (props) => {
 
 const withForm = reduxForm({ form: FORM_NAME })
 
-const withSagas = injectSagas(require('security/sagas/signUp'))
+const withSagas = injectSagas(signUpSagas)
 
 export default compose(
   withForm,

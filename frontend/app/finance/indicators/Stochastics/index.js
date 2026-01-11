@@ -1,1 +1,1 @@
-export default from './Stochastics'
+export { default } from './Stochastics'

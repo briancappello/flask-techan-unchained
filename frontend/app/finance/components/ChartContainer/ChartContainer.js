@@ -1,15 +1,16 @@
-import React from 'react'
-import Helmet from 'react-helmet'
-import { bindActionCreators, compose } from 'redux'
-import { connect } from 'react-redux'
-import { push } from 'react-router-redux'
+import React, { useState, useEffect, useCallback } from 'react'
+import { Helmet } from 'react-helmet-async'
+import { compose } from 'redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { push } from 'redux-first-history'
 import { stringify } from 'query-string'
 import classnames from 'classnames'
 
-import { bindRoutineCreators } from 'actions'
 import { ROUTES, ROUTE_MAP } from 'routes'
 import injectSagas from 'utils/async/injectSagas'
 import injectReducer from 'utils/async/injectReducer'
+import * as loadTickerHistoryReducer from 'finance/reducers/loadTickerHistory'
+import * as loadTickerHistorySagas from 'finance/sagas/loadTickerHistory'
 
 import { loadTickerHistory } from 'finance/actions'
 import {
@@ -27,91 +28,90 @@ import Watchlists from 'finance/components/Watchlists'
 import './chart-container.scss'
 
 
-class ChartContainer extends React.Component {
+const DEFAULT_PROPS = {
+  frequency: FREQUENCY.Daily,
+  datetime: '',
+  scale: LINEAR_SCALE,
+  type: CANDLE_CHART,
+}
 
-  static defaultProps = {
-    frequency: FREQUENCY.Daily,
-    datetime: '',
-    scale: LINEAR_SCALE,
-    type: CANDLE_CHART,
-  }
-
-  constructor(props) {
-    super(props)
-    const { datetime } = props
-    this.state = {
-      ticker: '',
-      datetime: datetime,
+const filterQueryParams = (queryParams) => {
+  const filtered = { ...queryParams }
+  ;['frequency', 'scale', 'type', 'datetime'].forEach(paramName => {
+    if (filtered[paramName] === DEFAULT_PROPS[paramName]) {
+      delete filtered[paramName]
     }
-  }
+  })
+  return filtered
+}
 
-  componentWillMount() {
-    const { loadTickerHistory, ticker, frequency, datetime } = this.props
-    loadTickerHistory.maybeTrigger({ ticker, frequency, datetime })
-  }
+const ChartContainer = ({
+  id,
+  ticker,
+  frequency = DEFAULT_PROPS.frequency,
+  datetime: initialDatetime = DEFAULT_PROPS.datetime,
+  scale = DEFAULT_PROPS.scale,
+  type = DEFAULT_PROPS.type,
+}) => {
+  const dispatch = useDispatch()
+  const history = useSelector((state) => selectHistoryByTicker(state, ticker, frequency, initialDatetime))
 
-  componentWillReceiveProps(nextProps) {
-    const { loadTickerHistory, ticker: prevTicker, frequency: prevFrequency, datetime: prevDatetime } = this.props
-    const { ticker, frequency, datetime } = nextProps
+  const [tickerInput, setTickerInput] = useState('')
+  const [datetimeInput, setDatetimeInput] = useState(initialDatetime)
 
-    if (prevTicker !== ticker || prevFrequency !== frequency || prevDatetime !== datetime) {
-      loadTickerHistory.maybeTrigger({ ticker, frequency, datetime })
-      this.setState({ ticker: '', datetime: datetime })
-    }
-  }
+  // Load ticker history when props change
+  useEffect(() => {
+    dispatch(loadTickerHistory.trigger({ ticker, frequency, datetime: initialDatetime }))
+    setTickerInput('')
+    setDatetimeInput(initialDatetime)
+  }, [ticker, frequency, initialDatetime, dispatch])
 
-  componentDidMount() {
-    window.addEventListener('keydown', (e) => {
+  // Handle keydown events
+  useEffect(() => {
+    const handleKeyDown = (e) => {
       switch (e.key) {
         case "ArrowLeft":
-          break
         case "ArrowRight":
-          break
         case "ArrowUp":
-          break
         case "ArrowDown":
           break
       }
       console.log(`keydown event listener: ${e.key}`)
-    })
-  }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
 
-  onClick = (key, value) => {
-    const { ticker, frequency, datetime, scale, type } = this.props
-    const args = { ticker, frequency, datetime, scale, type }
+  const pushNewUrl = useCallback(({ ticker: newTicker, ...queryParams }) => {
+    const filteredParams = filterQueryParams(queryParams)
+    dispatch(push({
+      pathname: ROUTE_MAP[ROUTES.Chart].toPath({ ticker: newTicker.toUpperCase() }),
+      search: Object.keys(filteredParams).length ? `?${stringify(filteredParams)}` : '',
+    }))
+  }, [dispatch])
+
+  const onClick = useCallback((key, value) => {
+    const args = { ticker, frequency, datetime: initialDatetime, scale, type }
     args[key] = value
-    this.pushNewUrl(args)
-  }
+    pushNewUrl(args)
+  }, [ticker, frequency, initialDatetime, scale, type, pushNewUrl])
 
-  onSubmit = (e) => {
+  const onSubmit = useCallback((e) => {
     e.preventDefault()
-    const { ticker: currentTicker } = this.props
-    const { ticker, datetime } = this.state
-    const { frequency, scale, type } = this.props
-    this.pushNewUrl({ ticker: ticker && ticker || currentTicker, datetime, frequency, scale, type })
-  }
-
-  pushNewUrl({ ticker, ...queryParams }) {
-    queryParams = this._filterQueryParams(queryParams)
-    this.props.push({
-      pathname: ROUTE_MAP[ROUTES.Chart].toPath({ ticker: ticker.toUpperCase() }),
-      search: Object.keys(queryParams).length ? `?${stringify(queryParams)}` : '',
+    pushNewUrl({
+      ticker: tickerInput || ticker,
+      datetime: datetimeInput,
+      frequency,
+      scale,
+      type
     })
-  }
+  }, [tickerInput, ticker, datetimeInput, frequency, scale, type, pushNewUrl])
 
-  _filterQueryParams(queryParams) {
-    ['frequency', 'scale', 'type', 'datetime'].forEach(paramName => {
-      if (queryParams[paramName] == ChartContainer.defaultProps[paramName]) {
-        delete queryParams[paramName]
-      }
-    })
-    return queryParams
-  }
-
-  renderButton(key, value, label) {
-    const active = value === this.props[key]
+  const renderButton = (key, value, label) => {
+    const currentValue = { frequency, scale, type }[key]
+    const active = value === currentValue
     return (
-      <button onClick={() => this.onClick(key, value)}
+      <button onClick={() => onClick(key, value)}
               className={classnames({ active })}
       >
         {label}
@@ -119,80 +119,62 @@ class ChartContainer extends React.Component {
     )
   }
 
-  render() {
-    const { id, ticker, datetime, history, frequency, scale, type } = this.props
-
-    return (
-      <div className="chart-container-wrap">
-        <Helmet>
-          <title>{ticker}</title>
-        </Helmet>
-        <div className="chart-container">
-          <div className="chart-controls">
-            <div className="row frequencies">
-              {this.renderButton('frequency', FREQUENCY.Minutely, '1m')}
-              {this.renderButton('frequency', FREQUENCY.FiveMinutely, '5m')}
-              {this.renderButton('frequency', FREQUENCY.TenMinutely, '10m')}
-              {this.renderButton('frequency', FREQUENCY.FifteenMinutely, '15m')}
-              {this.renderButton('frequency', FREQUENCY.ThirtyMinutely, '30m')}
-              {this.renderButton('frequency', FREQUENCY.Hourly, '1hr')}
-              {this.renderButton('frequency', FREQUENCY.Daily, 'D')}
-              {this.renderButton('frequency', FREQUENCY.Weekly, 'W')}
-              {this.renderButton('frequency', FREQUENCY.Monthly, 'M')}
-              {this.renderButton('frequency', FREQUENCY.Yearly, 'Y')}
-            </div>
-            <div className="row chart-types">
-              {this.renderButton('type', BAR_CHART, 'Bar')}
-              {this.renderButton('type', CANDLE_CHART, 'Candle')}
-              {this.renderButton('type', LINE_CHART, 'Line')}
-            </div>
-            <div className="row chart-scales">
-              {this.renderButton('scale', LINEAR_SCALE, 'Linear')}
-              {this.renderButton('scale', LOG_SCALE, 'Log')}
-            </div>
+  return (
+    <div className="chart-container-wrap">
+      <Helmet>
+        <title>{ticker}</title>
+      </Helmet>
+      <div className="chart-container">
+        <div className="chart-controls">
+          <div className="row frequencies">
+            {renderButton('frequency', FREQUENCY.Minutely, '1m')}
+            {renderButton('frequency', FREQUENCY.FiveMinutely, '5m')}
+            {renderButton('frequency', FREQUENCY.TenMinutely, '10m')}
+            {renderButton('frequency', FREQUENCY.FifteenMinutely, '15m')}
+            {renderButton('frequency', FREQUENCY.ThirtyMinutely, '30m')}
+            {renderButton('frequency', FREQUENCY.Hourly, '1hr')}
+            {renderButton('frequency', FREQUENCY.Daily, 'D')}
+            {renderButton('frequency', FREQUENCY.Weekly, 'W')}
+            {renderButton('frequency', FREQUENCY.Monthly, 'M')}
+            {renderButton('frequency', FREQUENCY.Yearly, 'Y')}
           </div>
-          <Chart id={id} data={history} ticker={ticker} frequency={frequency} scale={scale} type={type} />
+          <div className="row chart-types">
+            {renderButton('type', BAR_CHART, 'Bar')}
+            {renderButton('type', CANDLE_CHART, 'Candle')}
+            {renderButton('type', LINE_CHART, 'Line')}
+          </div>
+          <div className="row chart-scales">
+            {renderButton('scale', LINEAR_SCALE, 'Linear')}
+            {renderButton('scale', LOG_SCALE, 'Log')}
+          </div>
         </div>
-        <aside className="sidebar">
-          <form onSubmit={this.onSubmit}>
-            <input type="text"
-                   placeholder="Ticker Symbol"
-                   value={this.state.ticker}
-                   autoFocus={true}
-                   onChange={(e) => this.setState({ ticker: e.target.value })}
-            />
-            <input type="text"
-                   placeholder="Datetime"
-                   value={this.state.datetime}
-                   onChange={(e) => this.setState({ datetime: e.target.value })}
-            />
-            <input type="submit" style={{ display: "none" }} />
-          </form>
-          <Watchlists queryParams={this._filterQueryParams({ frequency, datetime, scale, type })} />
-        </aside>
+        <Chart id={id} data={history} ticker={ticker} frequency={frequency} scale={scale} type={type} />
       </div>
-    )
-  }
+      <aside className="sidebar">
+        <form onSubmit={onSubmit}>
+          <input type="text"
+                 placeholder="Ticker Symbol"
+                 value={tickerInput}
+                 autoFocus={true}
+                 onChange={(e) => setTickerInput(e.target.value)}
+          />
+          <input type="text"
+                 placeholder="Datetime"
+                 value={datetimeInput}
+                 onChange={(e) => setDatetimeInput(e.target.value)}
+          />
+          <input type="submit" style={{ display: "none" }} />
+        </form>
+        <Watchlists queryParams={filterQueryParams({ frequency, datetime: initialDatetime, scale, type })} />
+      </aside>
+    </div>
+  )
 }
 
-const withHistoryReducer = injectReducer(require('finance/reducers/loadTickerHistory'))
-const withHistorySagas = injectSagas(require('finance/sagas/loadTickerHistory'))
-
-const withConnect = connect(
-  (state, props) => {
-    const { ticker, frequency, datetime } = props
-    return {
-      history: selectHistoryByTicker(state, ticker, frequency, datetime),
-    }
-  },
-  (dispatch) => ({
-    ...bindActionCreators({ push }, dispatch),
-    ...bindRoutineCreators({ loadTickerHistory }, dispatch),
-  }),
-)
+const withHistoryReducer = injectReducer(loadTickerHistoryReducer)
+const withHistorySagas = injectSagas(loadTickerHistorySagas)
 
 export default compose(
   withHistoryReducer,
   withHistorySagas,
-  withConnect,
 )(ChartContainer)

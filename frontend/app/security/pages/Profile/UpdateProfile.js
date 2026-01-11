@@ -1,13 +1,14 @@
 import React from 'react'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
-import reduxForm from 'redux-form/es/reduxForm'
+import { reduxForm } from 'redux-form'
 
 import { bindRoutineCreators } from 'actions'
 import { updateProfile } from 'security/actions'
 import { DangerAlert } from 'components/Alert'
 import { EmailField, TextField } from 'components/Form'
 import { injectSagas } from 'utils/async'
+import * as updateProfileSagas from 'security/sagas/updateProfile'
 
 
 const FORM_NAME = 'updateProfile'
@@ -44,7 +45,7 @@ const withConnect = connect(
   (state) => ({ initialValues: state.security.user }),
 )
 
-const withSagas = injectSagas(require('security/sagas/updateProfile'))
+const withSagas = injectSagas(updateProfileSagas)
 
 export default compose(
   withConnect,

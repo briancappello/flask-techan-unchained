@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from 'redux-saga/effects'
-import { push } from 'react-router-redux'
+import { push } from 'redux-first-history'
 
 import { flashSuccess } from 'site/actions'
 import { ROUTES, ROUTE_MAP } from 'routes'

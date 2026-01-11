@@ -1,15 +1,14 @@
 import React from 'react'
 import { compose } from 'redux'
-import Helmet from 'react-helmet'
-import reduxForm from 'redux-form/es/reduxForm'
-import formActions from 'redux-form/es/actions'
-const { reset } = formActions
+import { Helmet } from 'react-helmet-async'
+import { reduxForm, reset } from 'redux-form'
 
 import { forgotPassword } from 'security/actions'
 import { DangerAlert } from 'components/Alert'
 import { PageContent } from 'components/Content'
 import { EmailField } from 'components/Form'
 import { injectSagas } from 'utils/async'
+import * as forgotPasswordSagas from 'security/sagas/forgotPassword'
 
 
 const FORM_NAME = 'forgotPassword'
@@ -53,7 +52,7 @@ const withForm = reduxForm({
   },
 })
 
-const withSagas = injectSagas(require('security/sagas/forgotPassword'))
+const withSagas = injectSagas(forgotPasswordSagas)
 
 export default compose(
   withForm,

@@ -22,6 +22,7 @@ export const FREQUENCY = {
   Yearly: 'Y',
 }
 
+// FIXME: daylight savings time
 export const TZ_OFFSET = ((new Date().getTimezoneOffset()) / 60) - 5;
 
 // https://github.com/d3/d3-format#api-reference
@@ -29,11 +30,7 @@ const DEC = ',.2f',
       DEC1 = ',.1f',
       DEC4 = ',.4f',
       INT = ',.0f',
-      SI = ',.3s',
-
-      // https://github.com/d3/d3-time-format#locale_format
-      DATE = '%b %d, %Y',
-      DATETIME = '%b %d, %Y %_I:%M %p'
+      SI = ',.3s'
 
 let dateFormatter = new Intl.DateTimeFormat("en-US", {
   month: "short",

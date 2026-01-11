@@ -1,1 +1,1 @@
-export default from './BBands'
+export { default } from './BBands'

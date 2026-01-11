@@ -1,5 +1,5 @@
 import { call, put, race, take, takeEvery } from 'redux-saga/effects'
-import SubmissionError from 'redux-form/es/SubmissionError'
+import { SubmissionError } from 'redux-form'
 
 import { ROUTINE_PROMISE } from 'actions'
 

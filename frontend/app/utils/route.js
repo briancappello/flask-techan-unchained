@@ -1,59 +1,51 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { push } from 'react-router-redux'
-import { Route, Redirect } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 
 import { flashInfo } from 'site/actions'
-import { ROUTES, ROUTE_MAP } from 'routes'
 
 
-const UnconnectedProtectedRoute = (props) => {
-  const {
-    component: Component,
-    isAuthenticated,
-    location,
-    ...routeProps,
-  } = props
+/**
+ * ProtectedRoute - Only allows authenticated users
+ * Redirects to login page if not authenticated
+ */
+export const ProtectedRoute = ({ children }) => {
+  const isAuthenticated = useSelector((state) => state.security.isAuthenticated)
+  const location = useLocation()
 
-  return <Route {...routeProps} render={(props) => (
-    isAuthenticated
-      ? <Component {...props} />
-      : <Redirect to={{
-          pathname: ROUTE_MAP[ROUTES.Login].path,
+  if (!isAuthenticated) {
+    return (
+      <Navigate
+        to={{
+          pathname: '/login',
           search: `?next=${location.pathname}`,
-        }} />
-  )} />
+        }}
+        replace
+      />
+    )
+  }
+
+  return children
 }
 
-export const ProtectedRoute = connect(
-  (state) => ({ isAuthenticated: state.security.isAuthenticated }),
-)(UnconnectedProtectedRoute)
 
+/**
+ * AnonymousRoute - Only allows non-authenticated users
+ * Redirects to home page if already authenticated
+ */
+export const AnonymousRoute = ({ children }) => {
+  const isAuthenticated = useSelector((state) => state.security.isAuthenticated)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
-class UnconnectedAnonymousRoute extends React.Component {
-  componentWillMount() {
-    const { isAuthenticated, push, flashInfo } = this.props
+  useEffect(() => {
     if (isAuthenticated) {
-      push(ROUTE_MAP[ROUTES.Home].path)
-      flashInfo('You are already logged in.')
+      navigate('/')
+      dispatch(flashInfo('You are already logged in.'))
     }
-  }
+  }, [isAuthenticated, dispatch, navigate])
 
-  render() {
-    const {
-      component: Component,
-      isAuthenticated,
-      push,
-      flashInfo,
-      ...routeProps,
-    } = this.props
-
-    return <Route {...routeProps} render={(props) => <Component {...props} />} />
-  }
+  // Still render children even if authenticated to avoid flash of content
+  // The useEffect will handle the redirect
+  return children
 }
-
-export const AnonymousRoute = connect(
-  (state) => ({ isAuthenticated: state.security.isAuthenticated }),
-  (dispatch) => bindActionCreators({ flashInfo, push }, dispatch),
-)(UnconnectedAnonymousRoute)

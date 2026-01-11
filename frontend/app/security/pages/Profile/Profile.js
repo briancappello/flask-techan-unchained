@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import Helmet from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 
 import { bindRoutineCreators } from 'actions'
 import { PageContent } from 'components/Content'

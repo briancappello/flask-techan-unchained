@@ -1,16 +1,15 @@
 import React from 'react'
 import { compose } from 'redux'
-import Helmet from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 import classnames from 'classnames'
-import reduxForm from 'redux-form/es/reduxForm'
-import formActions from 'redux-form/es/actions'
-const { reset } = formActions
+import { reduxForm, reset } from 'redux-form'
 
 import { resendConfirmationEmail } from 'security/actions'
 import { DangerAlert } from 'components/Alert'
 import { PageContent } from 'components/Content'
 import { EmailField } from 'components/Form'
 import { injectSagas } from 'utils/async'
+import * as resendConfirmationSagas from 'security/sagas/resendConfirmation'
 
 
 const FORM_NAME = 'resendConfirmation'
@@ -66,7 +65,7 @@ const withForm = reduxForm({
   },
 })
 
-const withSagas = injectSagas(require('security/sagas/resendConfirmation'))
+const withSagas = injectSagas(resendConfirmationSagas)
 
 export default compose(
   withForm,

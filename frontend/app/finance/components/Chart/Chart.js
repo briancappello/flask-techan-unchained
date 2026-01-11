@@ -16,7 +16,31 @@ import {
 } from 'finance/constants'
 import { niceLogMin, niceLogMax, getLogTickValues } from 'finance/utils/logScale'
 
+// Static imports for all indicators (required for Vite ESM)
+import BBands from 'finance/indicators/BBands'
+import MACD from 'finance/indicators/MACD'
+import RSI from 'finance/indicators/RSI'
+import SMA100 from 'finance/indicators/SMA100'
+import SMA200 from 'finance/indicators/SMA200'
+import SMA500 from 'finance/indicators/SMA500'
+import SMA1000 from 'finance/indicators/SMA1000'
+import Stochastics from 'finance/indicators/Stochastics'
+import Volume from 'finance/indicators/Volume'
+
 import './chart.scss'
+
+// Indicator registry for dynamic loading by name
+const INDICATORS = {
+  BBands,
+  MACD,
+  RSI,
+  SMA100,
+  SMA200,
+  SMA500,
+  SMA1000,
+  Stochastics,
+  Volume,
+}
 
 
 const CHART_TYPES = {
@@ -63,7 +87,10 @@ export default class Chart extends React.Component {
     let visibleBars = 0
     let startIdx = 0
     if (props.data && props.data.length) {
-      visibleBars = Math.min(props.data.length, frequency === FREQUENCY.Minutely ? 500 : MAX_BARS)
+      visibleBars = Math.min(
+        props.data.length,
+        frequency === FREQUENCY.Minutely ? 500 : MAX_BARS
+      )
       startIdx = Math.max(props.data.length - visibleBars, 0)
     }
 
@@ -75,11 +102,11 @@ export default class Chart extends React.Component {
       currentBar: null,
       latestBar: data ? data[data.length - 1] : {},
       upperIndicators: upperIndicators.map((indicatorName) => {
-        const Indicator = require(`finance/indicators/${indicatorName}`).default
+        const Indicator = INDICATORS[indicatorName]
         return new Indicator()
       }),
       indicators: indicators.map((indicatorName) => {
-        const Indicator = require(`finance/indicators/${indicatorName}`).default
+        const Indicator = INDICATORS[indicatorName]
         return new Indicator()
       }),
       indicatorHeight: indicatorHeight,
