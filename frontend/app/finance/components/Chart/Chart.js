@@ -58,7 +58,8 @@ const SCALES = {
   [LOG_SCALE]: d3.scaleLog(),
 }
 
-const MAX_BARS = 300
+const MARGIN = { top: 10, right: 45, bottom: 20, left: 45 }
+const MARGIN_X = MARGIN.left + MARGIN.right
 
 export default class Chart extends React.Component {
   static propTypes = {
@@ -67,6 +68,7 @@ export default class Chart extends React.Component {
     frequency: PropTypes.string.isRequired,
     scale: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
+    barWidth: PropTypes.number,
   }
 
   static defaultProps = {
@@ -77,24 +79,33 @@ export default class Chart extends React.Component {
     scale: LINEAR_SCALE,
     chartId: 'chart',
     type: CANDLE_CHART,
+    barWidth: 2.4,
   }
 
   constructor(props) {
     super(props)
     log_debug('Chart: constructor')
 
-    this.margin = { top: 10, right: 45, bottom: 20, left: 45 }
+    this.margin = MARGIN
 
-    const { chartId, data, frequency, indicators, indicatorHeight, upperIndicators } =
-      props
+    const {
+      chartId,
+      data,
+      frequency,
+      indicators,
+      indicatorHeight,
+      upperIndicators,
+      barWidth,
+    } = props
+
+    const totalWidth = window.innerWidth - CHART_SIDEBAR_WIDTH
+    const chartWidth = totalWidth - MARGIN_X
+    const capacity = Math.max(1, Math.floor(chartWidth / barWidth))
 
     let visibleBars = 0
     let startIdx = 0
     if (props.data && props.data.length) {
-      visibleBars = Math.min(
-        props.data.length,
-        frequency === FREQUENCY.Minutely ? 500 : MAX_BARS,
-      )
+      visibleBars = Math.min(props.data.length, capacity)
       startIdx = Math.max(props.data.length - visibleBars, 0)
     }
 
@@ -103,6 +114,7 @@ export default class Chart extends React.Component {
       visibleBars,
       startIdx,
       totalHeight: this._getTotalHeight(),
+      totalWidth,
       currentBar: null,
       latestBar: data ? data[data.length - 1] : {},
       upperIndicators: upperIndicators.map((indicatorName) => {
@@ -126,17 +138,19 @@ export default class Chart extends React.Component {
     ) {
       log_debug('Chart: getDerivedStateFromProps')
 
-      const { data, frequency } = nextProps
+      const { data, frequency, barWidth } = nextProps
+      const { totalWidth } = prevState
+
+      const chartWidth =
+        (totalWidth || window.innerWidth - CHART_SIDEBAR_WIDTH) - MARGIN_X
+      const capacity = Math.max(1, Math.floor(chartWidth / barWidth))
 
       let visibleBars = 0
       let startIdx = 0
       let latestBar = {}
 
       if (data && data.length) {
-        visibleBars = Math.min(
-          data.length,
-          frequency === FREQUENCY.Minutely ? 500 : MAX_BARS,
-        )
+        visibleBars = Math.min(data.length, capacity)
         startIdx = Math.max(data.length - visibleBars, 0)
         latestBar = data[data.length - 1]
       }
@@ -165,7 +179,7 @@ export default class Chart extends React.Component {
   componentDidMount() {
     log_debug('Chart: componentDidMount')
 
-    this.setState({ totalWidth: this._getTotalWidth() })
+    this.handleResize()
     window.addEventListener('resize', this.handleResize)
   }
 
@@ -177,7 +191,7 @@ export default class Chart extends React.Component {
       }
     }
 
-    const stateKeys = ['startIdx', 'totalHeight', 'totalWidth']
+    const stateKeys = ['startIdx', 'totalHeight', 'totalWidth', 'visibleBars']
     for (let key of stateKeys) {
       if (this.state[key] != prevState[key]) {
         return true
@@ -591,9 +605,21 @@ export default class Chart extends React.Component {
   }
 
   handleResize = () => {
+    const totalHeight = this._getTotalHeight()
+    const totalWidth = this._getTotalWidth()
+    const chartWidth = totalWidth - MARGIN_X
+    const capacity = Math.max(1, Math.floor(chartWidth / this.props.barWidth))
+    const visibleBars = this.props.data ? Math.min(this.props.data.length, capacity) : 0
+    // Adjust startIdx to keep latest bar visible or maintain position
+    const startIdx = this.props.data
+      ? Math.max(this.props.data.length - visibleBars, 0)
+      : 0
+
     this.setState({
-      totalHeight: this._getTotalHeight(),
-      totalWidth: this._getTotalWidth(),
+      totalHeight,
+      totalWidth,
+      visibleBars,
+      startIdx,
     })
   }
 
