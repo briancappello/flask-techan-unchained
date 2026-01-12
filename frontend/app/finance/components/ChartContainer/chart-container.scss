@@ -8,12 +8,30 @@ $sidebar-width: 200px; // should match CHART_SIDEBAR_WIDTH in finance/constants.
   .chart-container {
     float: left;
     width: 100%;
+    position: relative;
 
     .chart-controls {
       color: white;
       position: absolute;
       top: 10px;
-      right: 245px;
+      right: 45px;
+
+      &.zoom-controls {
+        right: 10px;
+        button {
+          height: 25px;
+          width: 25px;
+          line-height: 25px;
+          font-size: 300%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid white;
+        }
+        .minus {
+          padding-bottom: 5px;
+        }
+      }
 
       .row {
         text-align: right;

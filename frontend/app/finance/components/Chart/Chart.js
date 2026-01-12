@@ -128,13 +128,15 @@ export default class Chart extends React.Component {
       indicatorHeight: indicatorHeight,
       prevData: data,
       prevFrequency: frequency,
+      prevBarWidth: barWidth,
     }
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (
       nextProps.data !== prevState.prevData ||
-      nextProps.frequency !== prevState.prevFrequency
+      nextProps.frequency !== prevState.prevFrequency ||
+      nextProps.barWidth !== prevState.prevBarWidth
     ) {
       log_debug('Chart: getDerivedStateFromProps')
 
@@ -161,6 +163,7 @@ export default class Chart extends React.Component {
         latestBar,
         prevData: data,
         prevFrequency: frequency,
+        prevBarWidth: barWidth,
       }
     }
 
@@ -184,7 +187,7 @@ export default class Chart extends React.Component {
   }
 
   shouldChartUpdate(prevProps, prevState) {
-    const propKeys = ['data', 'type', 'scale', 'frequency']
+    const propKeys = ['data', 'type', 'scale', 'frequency', 'barWidth']
     for (let key of propKeys) {
       if (this.props[key] != prevProps[key]) {
         return true

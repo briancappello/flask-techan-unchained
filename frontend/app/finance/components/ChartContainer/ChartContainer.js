@@ -32,11 +32,12 @@ const DEFAULT_PROPS = {
   datetime: '',
   scale: LINEAR_SCALE,
   type: CANDLE_CHART,
+  barWidth: 3,
 }
 
 const filterQueryParams = (queryParams) => {
   const filtered = { ...queryParams }
-  ;['frequency', 'scale', 'type', 'datetime'].forEach((paramName) => {
+  ;['frequency', 'scale', 'type', 'datetime', 'barWidth'].forEach((paramName) => {
     if (filtered[paramName] === DEFAULT_PROPS[paramName]) {
       delete filtered[paramName]
     }
@@ -51,6 +52,7 @@ const ChartContainer = ({
   datetime: initialDatetime = DEFAULT_PROPS.datetime,
   scale = DEFAULT_PROPS.scale,
   type = DEFAULT_PROPS.type,
+  barWidth = DEFAULT_PROPS.barWidth,
 }) => {
   const dispatch = useDispatch()
   const [tickerInput, setTickerInput] = useState('')
@@ -102,11 +104,18 @@ const ChartContainer = ({
 
   const onClick = useCallback(
     (key, value) => {
-      const args = { ticker, frequency, datetime: initialDatetime, scale, type }
+      const args = {
+        ticker,
+        frequency,
+        datetime: initialDatetime,
+        scale,
+        type,
+        barWidth,
+      }
       args[key] = value
       pushNewUrl(args)
     },
-    [ticker, frequency, initialDatetime, scale, type, pushNewUrl],
+    [ticker, frequency, initialDatetime, scale, type, barWidth, pushNewUrl],
   )
 
   const onSubmit = useCallback(
@@ -118,9 +127,18 @@ const ChartContainer = ({
         frequency,
         scale,
         type,
+        barWidth,
       })
     },
-    [tickerInput, ticker, datetimeInput, frequency, scale, type, pushNewUrl],
+    [tickerInput, ticker, datetimeInput, frequency, scale, type, barWidth, pushNewUrl],
+  )
+
+  const onZoom = useCallback(
+    (delta) => {
+      const newWidth = Math.max(0.1, barWidth + delta)
+      onClick('barWidth', newWidth.toFixed(1))
+    },
+    [barWidth, onClick],
   )
 
   const renderButton = (key, value, label) => {
@@ -162,6 +180,14 @@ const ChartContainer = ({
             {renderButton('scale', LOG_SCALE, 'Log')}
           </div>
         </div>
+        <div className="chart-controls zoom-controls">
+          <div className="row">
+            <button className="plus" onClick={() => onZoom(0.1)}>+</button>
+          </div>
+          <div className="row">
+            <button className="minus" onClick={() => onZoom(-0.1)}>-</button>
+          </div>
+        </div>
         <Chart
           id={id}
           data={history}
@@ -169,6 +195,7 @@ const ChartContainer = ({
           frequency={frequency}
           scale={scale}
           type={type}
+          barWidth={barWidth}
         />
       </div>
       <aside className="sidebar">
@@ -194,6 +221,7 @@ const ChartContainer = ({
             datetime: initialDatetime,
             scale,
             type,
+            barWidth,
           })}
         />
       </aside>

@@ -17,6 +17,7 @@ const Chart = ({
   scale: defaultScale = LINEAR_SCALE,
   type: defaultType = CANDLE_CHART,
   datetime: defaultDatetime,
+  barWidth: defaultBarWidth = 10,
   ...props
 }) => {
   const { ticker } = useParams()
@@ -27,6 +28,9 @@ const Chart = ({
   const datetime = queryParams.datetime || defaultDatetime
   const scale = queryParams.scale || defaultScale
   const type = queryParams.type || defaultType
+  const barWidth = queryParams.barWidth
+    ? parseFloat(queryParams.barWidth)
+    : defaultBarWidth
 
   return (
     <ChartContainer
@@ -36,6 +40,7 @@ const Chart = ({
       datetime={datetime}
       scale={scale}
       type={type}
+      barWidth={barWidth}
       id={uuid4()}
     />
   )
