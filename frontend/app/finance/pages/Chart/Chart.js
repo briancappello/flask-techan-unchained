@@ -17,7 +17,7 @@ const Chart = ({
   scale: defaultScale = LINEAR_SCALE,
   type: defaultType = CANDLE_CHART,
   datetime: defaultDatetime,
-  barWidth: defaultBarWidth = 10,
+  barWidth: defaultBarWidth = 3.5,
   ...props
 }) => {
   const { ticker } = useParams()
