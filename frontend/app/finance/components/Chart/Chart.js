@@ -79,7 +79,7 @@ export default class Chart extends React.Component {
     scale: LINEAR_SCALE,
     chartId: 'chart',
     type: CANDLE_CHART,
-    barWidth: 2.4,
+    barWidth: 3.5,
   }
 
   constructor(props) {
@@ -184,6 +184,18 @@ export default class Chart extends React.Component {
 
     this.handleResize()
     window.addEventListener('resize', this.handleResize)
+    window.addEventListener('keydown', this.handleKeyDown)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize)
+    window.removeEventListener('keydown', this.handleKeyDown)
+  }
+
+  handleKeyDown = (event) => {
+    if (['ArrowLeft', 'ArrowRight'].includes(event.key)) {
+      this.handleScroll({ sourceEvent: event })
+    }
   }
 
   shouldChartUpdate(prevProps, prevState) {
@@ -564,6 +576,16 @@ export default class Chart extends React.Component {
         barDelta = 1
       }
 
+      // arrow keys
+    } else if (e.type === 'keydown') {
+      if (e.key === 'ArrowLeft') {
+        barDelta = -1
+      } else if (e.key === 'ArrowRight') {
+        barDelta = 1
+      } else {
+        return
+      }
+
       // click'n'drag
     } else {
       barDelta = -Math.ceil(e.movementX / this._getBarWidth())
@@ -576,13 +598,15 @@ export default class Chart extends React.Component {
     }
 
     const { startIdx, visibleBars } = this.state
-    const newStartIdx = startIdx + barDelta
+    let newStartIdx = startIdx + barDelta
 
     if (newStartIdx <= 0) {
-      this.setState({ startIdx: 0 })
+      newStartIdx = 0
     } else if (newStartIdx >= this.props.data.length - visibleBars) {
-      this.setState({ startIdx: this.props.data.length - visibleBars })
-    } else {
+      newStartIdx = Math.max(0, this.props.data.length - visibleBars)
+    }
+
+    if (newStartIdx !== startIdx) {
       this.setState({ startIdx: newStartIdx })
     }
   }
